@@ -1,10 +1,18 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
+
+
 
 // ignore: must_be_immutable
 class Result extends StatelessWidget {
   double rate;
+  String r;
+
+
   Result(double rate){
     this.rate=rate;
+    this.r=rate.floor().toString()+"%";
   }
   Result.empty(){
     this.rate=0;
@@ -15,6 +23,7 @@ class Result extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: "openhuninn",
           floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: Color.fromRGBO(255, 245, 227, 1),
         shape: RoundedRectangleBorder(),
@@ -34,8 +43,8 @@ class Result extends StatelessWidget {
                   ),
                   FloatingActionButton(
                     onPressed: () {},
-                    child: Image.asset("images/setting.png"),
-                    heroTag: "setting",
+                    child: Image.asset("images/customerService.png"),
+                    heroTag: "customerService",
                   ),
                 ],
               ),
@@ -50,9 +59,9 @@ class Result extends StatelessWidget {
                           children: [
                             Image.asset("images/rateBox.png"),
                             Text(
-                              rate.toString()+"%",
+                              r,
                               style: new TextStyle(
-                                  fontSize: 50, fontFamily: "NanumPenScript"),
+                                  fontSize: 50,),
                             )
                           ],
                         )

@@ -1,16 +1,17 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter_app/test.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/result.dart';
-import 'package:flutter_app/test.dart';
+import 'package:flutter_app/home.dart';
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   CameraController controller;
-  bool enableAudio = true;
-  bool isStraight=false;
+
+
 
   @override
   void initState() {
@@ -26,134 +27,34 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    this.setState(() {
-      isStraight=MediaQuery.of(context).orientation==Orientation.portrait;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if(timer.tick==5){
+        Navigator.push(
+            context,MaterialPageRoute(builder: (context)=>HomeMenuPage())
+        );
+      }
     });
-    if(this.isStraight){
-      return Scaffold(
+    return Scaffold(
           body: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      FloatingActionButton(onPressed: (){},
-                        child: Image.asset("images/home.png"),
-                        heroTag: "home",
-                      ),
-                      FloatingActionButton(onPressed: (){},
-                        child: Image.asset("images/setting.png"),
-                        heroTag: "setting",),
+                  Center(
+                    child:Expanded(child: Image.asset("images/labinhome.png",width: 100,),)
 
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Result(20)),
-                            );
-                          },
-                          child: Text("點我跳報告畫面"))
-                    ],
+                      // FlatButton(
+                      //     onPressed: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(builder: (context) => Result(20)),
+                      //       );
+                      //     },
+                      //     child: Text("點我跳報告畫面"))
+
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {},
-                        padding: EdgeInsets.zero,
-                        child: Image.asset('images/train.png', width: 200),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => CameraApp()),
-                          );
-                        },
-                        padding: EdgeInsets.zero,
-                        child: Image.asset('images/test.png', width: 200),
-                      ),
 
-                    ],
-                  ),Column(
-                    children: [
-                      FlatButton(
-                        onPressed: () {},
-                        padding: EdgeInsets.zero,
-                        child: Image.asset('images/knowledge.png', width: 200),
-                      ),
-                      FlatButton(
-                        onPressed: () {},
-                        padding: EdgeInsets.zero,
-                        child: Image.asset('images/record.png', width: 200),
-                      )
-                    ],
-                  )
                 ],
               ));
-    }
-    else{
-      return Scaffold(
-          body: Center(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      FloatingActionButton(onPressed: (){},
-                        child: Image.asset("images/home.png"),
-                        heroTag: "home",
-                      ),
-                      FloatingActionButton(onPressed: (){},
-                        child: Image.asset("images/setting.png"),
-                        heroTag: "setting",),
 
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Result(20)),
-                            );
-                          },
-                          child: Text("點我跳報告畫面"))
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FlatButton(
-                        onPressed: () {},
-                        padding: EdgeInsets.fromLTRB(25, 50, 0, 0),
-                        child: Image.asset('images/train.png', width: 200),
-                      ),
-                      FlatButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => CameraApp()),
-                          );
-                        },
-                        padding: EdgeInsets.fromLTRB(0, 50, 25, 0),
-                        child: Image.asset('images/test.png', width: 200),
-                      ),
-                      Column(
-                        children: <Widget>[
-                          FlatButton(
-                            onPressed: () {},
-                            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                            child: Image.asset('images/knowledge.png', width: 200),
-                          ),
-                          FlatButton(
-                            onPressed: () {},
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: Image.asset('images/record.png', width: 200),
-                          ),
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              )));
-    }
 
   }
 }
@@ -183,9 +84,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// List<CameraDescription> cameras = [];
+List<CameraDescription> cameras = [];
 
 Future<void> main() async {
-  print("enter main main");
   runApp(HomePage());
 }
