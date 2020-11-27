@@ -38,7 +38,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   //測驗時間
   int testTime = 210;
   //裝置穩定性檢查時間
-  int checkTime = 15;
+  int checkTime = 1;
   //在測驗時間中，不要讀取圖片的時間
   int notGetImgTime = 30;
   bool getImg = false;
