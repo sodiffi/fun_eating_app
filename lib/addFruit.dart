@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class AddFruit extends StatelessWidget {
   List before;
-  AddFruit(List b){
-    before=b;
+  AddFruit(List b) {
+    before = b;
   }
 
   @override
@@ -28,21 +28,36 @@ class AddFruit extends StatelessWidget {
         home: Scaffold(
             backgroundColor: Color.fromRGBO(254, 246, 227, 1),
             body: Center(
-              child:
-              Stack(
-                alignment: const Alignment(0, 0.5),
-
-                children: [
-                  Image.asset("images/prompt.png"),
-                FlatButton(onPressed: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context)=>CameraApp.second(2, cameras,before)));
-                }, child: Text("添加完畢"))
-                ],
-              )
-            )
-        ));
+                child: Stack(alignment: const Alignment(0, 0.7), children: [
+              Image.asset("images/prompt.png"),
+              FlatButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CameraApp.second(2, cameras, before)));
+                  },
+                  child: Container(
+                    decoration: new BoxDecoration(
+                      border: new Border.all(
+                          color: Color.fromRGBO(248, 203, 173, 1), width: 5),
+                      color: Color.fromRGBO(255, 242, 204, 1),
+                      shape: BoxShape.rectangle,
+                      borderRadius: new BorderRadius.circular(15),
+                    ),
+                    child: Text(
+                      "添加完畢",
+                      style: TextStyle(
+                          fontSize: 25, color: Color.fromRGBO(105, 57, 8, 1)),
+                    ),
+                    padding: EdgeInsets.all(5),
+                    
+                  ))
+            ]))));
   }
 }
+
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {

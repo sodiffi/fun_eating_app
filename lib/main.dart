@@ -12,6 +12,21 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   CameraController controller;
 
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.inactive:
+        print("Inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("Paused");
+        break;
+      case AppLifecycleState.resumed:
+        print("Resumed");
+        break;
+    }
+  }
+
 
   @override
   void initState() {
@@ -27,19 +42,29 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if(timer.tick==5){
-        Navigator.push(
-            context,MaterialPageRoute(builder: (context)=>HomeMenuPage())
-        );
-      }
-    });
+    // Timer.periodic(Duration(seconds: 1), (timer) {
+    //   if(timer.tick==5){
+    //     Navigator.push(
+    //         context,MaterialPageRoute(builder: (context)=>HomeMenuPage())
+    //     );
+    //     timer.cancel();
+    //   }
+    // });
     return Scaffold(
           body: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Center(
-                    child:Expanded(child: Image.asset("images/labinhome.png",width: 100,),)
+                    child:Expanded(child: Column(
+                      children: [
+                        Image.asset("images/labinhome.png",width: 100,),
+                        FlatButton(onPressed: (){
+                          Navigator.push(
+                              context,MaterialPageRoute(builder: (context)=>HomeMenuPage())
+                          );
+                        },child: Text("開始"))
+                      ],
+                    ))
 
                       // FlatButton(
                       //     onPressed: () {

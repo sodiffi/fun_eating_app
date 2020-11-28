@@ -36,11 +36,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   List beforeList = new List();
   List afterList = new List();
   //測驗時間
-  int testTime = 210;
+  int testTime = 10;
   //裝置穩定性檢查時間
   int checkTime = 1;
   //在測驗時間中，不要讀取圖片的時間
-  int notGetImgTime = 30;
+  int notGetImgTime = 2;
   bool getImg = false;
   // bool firstStepEnd = false;
   int step = 0;
@@ -202,7 +202,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print("1:${(beforeAvg[1] / afterAvg[1])}");
           print("rate ${rate}");
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Result(rate)));
+              context, MaterialPageRoute(builder: (context) => Result(rate.isNaN?0:rate)));
         }
       }
     });
@@ -258,12 +258,23 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(1.0),
                   child: Center(
                       child: Stack(
+                        alignment: Alignment(0.9,0.7),
                     children: [
                       Image.asset("images/seal.gif"),
-                      CircleAvatar(
-                        child: Text("${min}:${second}"),
-                        backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+                      Container(decoration: new BoxDecoration(
+                        
+                        border :new Border.all(color:Color.fromRGBO(248, 203, 173, 1),width: 5),
+                            color:Color.fromRGBO(255, 242, 204, 1),
+                        shape: BoxShape.rectangle,
+                        borderRadius: new BorderRadius.circular(15),
                       ),
+                      child: Text("${min}:${second}",style: TextStyle(fontSize: 20,color: Color.fromRGBO(105, 57, 8, 1)),),
+                      padding: EdgeInsets.all(5),),
+                      
+                      // CircleAvatar(
+                      //   child: Text("${min}:${second}"),
+                      //   backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+                      // ),
                     ],
                   )),
                 ),
@@ -393,7 +404,9 @@ class CameraApp extends StatelessWidget {
     step = s;
     cameras = c;
     beforeAvg = b;
+    print("from second ${b.first}");
   }
+
 
   @override
   Widget build(BuildContext context) {
