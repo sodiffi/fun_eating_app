@@ -34,17 +34,19 @@ class _TestMenuPageState extends State<TestMenuPage> {
             Flex(
               direction: Axis.horizontal,
               children: <Widget>[
+                Spacer(flex: 1),
                 Expanded(
                   flex: 1,
-                  child: Theme(
-                    FloatingActionButtonThemeData(
-                      backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-                      shape: RoundedRectangleBorder(),
-                      elevation: 0,
-                      child: FloatingActionButton(
-                        onPressed: () {},
-                        child: Image.asset("images/home.png"),
-                        heroTag: "home",
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0.0),
+                      onPressed: () {},
+                      child: Image.asset(
+                        'images/home.png',
+                        height: 50.0,
+                        width: 50.0,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -52,39 +54,55 @@ class _TestMenuPageState extends State<TestMenuPage> {
                 Spacer(flex: 8),
               ],
             ),
-            Center(
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TrainPage()));
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      'images/trainBox.png',
-                      width: 250,
+            Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: Center(
+                child: Container(
+                  child: FlatButton(
+                    padding: EdgeInsets.all(0.0),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => TrainPage()));
+                    },
+                    child: Stack(
+                      alignment: const Alignment(0, 0),
+                      children: [
+                        Image.asset(
+                          'images/trainBox.png',
+                          width: 200.0,
+                          fit: BoxFit.fill,
+                        ),
+                        Text('操作教學')
+                      ],
                     ),
-                    Text('操作教學')
-                  ],
+                  ),
                 ),
               ),
             ),
-            Center(
-              child: FlatButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TestInputPage()));
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      'images/testBox.png',
-                      width: 250,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Container(
+                  child: FlatButton(
+                    padding: EdgeInsets.all(0.0),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TestInputPage()));
+                    },
+                    child: Stack(
+                      alignment: const Alignment(0, 0),
+                      children: [
+                        Image.asset(
+                          'images/testBox.png',
+                          width: 200.0,
+                          fit: BoxFit.fill,
+                        ),
+                        Text('開始檢測')
+                      ],
                     ),
-                    Text('開始檢測')
-                  ],
+                  ),
                 ),
               ),
             ),
