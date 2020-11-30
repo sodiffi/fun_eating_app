@@ -1,9 +1,11 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/input.dart';
 import 'package:flutter_app/test.dart';
 import 'testMenu.dart';
 import 'package:flutter_better_camera/camera.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeMenuPage extends StatelessWidget {
   @override
@@ -20,7 +22,10 @@ class HomeMenuPage extends StatelessWidget {
           textTheme: TextTheme(
               bodyText1: TextStyle(fontSize: 20),
               bodyText2: TextStyle(fontSize: 35),
-              subtitle1: TextStyle(fontSize: 35))),
+              subtitle1: TextStyle(fontSize: 35),
+              button: TextStyle(
+                fontSize: 20,
+              ))),
       home: HomeMenu(),
       debugShowCheckedModeBanner: false,
     );
@@ -45,6 +50,51 @@ class HomeMenuState extends State<HomeMenu> {
     });
     main();
 
+    Widget homeButton = Flex(
+      direction: Axis.horizontal,
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeMenuPage()));
+              },
+              child: Image.asset(
+                'images/setting.png',
+                height: 50.0,
+                width: 50.0,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => HomeMenuPage()));
+              },
+              child: Image.asset(
+                'images/customerService.png',
+                height: 50.0,
+                width: 50.0,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        Spacer(flex: 3),
+      ],
+    );
+
     List<Widget> actionButton = [
       FloatingActionButton(
         onPressed: () {},
@@ -56,61 +106,104 @@ class HomeMenuState extends State<HomeMenu> {
         child: Image.asset("images/customerService.png"),
         heroTag: "customerService",
       ),
+      FlatButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TestInputPage()));
+          },
+          child: Text("輸入頁"))
     ];
 
     List<Widget> linkButtons = [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          FlatButton(
-            onPressed: () {},
-            child: Stack(
-              alignment: const Alignment(0, 0),
-              children: [
-                Image.asset(
-                  "images/txtBox.png",
-                  width: 80,
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                child: Stack(
+                  alignment: const Alignment(-0.3, -0.3),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      "農食小知識",
+                    )
+                  ],
                 ),
-                Text(
-                  "農食小知識",
-                )
-              ],
-            ),
-          ),
-          FlatButton(
-            onPressed: () {},
-            child: Stack(
-              alignment: const Alignment(0, 0),
-              children: [
-                Image.asset(
-                  "images/txtBox.png",
-                  width: 80,
+              )),
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                child: Stack(
+                  alignment: const Alignment(-0.2, -0.2),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      "檢測紀錄",
+                    )
+                  ],
                 ),
-                Text(
-                  "檢測紀錄",
-                )
-              ],
-            ),
-          ),
-          FlatButton(
-            onPressed: () {},
-            child: Stack(
-              alignment: const Alignment(0, 0),
-              children: [
-                Image.asset(
-                  "images/txtBox.png",
-                  width: 80,
+              )),
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                child: Stack(
+                  alignment: const Alignment(-0.2, -0.2),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      "農食地圖",
+                    )
+                  ],
                 ),
-                Text(
-                  "農食地圖",
-                )
-              ],
-            ),
-          )
+              )),
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {},
+                child: Stack(
+                  alignment: const Alignment(-0.2, -0.2),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      "放心店家",
+                    )
+                  ],
+                ),
+              ))
         ],
       )
     ];
     List<Widget> txtAndTestBtn = [
+      Padding(padding: EdgeInsets.all(10)),
       Text(
         "FUN心吃專家等級",
         style: Theme.of(context).textTheme.bodyText1,
@@ -119,24 +212,30 @@ class HomeMenuState extends State<HomeMenu> {
         "檢測${testTime}次",
         style: Theme.of(context).textTheme.bodyText2,
       ),
-      FlatButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (content) => CameraApp(0, cameras)));
-          },
-          child: Stack(
-            alignment: const Alignment(0, 0),
-            children: [
-              Image.asset(
-                "images/testBox.png",
-                width: 250,
-              ),
-              Text(
-                "開始檢測",
-                style: Theme.of(context).textTheme.subtitle1,
-              )
-            ],
-          ))
+      Padding(
+          padding: EdgeInsets.all(15),
+          child: FlatButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (content) => CameraApp(0, cameras)));
+              },
+              padding: EdgeInsets.zero,
+              child: Stack(
+                alignment: const Alignment(0, 0),
+                children: [
+                  Image.asset(
+                    "images/testBox.png",
+                    width: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  Text(
+                    "開始檢測",
+                    style: Theme.of(context).textTheme.subtitle1,
+                  )
+                ],
+              )))
     ];
 
     //直立畫面
@@ -144,25 +243,30 @@ class HomeMenuState extends State<HomeMenu> {
       return Container(
         color: Theme.of(context).backgroundColor,
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                          Row(
-                            children: actionButton,
-                          )
-                        ] +
-                        [
-                          Image.asset(
-                            "images/logo.png",
-                            height: 80,
-                          )
-                        ],
-                  ),
-                ] +
-                txtAndTestBtn +
-                linkButtons),
+              homeButton,
+              Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                      Image.asset(
+                        "images/logo_h.png",
+                        height: 50,
+                      )
+                    ] +
+                    txtAndTestBtn +
+                    linkButtons,
+              ))
+              // Row(
+              //   // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: <Widget>[
+              //     Row(
+              //       children: actionButton,
+              //     )
+              //   ],
+              // ),
+            ]),
       );
     } else {
       //橫立畫面
@@ -183,6 +287,7 @@ class HomeMenuState extends State<HomeMenu> {
                   linkButtons,
             ),
             Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: txtAndTestBtn,
             )
           ]));
@@ -199,5 +304,41 @@ Future<void> main() async {
     cameras = await availableCameras();
   } on CameraException catch (e) {
     logError(e.code, e.description);
+  }
+}
+
+_launchURLKnowledge() async {
+  const url = 'www.labinhand.com.tw/new.html';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+_launchURLStore() async {
+  const url = 'www.labinhand.com.tw/FUNshop.html';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+_launchURLCustomerService() async {
+  const url = 'http://www.labinhand.com.tw/connection.html';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+_launchURLMap() async {
+  const url = 'www.labinhand.com.tw/FUNmaps.html';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }

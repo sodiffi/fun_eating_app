@@ -35,6 +35,8 @@ dev_dependencies:
   path_provider:
   video_player:
   fluttertoast: ^7.1.1
+  date_format: ^1.0.9
+  url_launcher: ^5.7.10
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

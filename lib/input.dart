@@ -1,9 +1,12 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/home.dart';
 import 'train.dart';
 import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
+import 'package:date_format/date_format.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 // ignore: must_be_immutable
 class TestInputPage extends StatelessWidget {
@@ -19,15 +22,19 @@ class TestInputPage extends StatelessWidget {
             backgroundColor: Color.fromRGBO(255, 245, 227, 1),
             shape: RoundedRectangleBorder(),
             elevation: 0,
-          )),
+          ),
+          textTheme: TextTheme(
+              bodyText1: TextStyle(fontSize: 20),
+              bodyText2: TextStyle(fontSize: 20),
+              subtitle1: TextStyle(fontSize: 20),
+              headline1: TextStyle(fontSize: 50, color: Colors.black))),
       home: Scaffold(
-          backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
           body: Container(
             child: Center(
-              child:InputWidget(),
+              child: InputWidget(),
             ),
-          )
-      ),
+          )),
     );
   }
 }
@@ -40,6 +47,7 @@ class InputWidget extends StatefulWidget {
 }
 
 class InputPageState extends State<InputWidget> {
+  bool isStraight = false;
   List<String> items = [
     "雜糧類",
     "葉菜類",
@@ -74,68 +82,189 @@ class InputPageState extends State<InputWidget> {
     "彰化縣",
     "其他"
   ];
-  String item = "雜糧類";
-  String area = "基隆市";
-
+  String item = "";
+  String area = "";
+  BoxDecoration boxDecoration = BoxDecoration(
+      color: Color.fromRGBO(255, 242, 204, 1),
+      border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
 
   @override
   Widget build(BuildContext context) {
+    this.setState(() {
+      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+    });
     main();
-    return GridView(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 10 / 2),
-      children: <Widget>[
-        Row(
-          children: [
-            FloatingActionButton(
-              onPressed: () {},
-              child: Image.asset("images/home.png"),
-              heroTag: "home",
-            )
-          ],
-        ),Row(),
-        Text("檢測蔬果"),
-        DropdownButton<String>(
-          hint: Text("請選擇檢測蔬果"),
-          value: item,
-          items: items.map((String value) {
-            return new DropdownMenuItem<String>(
-              value: value,
-              child: new Text(value),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              item=value;
-            });
-          },
-        ),
-        Text("來自/購買地區"),
-        DropdownButton<String>(
-          value: area,
-          items: areas.map((String value) {
-            return new DropdownMenuItem<String>(
-              value: value,
-              child: new Text(value),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              area = value;
-            });
-          },
-        ),Row(
-          children: [
-            FlatButton(onPressed: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>CameraApp(1, cameras)));
-            }, child: Text("確定"))
-          ],
-        ),Row()
-      ],
-    );
+    if(isStraight){
+      return table();
+    }
+    else{
+      return table();
+    }
   }
 
+  Widget table(){
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Flex(
+            direction: Axis.horizontal,
+            children: <Widget>[
+              Expanded(
+                flex: isStraight ? 2 : 1,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HomeMenuPage()));
+                  },
+                  child: Image.asset("images/home.png"),
+                  heroTag: "home",
+                ),
+              ),
+              Spacer(flex: 8),
+            ],
+          ),
+          Flex(
+            direction: Axis.horizontal,
+            children: [
+              isStraight ? Container() : Spacer(flex: 2),
+              Expanded(
+                child: Image.asset(
+                  "images/note.png",
+                  height: 50,
+                ),
+                flex: 1,
+              ),
+              Expanded(
+                child: Text(
+                  "檢測小筆記",
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                flex: 2,
+              ),
+              isStraight ? Container() : Spacer(flex: 2)
+            ],
+          ),
+          Row(
+            // mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 60,
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                padding: EdgeInsets.all(10),
+                decoration: boxDecoration,
+                child: Text("檢測蔬果"),
+              ),
+              Container(
+                width: 200,
+                height: 60,
+                padding: EdgeInsets.all(0),
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                decoration: boxDecoration,
+                child: DropdownButton<String>(
+                  hint: Container(
+                    width: 150,
+                    child: Text(item == "" ? "請選擇檢測蔬果" : item),
+                  ),
+                  items: items.map((String value) {
+                    return new DropdownMenuItem<String>(
+                        value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      item = value;
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 60,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                decoration: boxDecoration,
+                child: Text("來自/購買地區"),
+              ),
+              Container(
+                width: 200,
+                height: 60,
+                padding: EdgeInsets.all(0),
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                decoration: boxDecoration,
+                child: DropdownButton<String>(
+                  hint: Container(
+                    width: 150,
+                    child: Text(area == "" ? "請選擇購買地點" : area),
+                  ),
+                  items: areas.map((String value) {
+                    return new DropdownMenuItem<String>(
+                        value: value, child: Text(value));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      area = value;
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 60,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                decoration: boxDecoration,
+                child: Text("時間"),
+              ),
+              Container(
+                width: 200,
+                height: 60,
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                decoration: boxDecoration,
+                child: Text(formatDate(DateTime.now(),
+                    [yyyy, '-', mm, '-', dd, " ", HH, ':', nn, ':', ss])),
+              ),
+            ],
+          ),
+          FlatButton(
+              onPressed: () {
+                if (area != "" && item != "") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CameraApp(1, cameras)));
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "請選擇蔬果類型與購買地點",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.grey,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              },
+              child: Text("確定"))
+        ],
+      ),
+    );
+  }
 }
+
 
 
 List<CameraDescription> cameras = [];
