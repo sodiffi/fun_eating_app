@@ -27,7 +27,7 @@ class TestInputPage extends StatelessWidget {
               bodyText1: TextStyle(fontSize: 20),
               bodyText2: TextStyle(fontSize: 20),
               subtitle1: TextStyle(fontSize: 20),
-              headline1: TextStyle(fontSize: 50, color: Colors.black))),
+              headline1: TextStyle(fontSize: 35, color: Colors.black))),
       home: Scaffold(
           backgroundColor: Color.fromRGBO(255, 245, 227, 1),
           body: Container(

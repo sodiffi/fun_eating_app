@@ -3,7 +3,6 @@
 import 'dart:ui';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_better_camera/camera.dart';
-import 'home.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -47,7 +46,7 @@ class AddFruit extends StatelessWidget {
                       borderRadius: new BorderRadius.circular(15),
                     ),
                     child: Text(
-                      "添加完畢",
+                      "繼續檢測",
                       style: TextStyle(
                           fontSize: 25, color: Color.fromRGBO(105, 57, 8, 1)),
                     ),

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_app/addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/result.dart';
@@ -35,12 +35,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   List checkList = new List();
   List beforeList = new List();
   List afterList = new List();
-  //測驗時間
-  int testTime = 10;
-  //裝置穩定性檢查時間
-  int checkTime = 1;
-  //在測驗時間中，不要讀取圖片的時間
-  int notGetImgTime = 2;
+  //測驗時間210
+  int testTime = 210;
+  //裝置穩定性檢查時間15
+  int checkTime = 15;
+  //在測驗時間中，不要讀取圖片的時間30
+  int notGetImgTime = 30;
   bool getImg = false;
   // bool firstStepEnd = false;
   int step = 0;
@@ -200,9 +200,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print("1:${(afterAvg[2] / beforeAvg[2])}");
           print("1:${(beforeAvg[0] / afterAvg[0])}");
           print("1:${(beforeAvg[1] / afterAvg[1])}");
-          print("rate ${rate}");
+          print("rate ${rate}");          
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Result(rate.isNaN?0:rate)));
+              context, MaterialPageRoute(builder: (context) => ResultPage(rate.isNaN?0:rate)));
         }
       }
     });

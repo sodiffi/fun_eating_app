@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/input.dart';
 import 'package:flutter_app/test.dart';
-import 'testMenu.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -75,13 +74,10 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
             child: FlatButton(
               padding: EdgeInsets.zero,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeMenuPage()));
-              },
+              onPressed: _launchURLCustomerService,
               child: Image.asset(
                 'images/customerService.png',
                 height: 50.0,
@@ -102,16 +98,16 @@ class HomeMenuState extends State<HomeMenu> {
         heroTag: "setting",
       ),
       FloatingActionButton(
-        onPressed: () {},
+        onPressed: _launchURLCustomerService,
         child: Image.asset("images/customerService.png"),
         heroTag: "customerService",
       ),
-      FlatButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TestInputPage()));
-          },
-          child: Text("輸入頁"))
+      // FlatButton(
+      //     onPressed: () {
+      //       Navigator.push(context,
+      //           MaterialPageRoute(builder: (context) => TestInputPage()));
+      //     },
+      //     child: Text("輸入頁"))
     ];
 
     List<Widget> linkButtons = [
@@ -122,7 +118,7 @@ class HomeMenuState extends State<HomeMenu> {
               padding: EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed: _launchURLKnowledge,
                 child: Stack(
                   alignment: const Alignment(-0.3, -0.3),
                   children: [
@@ -165,7 +161,7 @@ class HomeMenuState extends State<HomeMenu> {
               padding: EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed:_launchURLMap,
                 child: Stack(
                   alignment: const Alignment(-0.2, -0.2),
                   children: [
@@ -184,7 +180,7 @@ class HomeMenuState extends State<HomeMenu> {
               padding: EdgeInsets.all(15),
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                onPressed: () {},
+                onPressed: _launchURLStore,
                 child: Stack(
                   alignment: const Alignment(-0.2, -0.2),
                   children: [
@@ -308,7 +304,8 @@ Future<void> main() async {
 }
 
 _launchURLKnowledge() async {
-  const url = 'www.labinhand.com.tw/new.html';
+  const url = 'http://www.labinhand.com.tw/new.html';
+  // const url = 'https://www.google.com';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -317,7 +314,7 @@ _launchURLKnowledge() async {
 }
 
 _launchURLStore() async {
-  const url = 'www.labinhand.com.tw/FUNshop.html';
+  const url = 'http://www.labinhand.com.tw/FUNshop.html';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -335,7 +332,7 @@ _launchURLCustomerService() async {
 }
 
 _launchURLMap() async {
-  const url = 'www.labinhand.com.tw/FUNmaps.html';
+  const url = 'http://www.labinhand.com.tw/FUNmaps.html';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
