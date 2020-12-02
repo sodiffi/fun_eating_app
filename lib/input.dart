@@ -152,7 +152,7 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 padding: EdgeInsets.all(10),
@@ -160,7 +160,7 @@ class InputPageState extends State<InputWidget> {
                 child: Text("檢測蔬果"),
               ),
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -187,7 +187,7 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -195,7 +195,7 @@ class InputPageState extends State<InputWidget> {
                 child: Text("來自/購買地區"),
               ),
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -222,7 +222,7 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -230,7 +230,7 @@ class InputPageState extends State<InputWidget> {
                 child: Text("時間"),
               ),
               Container(
-                width: 200,
+                width: 180,
                 height: 60,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),

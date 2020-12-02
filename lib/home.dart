@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/input.dart';
+import 'package:flutter_app/result.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -87,6 +88,12 @@ class HomeMenuState extends State<HomeMenu> {
             ),
           ),
         ),
+         // FlatButton(
+         //  onPressed: () {
+         //    Navigator.push(context,
+         //        MaterialPageRoute(builder: (context) => ResultPage(44)));
+         //  },
+         //  child: Text("123")),
         Spacer(flex: 3),
       ],
     );
@@ -105,7 +112,7 @@ class HomeMenuState extends State<HomeMenu> {
       // FlatButton(
       //     onPressed: () {
       //       Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => TestInputPage()));
+      //           MaterialPageRoute(builder: (context) => ResultPage(0.5)));
       //     },
       //     child: Text("輸入頁"))
     ];
@@ -115,7 +122,7 @@ class HomeMenuState extends State<HomeMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(5),
               child: FlatButton(
                 padding: EdgeInsets.zero,
                 onPressed: _launchURLKnowledge,
@@ -134,7 +141,7 @@ class HomeMenuState extends State<HomeMenu> {
                 ),
               )),
           Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(5),
               child: FlatButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {},
@@ -158,7 +165,7 @@ class HomeMenuState extends State<HomeMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(5),
               child: FlatButton(
                 padding: EdgeInsets.zero,
                 onPressed:_launchURLMap,
@@ -177,7 +184,7 @@ class HomeMenuState extends State<HomeMenu> {
                 ),
               )),
           Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(5),
               child: FlatButton(
                 padding: EdgeInsets.zero,
                 onPressed: _launchURLStore,

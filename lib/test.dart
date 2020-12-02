@@ -200,7 +200,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print("1:${(afterAvg[2] / beforeAvg[2])}");
           print("1:${(beforeAvg[0] / afterAvg[0])}");
           print("1:${(beforeAvg[1] / afterAvg[1])}");
-          print("rate ${rate}");          
+          print("rate ${rate}");
+          String r=rate.floor().toString() + "%";
+          String str="";
+
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => ResultPage(rate.isNaN?0:rate)));
         }
