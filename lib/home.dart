@@ -65,8 +65,8 @@ class HomeMenuState extends State<HomeMenu> {
               },
               child: Image.asset(
                 'images/setting.png',
-                height: 50.0,
-                width: 50.0,
+                height: MediaQuery.of(context).size.height * 0.03,
+                width: MediaQuery.of(context).size.height * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -81,19 +81,19 @@ class HomeMenuState extends State<HomeMenu> {
               onPressed: _launchURLCustomerService,
               child: Image.asset(
                 'images/customerService.png',
-                height: 50.0,
-                width: 50.0,
+                height: MediaQuery.of(context).size.height * 0.03,
+                width: MediaQuery.of(context).size.height * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
-         // FlatButton(
-         //  onPressed: () {
-         //    Navigator.push(context,
-         //        MaterialPageRoute(builder: (context) => ResultPage(44)));
-         //  },
-         //  child: Text("123")),
+        // FlatButton(
+        //  onPressed: () {
+        //    Navigator.push(context,
+        //        MaterialPageRoute(builder: (context) => ResultPage(44)));
+        //  },
+        //  child: Text("123")),
         Spacer(flex: 3),
       ],
     );
@@ -131,7 +131,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: 150,
+                      width: MediaQuery.of(context).size.height * 0.3,
                       fit: BoxFit.cover,
                     ),
                     Text(
@@ -150,7 +150,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: 150,
+                      width: MediaQuery.of(context).size.height * 0.3,
                       fit: BoxFit.cover,
                     ),
                     Text(
@@ -168,13 +168,13 @@ class HomeMenuState extends State<HomeMenu> {
               padding: EdgeInsets.all(5),
               child: FlatButton(
                 padding: EdgeInsets.zero,
-                onPressed:_launchURLMap,
+                onPressed: _launchURLMap,
                 child: Stack(
                   alignment: const Alignment(-0.2, -0.2),
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: 150,
+                      width: MediaQuery.of(context).size.height * 0.3,
                       fit: BoxFit.cover,
                     ),
                     Text(
@@ -193,7 +193,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: 150,
+                      width: MediaQuery.of(context).size.height * 0.3,
                       fit: BoxFit.cover,
                     ),
                     Text(
@@ -230,7 +230,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/testBox.png",
-                    width: 200,
+                    width: MediaQuery.of(context).size.height * 0.5,
                     fit: BoxFit.cover,
                   ),
                   Text(
@@ -274,26 +274,43 @@ class HomeMenuState extends State<HomeMenu> {
     } else {
       //橫立畫面
       return Container(
-          color: Theme.of(context).backgroundColor,
-          child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Column(
-              children: actionButton,
+        width: MediaQuery.of(context).size.height * 1,
+        color: Theme.of(context).backgroundColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15,25,0,0),
+              child: Column(
+                children: actionButton,
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                    Image.asset(
-                      "images/logo.png",
-                      width: 150,
-                    )
-                  ] +
-                  linkButtons,
+            Row(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                        Image.asset(
+                          "images/logo.png",
+                          width: MediaQuery.of(context).size.height * 0.3,
+                        )
+                      ] +
+                      linkButtons,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0,0,0,0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: txtAndTestBtn,
+                  ),
+                ),
+              ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: txtAndTestBtn,
-            )
-          ]));
+            Container(),
+            Container(),
+          ],
+        ),
+      );
     }
   }
 }
