@@ -1,16 +1,12 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
-import 'train.dart';
 import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-// ignore: must_be_immutable
+
 class TestInputPage extends StatelessWidget {
-  int testTime = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +23,7 @@ class TestInputPage extends StatelessWidget {
               bodyText1: TextStyle(fontSize: 20),
               bodyText2: TextStyle(fontSize: 20),
               subtitle1: TextStyle(fontSize: 20),
-              headline1: TextStyle(fontSize: 35, color: Colors.black))),
+              headline1: TextStyle(fontSize: 30, color: Colors.black))),
       home: Scaffold(
           backgroundColor: Color.fromRGBO(255, 245, 227, 1),
           body: Container(

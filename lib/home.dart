@@ -1,9 +1,6 @@
-// import 'dart:html';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/input.dart';
-import 'package:flutter_app/result.dart';
 import 'package:flutter_app/test.dart';
+import 'package:flutter_app/themeData.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,21 +8,7 @@ class HomeMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          fontFamily: "openhuninn",
-          backgroundColor: Color.fromRGBO(254, 246, 227, 1),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color.fromRGBO(254, 246, 227, 1),
-            shape: RoundedRectangleBorder(),
-            elevation: 0,
-          ),
-          textTheme: TextTheme(
-              bodyText1: TextStyle(fontSize: 20),
-              bodyText2: TextStyle(fontSize: 35),
-              subtitle1: TextStyle(fontSize: 35),
-              button: TextStyle(
-                fontSize: 20,
-              ))),
+      theme: ItemTheme.themeData,
       home: HomeMenu(),
       debugShowCheckedModeBanner: false,
     );
@@ -40,7 +23,7 @@ class HomeMenu extends StatefulWidget {
 }
 
 class HomeMenuState extends State<HomeMenu> {
-  int testTime = 5;
+  int testTime = 0;
   bool isStraight = false;
 
   @override
@@ -48,8 +31,8 @@ class HomeMenuState extends State<HomeMenu> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    main();
-
+// main();
+    double sizeHeight = MediaQuery.of(context).size.height;
     Widget homeButton = Flex(
       direction: Axis.horizontal,
       children: <Widget>[
@@ -65,8 +48,8 @@ class HomeMenuState extends State<HomeMenu> {
               },
               child: Image.asset(
                 'images/setting.png',
-                height: MediaQuery.of(context).size.height * 0.03,
-                width: MediaQuery.of(context).size.height * 0.03,
+                height: sizeHeight * 0.03,
+                width: sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -81,19 +64,13 @@ class HomeMenuState extends State<HomeMenu> {
               onPressed: _launchURLCustomerService,
               child: Image.asset(
                 'images/customerService.png',
-                height: MediaQuery.of(context).size.height * 0.03,
-                width: MediaQuery.of(context).size.height * 0.03,
+                height: sizeHeight * 0.03,
+                width: sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
           ),
         ),
-        // FlatButton(
-        //  onPressed: () {
-        //    Navigator.push(context,
-        //        MaterialPageRoute(builder: (context) => ResultPage(44)));
-        //  },
-        //  child: Text("123")),
         Spacer(flex: 3),
       ],
     );
@@ -109,12 +86,6 @@ class HomeMenuState extends State<HomeMenu> {
         child: Image.asset("images/customerService.png"),
         heroTag: "customerService",
       ),
-      // FlatButton(
-      //     onPressed: () {
-      //       Navigator.push(context,
-      //           MaterialPageRoute(builder: (context) => ResultPage(0.5)));
-      //     },
-      //     child: Text("輸入頁"))
     ];
 
     List<Widget> linkButtons = [
@@ -122,43 +93,41 @@ class HomeMenuState extends State<HomeMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-              padding: EdgeInsets.all(5),
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: _launchURLKnowledge,
-                child: Stack(
-                  alignment: const Alignment(-0.3, -0.3),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: MediaQuery.of(context).size.height * 0.3,
-                      fit: BoxFit.cover,
-                    ),
-                    Text(
-                      "農食小知識",
-                    )
-                  ],
-                ),
-              )),
+            padding: EdgeInsets.all(5),
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: _launchURLKnowledge,
+              child: Stack(
+                alignment: const Alignment(-0.3, -0.3),
+                children: [
+                  Image.asset(
+                    "images/txtBox.png",
+                    width: sizeHeight * 0.3,
+                    fit: BoxFit.cover,
+                  ),
+                  Text("農食小知識"),
+                ],
+              ),
+            ),
+          ),
           Padding(
-              padding: EdgeInsets.all(5),
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                child: Stack(
-                  alignment: const Alignment(-0.2, -0.2),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: MediaQuery.of(context).size.height * 0.3,
-                      fit: BoxFit.cover,
-                    ),
-                    Text(
-                      "檢測紀錄",
-                    )
-                  ],
-                ),
-              )),
+            padding: EdgeInsets.all(5),
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {},
+              child: Stack(
+                alignment: const Alignment(-0.2, -0.2),
+                children: [
+                  Image.asset(
+                    "images/txtBox.png",
+                    width: sizeHeight * 0.3,
+                    fit: BoxFit.cover,
+                  ),
+                  Text("檢測紀錄")
+                ],
+              ),
+            ),
+          ),
         ],
       ),
       Row(
@@ -174,34 +143,33 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: MediaQuery.of(context).size.height * 0.3,
+                      width: sizeHeight * 0.3,
                       fit: BoxFit.cover,
                     ),
-                    Text(
-                      "農食地圖",
-                    )
+                    Text("農食地圖"),
                   ],
                 ),
               )),
           Padding(
-              padding: EdgeInsets.all(5),
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: _launchURLStore,
-                child: Stack(
-                  alignment: const Alignment(-0.2, -0.2),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: MediaQuery.of(context).size.height * 0.3,
-                      fit: BoxFit.cover,
-                    ),
-                    Text(
-                      "放心店家",
-                    )
-                  ],
-                ),
-              ))
+            padding: EdgeInsets.all(5),
+            child: FlatButton(
+              padding: EdgeInsets.zero,
+              onPressed: _launchURLStore,
+              child: Stack(
+                alignment: const Alignment(-0.2, -0.2),
+                children: [
+                  Image.asset(
+                    "images/txtBox.png",
+                    width: sizeHeight * 0.3,
+                    fit: BoxFit.cover,
+                  ),
+                  Text(
+                    "放心店家",
+                  )
+                ],
+              ),
+            ),
+          )
         ],
       )
     ];
@@ -216,71 +184,61 @@ class HomeMenuState extends State<HomeMenu> {
         style: Theme.of(context).textTheme.bodyText2,
       ),
       Padding(
-          padding: EdgeInsets.all(15),
-          child: FlatButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (content) => CameraApp(0, cameras)));
-              },
-              padding: EdgeInsets.zero,
-              child: Stack(
-                alignment: const Alignment(0, 0),
-                children: [
-                  Image.asset(
-                    "images/testBox.png",
-                    width: MediaQuery.of(context).size.height * 0.5,
-                    fit: BoxFit.cover,
-                  ),
-                  Text(
-                    "開始檢測",
-                    style: Theme.of(context).textTheme.subtitle1,
-                  )
-                ],
-              )))
+        padding: EdgeInsets.all(15),
+        child: FlatButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (content) => CameraApp(0, cameras)));
+          },
+          padding: EdgeInsets.zero,
+          child: Stack(
+            alignment: const Alignment(0, 0),
+            children: [
+              Image.asset(
+                "images/testBox.png",
+                width: sizeHeight * 0.5,
+                fit: BoxFit.cover,
+              ),
+              Text(
+                "開始檢測",
+                style: Theme.of(context).textTheme.subtitle1,
+              )
+            ],
+          ),
+        ),
+      )
     ];
 
     //直立畫面
     if (isStraight) {
       return Container(
         color: Theme.of(context).backgroundColor,
-        child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(children: <Widget>[
+          homeButton,
+          Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              homeButton,
-              Center(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                      Image.asset(
-                        "images/logo_h.png",
-                        height: 50,
-                      )
-                    ] +
-                    txtAndTestBtn +
-                    linkButtons,
-              ))
-              // Row(
-              //   // mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: <Widget>[
-              //     Row(
-              //       children: actionButton,
-              //     )
-              //   ],
-              // ),
-            ]),
+                  Image.asset(
+                    "images/logo_h.png",
+                    height: 50,
+                  )
+                ] +
+                txtAndTestBtn +
+                linkButtons,
+          ))
+        ]),
       );
     } else {
       //橫立畫面
       return Container(
-        width: MediaQuery.of(context).size.height * 1,
+        width: sizeHeight * 1,
         color: Theme.of(context).backgroundColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(15,25,0,0),
+              padding: const EdgeInsets.fromLTRB(15, 25, 0, 0),
               child: Column(
                 children: actionButton,
               ),
@@ -292,13 +250,13 @@ class HomeMenuState extends State<HomeMenu> {
                   children: <Widget>[
                         Image.asset(
                           "images/logo.png",
-                          width: MediaQuery.of(context).size.height * 0.3,
+                          width: sizeHeight * 0.3,
                         )
                       ] +
                       linkButtons,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0,0,0,0),
+                  padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: txtAndTestBtn,
@@ -317,15 +275,15 @@ class HomeMenuState extends State<HomeMenu> {
 
 List<CameraDescription> cameras = [];
 
-Future<void> main() async {
-  // Fetch the available cameras before initializing the app.
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    logError(e.code, e.description);
-  }
-}
+// Future<void> main() async {
+//   // Fetch the available cameras before initializing the app.
+//   try {
+//     WidgetsFlutterBinding.ensureInitialized();
+//     cameras = await availableCameras();
+//   } on CameraException catch (e) {
+//     logError(e.code, e.description);
+//   }
+// }
 
 _launchURLKnowledge() async {
   const url = 'http://www.labinhand.com.tw/new.html';
