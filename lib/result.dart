@@ -60,7 +60,6 @@ class ResultState extends State<Result> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    String str = "123";
     // print(insideR<35);
     // if(insideR<=35) str="合格";
     // else if(insideR<=45) str="通知供應單位延期採收\n追蹤農民用藥";

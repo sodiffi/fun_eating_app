@@ -76,18 +76,18 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    controller.setFlashMode(FlashMode.off);
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
     if (state == AppLifecycleState.inactive) {
       controller?.dispose();
-      controller.setFlashMode(FlashMode.off);
+      
     } else if (state == AppLifecycleState.resumed) {
       if (controller != null) {
         onNewCameraSelected(controller.description);
-      }
-      controller.setFlashMode(FlashMode.off);
+      }      
     }
   }
 

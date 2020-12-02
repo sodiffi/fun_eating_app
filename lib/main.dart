@@ -1,33 +1,28 @@
-import 'dart:async';
-import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
 
-
-class Home extends StatelessWidget{
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   return Container(
-     color: Color.fromRGBO(255, 245, 227, 1),
-     child: Column(
-       mainAxisAlignment: MainAxisAlignment.center,
-       children: [
-         Image.asset(
-           "images/labinhome.png",
-           width: 100,
-         ),
-         FlatButton(
-             onPressed: () {
-               Navigator.pushNamed(context, '/begin');
-             },
-             child: Text("開始"))
-       ],
-     ),
-   );
+    return Container(
+      color: Color.fromRGBO(255, 245, 227, 1),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            "images/labinhome.png",
+            width: 100,
+          ),
+          FlatButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/begin');
+              },
+              child: Text("開始"))
+        ],
+      ),
+    );
   }
-
 }
-
 
 class HomePage extends StatelessWidget {
   @override
@@ -40,8 +35,7 @@ class HomePage extends StatelessWidget {
             shape: RoundedRectangleBorder(),
             elevation: 0,
           )),
-      home:
-      Navigator(
+      home: Navigator(
         onGenerateRoute: (settings) {
           WidgetBuilder builder;
           switch (settings.name) {
@@ -57,7 +51,6 @@ class HomePage extends StatelessWidget {
           return new MaterialPageRoute(builder: builder, settings: settings);
         },
       ),
-
 
       // home:Column(children: [],),
       debugShowCheckedModeBanner: false,

@@ -37,34 +37,7 @@ class _TestMenuPageState extends State<TestMenu> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    Widget homeButton = Flex(
-      direction: Axis.horizontal,
-      children: <Widget>[
-        Expanded(
-          // flex: 1,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
-            child: AspectRatio(
-              aspectRatio: 1 / 1,
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeMenuPage()));
-                },
-                child: Image.asset(
-                  'images/home.png',
-                  height: 50.0,
-                  width: 50.0,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Spacer(flex: 5),
-      ],
-    );
+    
 
     Widget buttonTrainBox = (Padding(
       padding: EdgeInsets.all(10),
