@@ -95,15 +95,15 @@ class InputPageState extends State<InputWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
-          ),
+         
           Flex(
             direction: Axis.horizontal,
+            
             children: <Widget>[
               Expanded(
                 flex: isStraight ? 2 : 1,
                 child: FlatButton(
+                  
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     Navigator.push(
