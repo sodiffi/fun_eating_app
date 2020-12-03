@@ -5,9 +5,7 @@ import 'package:flutter_better_camera/camera.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 class TestInputPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -89,34 +87,36 @@ class InputPageState extends State<InputWidget> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
+    double sizeHeight = isStraight
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height;
     main();
-    if(isStraight){
-      return table();
-    }
-    else{
-      return table();
-    }
-  }
-
-  Widget table(){
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+         
           Flex(
             direction: Axis.horizontal,
+            
             children: <Widget>[
               Expanded(
                 flex: isStraight ? 2 : 1,
-                child: FloatingActionButton(
+                child: FlatButton(
+                  
+                  padding: EdgeInsets.zero,
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => HomeMenuPage()));
                   },
-                  child: Image.asset("images/home.png"),
-                  heroTag: "home",
+                  child: Image.asset(
+                    'images/home.png',
+                    height: 45,
+                    width: 45,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               Spacer(flex: 8),
@@ -149,7 +149,7 @@ class InputPageState extends State<InputWidget> {
             children: [
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 padding: EdgeInsets.all(10),
                 decoration: boxDecoration,
@@ -157,7 +157,7 @@ class InputPageState extends State<InputWidget> {
               ),
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -184,7 +184,7 @@ class InputPageState extends State<InputWidget> {
             children: [
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -192,7 +192,7 @@ class InputPageState extends State<InputWidget> {
               ),
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -219,7 +219,7 @@ class InputPageState extends State<InputWidget> {
             children: [
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -227,7 +227,7 @@ class InputPageState extends State<InputWidget> {
               ),
               Container(
                 width: 180,
-                height: 60,
+                height: 45,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -260,8 +260,6 @@ class InputPageState extends State<InputWidget> {
     );
   }
 }
-
-
 
 List<CameraDescription> cameras = [];
 

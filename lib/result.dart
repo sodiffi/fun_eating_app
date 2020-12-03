@@ -96,9 +96,10 @@ class ResultState extends State<Result> {
                   Text(
                     rate,
                     style: new TextStyle(
-                        fontSize: 50,
-                        decoration: TextDecoration.none,
-                        color: Color.fromRGBO(153, 87, 37, 1)),
+                      fontSize: 50,
+                      decoration: TextDecoration.none,
+                      color: Color.fromRGBO(153, 87, 37, 1),
+                    ),
                   )
                 ],
               ),
@@ -119,7 +120,15 @@ class ResultState extends State<Result> {
                         ],
                       ),
                       Text(
-                        content, style: Theme.of(context).textTheme.bodyText1,
+                        content,
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: num < 35
+                              ? Colors.green
+                              : (num < 45 ? Colors.amber : Colors.red),
+                          decoration: TextDecoration.none,
+                        ),
+
                         // rate < 35
                         //     ? "合格"
                         //     : rate < 45
@@ -137,8 +146,10 @@ class ResultState extends State<Result> {
       return Container(
         color: Color.fromRGBO(255, 245, 227, 1),
         child: Column(
+
             // mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(padding: EdgeInsets.fromLTRB(15, 10, 0, 0),),
               Row(
                 children: [
                   FloatingActionButton(
@@ -172,6 +183,8 @@ class ResultState extends State<Result> {
                               rate,
                               style: new TextStyle(
                                 fontSize: 50,
+                                decoration: TextDecoration.none,
+                                color: Color.fromRGBO(153, 87, 37, 1),
                               ),
                             )
                           ],
@@ -187,14 +200,22 @@ class ResultState extends State<Result> {
                           Image.asset("images/share.png"),
                         ],
                       ),
-                      Text(content
-                          // (rate<35
-                          //     ? "合格"
-                          //     :(rate<45
-                          //         ? "通知供應單位延期採收\n追蹤農民用藥"
-                          //         : "銷毀或\n將樣品送衛生局複檢")),
-                          // style: new TextStyle(fontSize: 45),
-                          )
+                      Text(
+                        content,
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: num < 35
+                              ? Colors.green
+                              : (num < 45 ? Colors.amber : Colors.red),
+                          decoration: TextDecoration.none,
+                        ),
+                        // (rate<35
+                        //     ? "合格"
+                        //     :(rate<45
+                        //         ? "通知供應單位延期採收\n追蹤農民用藥"
+                        //         : "銷毀或\n將樣品送衛生局複檢")),
+                        // style: new TextStyle(fontSize: 45),
+                      )
                     ],
                   ),
                 ],

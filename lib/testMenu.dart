@@ -37,7 +37,9 @@ class _TestMenuPageState extends State<TestMenu> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    
+    double sizeHeight = isStraight
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height;
 
     Widget buttonTrainBox = (Padding(
       padding: EdgeInsets.all(10),
@@ -68,34 +70,36 @@ class _TestMenuPageState extends State<TestMenu> {
         ),
       ),
     ));
-    Widget buttonTestBox = (Padding(
-        padding: EdgeInsets.all(10),
-        child: Container(
+    Widget buttonTestBox = Padding(
+      padding: EdgeInsets.all(10),
+      child: Container(
+        padding: EdgeInsets.zero,
+        child: FlatButton(
           padding: EdgeInsets.zero,
-          child: FlatButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => TestInputPage()));
-            },
-            child: Stack(
-              alignment: const Alignment(0, 0),
-              children: [
-                Image.asset(
-                  'images/testBox.png',
-                  width: isStraight
-                      ? MediaQuery.of(context).size.height * 0.3
-                      : MediaQuery.of(context).size.height * 0.5,
-                  height: isStraight
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => TestInputPage()));
+          },
+          child: Stack(
+            alignment: const Alignment(0, 0),
+            children: [
+              Image.asset(
+                'images/testBox.png',
+                width: isStraight
                     ? MediaQuery.of(context).size.height * 0.3
-                    : MediaQuery.of(context).size.height * 0.5 ,
-                  fit: BoxFit.cover,
-                ),
-                Text('開始檢測')
-              ],
-            ),
+                    : MediaQuery.of(context).size.height * 0.5,
+                height: isStraight
+                    ? MediaQuery.of(context).size.height * 0.3
+                    : MediaQuery.of(context).size.height * 0.5,
+                fit: BoxFit.cover,
+              ),
+              Text('開始檢測')
+            ],
           ),
-        )));
+        ),
+      ),
+    );
+
 
     return Container(
       color: Theme.of(context).backgroundColor,
@@ -106,12 +110,28 @@ class _TestMenuPageState extends State<TestMenu> {
                   direction: Axis.horizontal,
                   children: <Widget>[
                     Expanded(
-                      // flex: 1,
+                      flex: 1,
                       child: Padding(
                         padding:
-                            EdgeInsets.fromLTRB(0, isStraight ? 25 : 0, 0, 0),
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
+                            EdgeInsets.fromLTRB(0, 25, 0, 0),
+                        // child: AspectRatio(
+                        //   aspectRatio: 1 / 1,
+                        //   child: FlatButton(
+                        //     padding: EdgeInsets.zero,
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(
+                        //               builder: (context) => HomeMenuPage()));
+                        //     },
+                        //     child: Image.asset(
+                        //       'images/home.png',
+                        //       height: 50,
+                        //       width: 50,
+                        //       fit: BoxFit.fill,
+                        //     ),
+                        //   ),
+                        // ),
                           child: FlatButton(
                             padding: EdgeInsets.zero,
                             onPressed: () {
@@ -122,12 +142,11 @@ class _TestMenuPageState extends State<TestMenu> {
                             },
                             child: Image.asset(
                               'images/home.png',
-                              height: 50.0,
-                              width: 50.0,
-                              fit: BoxFit.fill,
+                              height: isStraight ? 50 : sizeHeight * 0.15,
+                              width: isStraight ? 50 : sizeHeight * 0.15,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
                       ),
                     ),
                     Spacer(flex: isStraight ? 5 : 6),

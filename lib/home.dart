@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/test.dart';
-import 'package:flutter_app/themeData.dart';
+import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,15 +31,17 @@ class HomeMenuState extends State<HomeMenu> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-// main();
-    double sizeHeight = MediaQuery.of(context).size.height;
+    main();
+    double sizeHeight = isStraight
+        ? MediaQuery.of(context).size.width
+        : MediaQuery.of(context).size.height;
     Widget homeButton = Flex(
       direction: Axis.horizontal,
       children: <Widget>[
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 25, 0, 25),
+            padding: const EdgeInsets.fromLTRB(25, 50, 0, 25),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -48,8 +50,8 @@ class HomeMenuState extends State<HomeMenu> {
               },
               child: Image.asset(
                 'images/setting.png',
-                height: sizeHeight * 0.03,
-                width: sizeHeight * 0.03,
+                height: isStraight ? 50 : sizeHeight * 0.03,
+                width: isStraight ? 50 : sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -58,14 +60,14 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 25, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 25),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: _launchURLCustomerService,
               child: Image.asset(
                 'images/customerService.png',
-                height: sizeHeight * 0.03,
-                width: sizeHeight * 0.03,
+                height: isStraight ? 50 : sizeHeight * 0.03,
+                width: isStraight ? 50 : sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -102,7 +104,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.35,
                     fit: BoxFit.cover,
                   ),
                   Text("農食小知識"),
@@ -120,7 +122,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.35,
                     fit: BoxFit.cover,
                   ),
                   Text("檢測紀錄")
@@ -143,7 +145,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: sizeHeight * 0.3,
+                      width: sizeHeight * 0.35,
                       fit: BoxFit.cover,
                     ),
                     Text("農食地圖"),
@@ -160,7 +162,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.35,
                     fit: BoxFit.cover,
                   ),
                   Text(
@@ -275,15 +277,15 @@ class HomeMenuState extends State<HomeMenu> {
 
 List<CameraDescription> cameras = [];
 
-// Future<void> main() async {
-//   // Fetch the available cameras before initializing the app.
-//   try {
-//     WidgetsFlutterBinding.ensureInitialized();
-//     cameras = await availableCameras();
-//   } on CameraException catch (e) {
-//     logError(e.code, e.description);
-//   }
-// }
+Future<void> main() async {
+  // Fetch the available cameras before initializing the app.
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    logError(e.code, e.description);
+  }
+}
 
 _launchURLKnowledge() async {
   const url = 'http://www.labinhand.com.tw/new.html';

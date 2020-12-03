@@ -55,7 +55,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     step = s;
     if (s == 0) {
       startCheck();
-      print(cameras.length);
+      print("cameras length"+cameras.length.toString());
     } else {
       startTest();
     }
@@ -198,8 +198,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
                   (beforeAvg[0] / afterAvg[0]) *
                   (beforeAvg[1] / afterAvg[1]));
           print("1:${(afterAvg[2] / beforeAvg[2])}");
-          print("1:${(beforeAvg[0] / afterAvg[0])}");
-          print("1:${(beforeAvg[1] / afterAvg[1])}");
+          print("2:${(beforeAvg[0] / afterAvg[0])}");
+          print("3:${(beforeAvg[1] / afterAvg[1])}");
           print("rate ${rate}");
           String r=rate.floor().toString() + "%";
           String str="";
@@ -212,8 +212,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   }
 
   List getData(List data) {
-    print(data.length);
-    print(beforeList.length);
     List<double> rList = new List();
     List<double> gList = new List();
     List<double> bList = new List();
@@ -221,7 +219,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     int countTime = 0;
     //計算斜率
     for (int i = 1; i < data.length; i++) {
-      print(data[i - 1][0]);
       rList.add(data[i][0] - data[i - 1][0]);
       gList.add(data[i][1] - data[i - 1][1]);
       bList.add(data[i][2] - data[i - 1][2]);
