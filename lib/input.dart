@@ -90,8 +90,14 @@ class InputPageState extends State<InputWidget> {
     double sizeHeight = isStraight
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height;
+
+    double sizeWidth = isStraight
+        ? MediaQuery.of(context).size.height
+        : MediaQuery.of(context).size.width;
+
     main();
     return Container(
+      height: sizeHeight,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -138,7 +144,7 @@ class InputPageState extends State<InputWidget> {
                   "檢測小筆記",
                   style: Theme.of(context).textTheme.headline1,
                 ),
-                flex: 2,
+                flex: 3,
               ),
               isStraight ? Container() : Spacer(flex: 2)
             ],
@@ -148,16 +154,16 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 padding: EdgeInsets.all(10),
                 decoration: boxDecoration,
                 child: Text("檢測蔬果"),
               ),
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -183,16 +189,16 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
                 child: Text("來自/購買地區"),
               ),
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 padding: EdgeInsets.all(0),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
@@ -218,16 +224,16 @@ class InputPageState extends State<InputWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
                 child: Text("時間"),
               ),
               Container(
-                width: 180,
-                height: 45,
+                width: sizeWidth*0.38,
+                height: sizeHeight*0.14,
                 padding: EdgeInsets.all(10),
                 margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 decoration: boxDecoration,
