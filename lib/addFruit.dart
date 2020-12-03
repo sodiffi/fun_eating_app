@@ -1,6 +1,5 @@
-// import 'dart:html';
-
 import 'dart:ui';
+import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -16,44 +15,46 @@ class AddFruit extends StatelessWidget {
   Widget build(BuildContext context) {
     main();
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            fontFamily: "openhuninn",
-            floatingActionButtonTheme: FloatingActionButtonThemeData(
-              backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-              shape: RoundedRectangleBorder(),
-              elevation: 0,
-            )),
-        home: Scaffold(
-            backgroundColor: Color.fromRGBO(254, 246, 227, 1),
-            body: Center(
-                child: Stack(alignment: const Alignment(0, 0.7), children: [
+      debugShowCheckedModeBanner: false,
+      theme: ItemTheme.themeData,
+      home: Scaffold(
+        backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+        body: Center(
+          child: Stack(
+            alignment: const Alignment(0, 0.7),
+            children: [
               Image.asset("images/prompt.png"),
               FlatButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CameraApp.second(2, cameras, before)));
-                  },
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      border: new Border.all(
-                          color: Color.fromRGBO(248, 203, 173, 1), width: 5),
-                      color: Color.fromRGBO(255, 242, 204, 1),
-                      shape: BoxShape.rectangle,
-                      borderRadius: new BorderRadius.circular(15),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CameraApp.second(2, cameras, before),
                     ),
-                    child: Text(
-                      "繼續檢測",
-                      style: TextStyle(
-                          fontSize: 25, color: Color.fromRGBO(105, 57, 8, 1)),
-                    ),
-                    padding: EdgeInsets.all(5),
-                    
-                  ))
-            ]))));
+                  );
+                },
+                child: Container(
+                  decoration: new BoxDecoration(
+                    border: new Border.all(
+                        color: Color.fromRGBO(248, 203, 173, 1), width: 5),
+                    color: Color.fromRGBO(255, 242, 204, 1),
+                    shape: BoxShape.rectangle,
+                    borderRadius: new BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    "繼續檢測",
+                    style: TextStyle(
+                        fontSize: 25, color: Color.fromRGBO(105, 57, 8, 1)),
+                  ),
+                  padding: EdgeInsets.all(5),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
