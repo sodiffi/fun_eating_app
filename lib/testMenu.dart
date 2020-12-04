@@ -100,7 +100,6 @@ class _TestMenuPageState extends State<TestMenu> {
       ),
     );
 
-
     return Container(
       color: Theme.of(context).backgroundColor,
       child: SizedBox(
@@ -112,8 +111,7 @@ class _TestMenuPageState extends State<TestMenu> {
                     Expanded(
                       flex: 1,
                       child: Padding(
-                        padding:
-                            EdgeInsets.fromLTRB(0, 25, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
                         // child: AspectRatio(
                         //   aspectRatio: 1 / 1,
                         //   child: FlatButton(
@@ -132,21 +130,21 @@ class _TestMenuPageState extends State<TestMenu> {
                         //     ),
                         //   ),
                         // ),
-                          child: FlatButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeMenuPage()));
-                            },
-                            child: Image.asset(
-                              'images/home.png',
-                              height: isStraight ? 50 : sizeHeight * 0.15,
-                              width: isStraight ? 50 : sizeHeight * 0.15,
-                              fit: BoxFit.cover,
-                            ),
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeMenuPage()));
+                          },
+                          child: Image.asset(
+                            'images/home.png',
+                            height: isStraight ? 50 : sizeHeight * 0.15,
+                            width: isStraight ? 50 : sizeHeight * 0.15,
+                            fit: BoxFit.cover,
                           ),
+                        ),
                       ),
                     ),
                     Spacer(flex: isStraight ? 5 : 6),
@@ -160,15 +158,32 @@ class _TestMenuPageState extends State<TestMenu> {
                         child: Flex(
                           direction: Axis.vertical,
                           children: [
-                            Expanded(flex: 1, child: buttonTrainBox),
-                            Expanded(flex: 1, child: buttonTestBox),
+                            Spacer(flex: 1),
+                            Expanded(
+                              flex: 9,
+                              child: Column(
+                                children: [
+                                  buttonTrainBox,
+                                  buttonTestBox,
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ]
                   : [
                       Row(
-                        children: [buttonTrainBox, buttonTestBox],
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.02),
+                              child: buttonTrainBox),
+                          Padding(
+                              padding: EdgeInsets.all(
+                                  MediaQuery.of(context).size.width * 0.02),
+                              child: buttonTestBox)
+                        ],
                         mainAxisAlignment: MainAxisAlignment.center,
                       ),
                     ]),

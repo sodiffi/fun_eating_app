@@ -80,7 +80,10 @@ class HomeMenuState extends State<HomeMenu> {
     List<Widget> actionButton = [
       FloatingActionButton(
         onPressed: () {},
-        child: Image.asset("images/setting.png"),
+        child: Image.asset(
+          "images/setting.png",
+          width: sizeHeight*0.3,
+          ),
         heroTag: "setting",
       ),
       FloatingActionButton(
@@ -104,7 +107,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.35,
+                    width: sizeHeight * 0.3,
                     fit: BoxFit.cover,
                   ),
                   Text("農食小知識"),
@@ -122,7 +125,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.35,
+                    width: sizeHeight * 0.3,
                     fit: BoxFit.cover,
                   ),
                   Text("檢測紀錄")
@@ -145,7 +148,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: sizeHeight * 0.35,
+                      width: sizeHeight * 0.3,
                       fit: BoxFit.cover,
                     ),
                     Text("農食地圖"),
@@ -162,7 +165,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.35,
+                    width: sizeHeight * 0.3,
                     fit: BoxFit.cover,
                   ),
                   Text(
@@ -198,7 +201,7 @@ class HomeMenuState extends State<HomeMenu> {
             children: [
               Image.asset(
                 "images/testBox.png",
-                width: sizeHeight * 0.5,
+                width: sizeHeight * 0.45,
                 fit: BoxFit.cover,
               ),
               Text(
@@ -240,7 +243,7 @@ class HomeMenuState extends State<HomeMenu> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(15, 25, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 25, 0, 0),
               child: Column(
                 children: actionButton,
               ),
