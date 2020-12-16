@@ -2,15 +2,19 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_app/addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/result.dart';
 import 'testMenu.dart';
+import 'package:csv/csv.dart';
+import 'package:simple_permissions/simple_permissions.dart';
+import 'package:path_provider/path_provider.dart';
 
 List<CameraDescription> cameras = [];
 List beforeAvg;
 List afterAvg;
+List beforeL;
+
 // int step;
 
 class CameraHome extends StatefulWidget {
@@ -36,11 +40,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   List beforeList = new List();
   List afterList = new List();
   //測驗時間210
-  int testTime = 210;
+  int testTime = 21;
   //裝置穩定性檢查時間15
-  int checkTime = 15;
+  int checkTime = 3;
   //在測驗時間中，不要讀取圖片的時間30
-  int notGetImgTime = 30;
+  int notGetImgTime = 3;
   bool getImg = false;
   // bool firstStepEnd = false;
   int step = 0;
@@ -55,7 +59,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     step = s;
     if (s == 0) {
       startCheck();
-      print("cameras length"+cameras.length.toString());
+      print("cameras length" + cameras.length.toString());
     } else {
       startTest();
     }
@@ -71,7 +75,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    controller.setFlashMode(FlashMode.off);
+    // controller.setFlashMode(FlashMode.off);
   }
 
   @override
@@ -83,11 +87,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     }
     if (state == AppLifecycleState.inactive) {
       controller?.dispose();
-      
     } else if (state == AppLifecycleState.resumed) {
       if (controller != null) {
         onNewCameraSelected(controller.description);
-      }      
+      }
     }
   }
 
@@ -145,6 +148,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         }
         timer.cancel();
         controller.setFlashMode(FlashMode.off);
+        controller.dispose();
         Navigator.push(
             cc, MaterialPageRoute(builder: (context) => TestMenuPage()));
       }
@@ -166,6 +170,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       setState(() {
         min = ((timer.tick + (step == 2 ? 210 : 0)) / 60).floor().toString();
         second = ((timer.tick + (step == 2 ? 210 : 0)) % 60).floor().toString();
+        if (second.length == 1) second = "0" + second;
       });
       print("${step} ${timer.tick}");
       if (timer.tick > notGetImgTime) {
@@ -189,9 +194,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
               backgroundColor: Colors.grey,
               textColor: Colors.white,
               fontSize: 16.0);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddFruit(beforeAvg)));
+          Navigator.push(cc,
+              MaterialPageRoute(builder: (context) => AddFruit(beforeList)));
         } else {
+          beforeAvg = getData(beforeL);
           afterAvg = getData(afterList);
           double rate = 1 -
               ((afterAvg[2] / beforeAvg[2]) *
@@ -201,11 +207,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print("2:${(beforeAvg[0] / afterAvg[0])}");
           print("3:${(beforeAvg[1] / afterAvg[1])}");
           print("rate ${rate}");
-          String r=rate.floor().toString() + "%";
-          String str="";
-
+          // getCsv(rate, afterList);
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ResultPage(rate.isNaN?0:rate)));
+              cc,
+              MaterialPageRoute(
+                  builder: (context) => ResultPage(rate.isNaN ? 0 : rate,beforeList,afterList)));
         }
       }
     });
@@ -258,34 +264,32 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
                   padding: const EdgeInsets.all(1.0),
                   child: Center(
                       child: Stack(
-                        alignment: Alignment(0.9,0.7),
+                    alignment: Alignment(0.9, 0.7),
                     children: [
                       Image.asset("images/seal.gif"),
-                      Container(decoration: new BoxDecoration(
-                        
-                        border :new Border.all(color:Color.fromRGBO(248, 203, 173, 1),width: 5),
-                            color:Color.fromRGBO(255, 242, 204, 1),
-                        shape: BoxShape.rectangle,
-                        borderRadius: new BorderRadius.circular(15),
+                      Container(
+                        decoration: new BoxDecoration(
+                          border: new Border.all(
+                              color: Color.fromRGBO(248, 203, 173, 1),
+                              width: 5),
+                          color: Color.fromRGBO(255, 242, 204, 1),
+                          shape: BoxShape.rectangle,
+                          borderRadius: new BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          "${min}:${second}",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(105, 57, 8, 1)),
+                        ),
+                        padding: EdgeInsets.all(5),
                       ),
-                      child: Text("${min}:${second}",style: TextStyle(fontSize: 20,color: Color.fromRGBO(105, 57, 8, 1)),),
-                      padding: EdgeInsets.all(5),),
-                      
-                      // CircleAvatar(
-                      //   child: Text("${min}:${second}"),
-                      //   backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-                      // ),
+
+
                     ],
                   )),
                 ),
-                // decoration: BoxDecoration(
-                //   border: Border.all(
-                //     color: controller != null && controller.value.isRecordingVideo
-                //         ? Colors.redAccent
-                //         : Colors.grey,
-                //     width: 3.0,
-                //   ),
-                // ),
+
               ),
             ),
           ],
@@ -346,7 +350,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
             checkList.add([r, g, b]);
           } else if (step == 1) {
             beforeList.add([r, g, b]);
-            print(beforeList.length);
           } else {
             afterList.add([r, g, b]);
           }
@@ -356,6 +359,54 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print(">>>>>>>>>>>> ERROR:" + e.toString());
         }
       }
+    }
+  }
+
+  getCsv(double rate, List afterL) async {
+    //create an element rows of type list of list. All the above data set are stored in associate list
+//Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
+
+    List<List<dynamic>> rows = List<List<dynamic>>();
+    for (int i = 0; i < beforeL.length; i++) {
+      List<dynamic> row = List();
+      row.add(i);
+      row.addAll(beforeL[i]);
+      rows.add(row);
+    }
+    rows.add(["----", "----", "----", "----"]);
+    for (int i = 0; i < afterL.length; i++) {
+      List<dynamic> row = List();
+      row.add(i);
+      row.addAll(afterL[i]);
+      rows.add(row);
+    }
+    rows.add(["----", "----", "----", "----"]);
+    rows.add(["rate", rate]);
+
+//     for (int i = 0; i < associateList.length; i++) {
+// //row refer to each column of a row in csv file and rows refer to each row in a file
+//       List<dynamic> row = List();
+//       row.add(associateList[i].name);
+//       row.add(associateList[i].gender);
+//       row.add(associateList[i].age);
+//       rows.add(row);
+//     }
+
+    await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
+    bool checkPermission = await SimplePermissions.checkPermission(
+        Permission.WriteExternalStorage);
+    if (checkPermission) {
+//store file in documents folder
+
+      String dir = (await getExternalStorageDirectory()).absolute.path +
+          "/fun_heart_eating";
+      // file = "$dir";
+      File f = new File(dir + "filename.csv");
+
+// convert rows to String and write as csv file
+
+      String csv = const ListToCsvConverter().convert(rows);
+      f.writeAsString(csv);
     }
   }
 
@@ -403,10 +454,9 @@ class CameraApp extends StatelessWidget {
   CameraApp.second(int s, List<CameraDescription> c, List b) {
     step = s;
     cameras = c;
-    beforeAvg = b;
+    beforeL = b;
     print("from second ${b.first}");
   }
-
 
   @override
   Widget build(BuildContext context) {

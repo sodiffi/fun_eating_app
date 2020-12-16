@@ -1,32 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
 import 'package:flutter/services.dart';
-
+import 'package:flutter_app/itemTheme.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Timer.periodic(
+      Duration(seconds: 5),
+      (timer) => {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false)
+      },
+    );
+
     return Container(
       color: Color.fromRGBO(255, 245, 227, 1),
-      child: FlatButton(
-        onPressed: ()=>{Navigator.pushNamed(context, '/begin')},
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Image.asset(
-                "images/labinhome.png",
-                width: 100,
-              ),
-            ),
-            Text("開始"),
-            // FlatButton(
-            //     onPressed: () {
-            //       Navigator.pushNamed(context, '/begin');
-            //     },
-            //     child: Text("開始"))
-          ],
+      child: Center(
+        child: Image.asset(
+          "images/labinhome.png",
+          width: 100,
+          height: 100,
         ),
       ),
     );
@@ -38,13 +34,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     return MaterialApp(
-      theme: ThemeData(
-          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-            shape: RoundedRectangleBorder(),
-            elevation: 0,
-          )),
+      theme: ItemTheme.themeData,
       home: Navigator(
         onGenerateRoute: (settings) {
           WidgetBuilder builder;
@@ -55,14 +45,13 @@ class HomePage extends StatelessWidget {
             case '/begin':
               builder = (_) => HomeMenuPage();
               break;
+
             default:
               throw new Exception('路由名稱有誤: ${settings.name}');
           }
           return new MaterialPageRoute(builder: builder, settings: settings);
         },
       ),
-
-      // home:Column(children: [],),
       debugShowCheckedModeBanner: false,
     );
   }

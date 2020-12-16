@@ -8,7 +8,8 @@
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
@@ -16,10 +17,10 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="io.flutter.app.FlutterApplication"  
         android:label="Fun心吃"
         android:icon="@mipmap/ic_launcher">
-
+        android:requestLegacyExternalStorage="true"
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
