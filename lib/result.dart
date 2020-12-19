@@ -20,7 +20,7 @@ class ResultPage extends StatelessWidget {
     rate = result.floor().toString() + "%";
     before=b;
     after=a;
-    getCsv();
+    // getCsv();
     if (result <= 35)
       content = "合格";
     else if (result <= 45)
