@@ -26,6 +26,7 @@ class AddFruit extends StatelessWidget {
               Image.asset("images/prompt.png"),
               FlatButton(
                 onPressed: () {
+                  print("addFruit"+before.length.toString());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
