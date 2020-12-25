@@ -39,6 +39,8 @@ dev_dependencies:
   url_launcher_web: ^0.1.0
   csv: ^4.1.0
   simple_permissions: ^0.1.9
+  permission_handler: ^5.0.1+1
+
 
 
 

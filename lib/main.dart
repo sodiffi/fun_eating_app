@@ -10,9 +10,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     Timer.periodic(
       Duration(seconds: 5),
-      (timer) => {
+      (timer)  {
+        print("timer");
         Navigator.of(context)
-            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false)
+            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
+
+        timer.cancel();
+
       },
     );
 

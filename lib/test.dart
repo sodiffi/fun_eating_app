@@ -9,6 +9,7 @@ import 'testMenu.dart';
 import 'package:csv/csv.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:path_provider/path_provider.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 List<CameraDescription> cameras = [];
 List beforeAvg;
@@ -149,7 +150,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         timer.cancel();
         controller.setFlashMode(FlashMode.off);
         controller.dispose();
-        Navigator.push(
+        Navigator.pushReplacement(
             cc, MaterialPageRoute(builder: (context) => TestMenuPage()));
       }
       getImg = true;
@@ -180,25 +181,33 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         timer.cancel();
         controller.setFlashMode(FlashMode.off);
         if (step == 1) {
+          print("before List"+beforeList.toString());
           beforeAvg = getData(beforeList);
           //酵素棒似乎有問題，請更換酵素棒，再試一次
-          String msg = "請做第七步驟";
           if (beforeAvg[2] > 0.008) {
-            msg = "酵素棒似乎有問題，請更換酵素棒，再試一次" + msg;
+            Fluttertoast.showToast(
+                msg: "酵素棒似乎有問題，請更換酵素棒，再試一次",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0);
           }
-          Fluttertoast.showToast(
-              msg: msg,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 16.0);
+
+
           Navigator.push(cc,
               MaterialPageRoute(builder: (context) => AddFruit(beforeList)));
         } else {
           beforeAvg = getData(beforeL);
           afterAvg = getData(afterList);
+          print("-------first finish-------");
+          print(beforeL.length);
+          print("-------");
+          print(beforeAvg);
+          print("-------");
+          print(afterAvg);
+          print("-------first finish-------");
           double rate = 1 -
               ((afterAvg[2] / beforeAvg[2]) *
                   (beforeAvg[0] / afterAvg[0]) *
@@ -207,11 +216,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           print("2:${(beforeAvg[0] / afterAvg[0])}");
           print("3:${(beforeAvg[1] / afterAvg[1])}");
           print("rate ${rate}");
-          // getCsv(rate, afterList);
+          print("beforeList ${beforeList.length}");
+          print("afterList ${afterList.length}");
           Navigator.push(
               cc,
               MaterialPageRoute(
-                  builder: (context) => ResultPage(rate.isNaN ? 0 : rate,beforeList,afterList)));
+                  builder: (context) => ResultPage(rate.isNaN ? 0 : rate,beforeL,afterList)));
         }
       }
     });
@@ -223,26 +233,34 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     List<double> bList = new List();
     List<double> result = [0, 0, 0];
     int countTime = 0;
+    print("data"+data.toString());
     //計算斜率
     for (int i = 1; i < data.length; i++) {
       rList.add(data[i][0] - data[i - 1][0]);
       gList.add(data[i][1] - data[i - 1][1]);
       bList.add(data[i][2] - data[i - 1][2]);
+      print("count "+(data[i][2] - data[i - 1][2]).toString());
     }
     //排序
+    print(bList);
     bList.sort();
     //取中間25%~75%的資料
     for (int i = (bList.length * 0.25).floor();
         i < (bList.length * 0.75).floor();
         i++) {
+
       result[0] += rList[i];
       result[1] += gList[i];
       result[2] += bList[i];
       countTime++;
+      print("result "+i.toString()+result.toString());
     }
+    print("countTime"+countTime.toString());
     result[0] = result[0] / countTime;
     result[1] /= countTime;
     result[2] /= countTime;
+
+
     return result;
   }
 
@@ -438,7 +456,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   }
 
   void _showCameraException(CameraException e) {
+    print("--------");
+    print("camera exception");
     logError(e.code, e.description);
+    print("--------");
     // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
