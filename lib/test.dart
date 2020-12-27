@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_app/addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/result.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
+
+
 // import 'package:permission_handler/permission_handler.dart';
 
 
@@ -45,32 +48,32 @@ class CameraHome extends StatefulWidget {
 
 class TestState extends State<CameraHome> with WidgetsBindingObserver {
   CameraController controller;
+  //啟用音效(暫不使用)
   bool enableAudio = true;
   List checkList = new List();
-
-
   //測驗時間210
   int testTime = 10;
-
   //裝置穩定性檢查時間15
   int checkTime = 3;
-
   //在測驗時間中，不要讀取圖片的時間30
   int notGetImgTime = 3;
+  //讀取圖片
   bool getImg = false;
+  /*
+  0-裝置位置及穩定性檢測
+  1-第一階段檢測
+  2-第二階段檢測
+  */
   int step = 0;
   BuildContext cc;
   String min = "";
   String second = "";
   DataBean dataBean = new DataBean();
 
-  //0-裝置位置及穩定性檢測
-  //1-第一階段檢測
-  //2-第二階段檢測
+
   TestState(DataBean d) {
     dataBean = d;
     step = dataBean.step;
-
     if (dataBean.step == 0) {
       startCheck();
     } else {
@@ -124,6 +127,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         backgroundColor: Colors.grey,
         textColor: Colors.white,
         fontSize: 16.0);
+
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (timer.tick == checkTime) {
         String msg = "";
@@ -176,7 +180,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   /* 第二、三步驟 測驗*/
   void startTest() {
-    onNewCameraSelected(dataBean.cameras[0]);//開相機
+    //開相機
+    onNewCameraSelected(dataBean.cameras[0]);
     Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         min = ((timer.tick + (step == 2 ? 210 : 0)) / 60).floor().toString();
@@ -322,8 +327,14 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   // }
 
   void getRGB(CameraImage image) async {
+    
     if (getImg) {
       if (Platform.isAndroid) {
+
+
+
+
+
         try {
           final int width = image.width;
           final int height = image.height;
@@ -332,7 +343,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           double r = 0;
           double g = 0;
           double b = 0;
-
           for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
               final int uvIndex = uvPixelStride * (x / 2).floor() +

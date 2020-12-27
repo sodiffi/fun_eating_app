@@ -13,11 +13,6 @@ class TestInputPage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           fontFamily: "openhuninn",
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-            shape: RoundedRectangleBorder(),
-            elevation: 0,
-          ),
           textTheme: TextTheme(
               bodyText1: TextStyle(fontSize: 20),
               bodyText2: TextStyle(fontSize: 20),
@@ -26,9 +21,7 @@ class TestInputPage extends StatelessWidget {
       home: Scaffold(
           backgroundColor: Color.fromRGBO(255, 245, 227, 1),
           body: Container(
-            child: Center(
-              child: InputWidget(),
-            ),
+            child: InputWidget(),
           )),
     );
   }
@@ -93,13 +86,9 @@ class InputPageState extends State<InputWidget> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    double sizeHeight = isStraight
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height;
+    double sizeHeight =   MediaQuery.of(context).size.height;
 
-    double sizeWidth = isStraight
-        ? MediaQuery.of(context).size.height
-        : MediaQuery.of(context).size.width;
+    double sizeWidth =   MediaQuery.of(context).size.width;
 
     getCamera();
     return Scaffold(
@@ -114,9 +103,9 @@ class InputPageState extends State<InputWidget> {
                 direction: Axis.horizontal,
                 children: <Widget>[
                   Expanded(
-                    flex: isStraight ? 2 : 1,
+                    flex: 1,
                     child: FlatButton(
-                      padding: EdgeInsets.zero,
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       onPressed: () {
                         Navigator.pushReplacement(
                             context,
@@ -131,7 +120,8 @@ class InputPageState extends State<InputWidget> {
                       ),
                     ),
                   ),
-                  Spacer(flex: 8),
+                  Spacer(flex: 6),
+
                 ],
               ),
               Flex(
@@ -175,25 +165,27 @@ class InputPageState extends State<InputWidget> {
                       padding: EdgeInsets.all(0),
                       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                       decoration: boxDecoration,
-                      child: DropdownButton<String>(
-                        hint: Container(
-                          width: 150,
-                          child: Center(
-                            child: Text(item == "" ? "請選擇檢測蔬果" : item),
+                      child: Center(
+                        child: DropdownButton<String>(
+                          hint: Container(
+                            width: 150,
+                            child: Center(
+                              child: Text(item == "" ? "請選擇檢測蔬果" : item),
+                            ),
                           ),
+                          items: items.map((String value) {
+                            return new DropdownMenuItem<String>(
+                                value: value,
+                                child: Center(
+                                  child: Text(value),
+                                ));
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              item = value;
+                            });
+                          },
                         ),
-                        items: items.map((String value) {
-                          return new DropdownMenuItem<String>(
-                              value: value,
-                              child: Center(
-                                child: Text(value),
-                              ));
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            item = value;
-                          });
-                        },
                       ),
                     ),
                     flex: 1,
@@ -223,25 +215,27 @@ class InputPageState extends State<InputWidget> {
                       padding: EdgeInsets.all(0),
                       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                       decoration: boxDecoration,
-                      child: DropdownButton<String>(
-                        hint: Container(
-                          width: 150,
-                          child: Center(
-                            child: Text(area == "" ? "請選擇購買地點" : area),
+                      child: Center(
+                        child: DropdownButton<String>(
+                          hint: Container(
+                            width: 150,
+                            child: Center(
+                              child: Text(area == "" ? "請選擇購買地點" : area),
+                            ),
                           ),
+                          items: areas.map((String value) {
+                            return new DropdownMenuItem<String>(
+                                value: value,
+                                child: Center(
+                                  child: Text(value),
+                                ));
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              area = value;
+                            });
+                          },
                         ),
-                        items: areas.map((String value) {
-                          return new DropdownMenuItem<String>(
-                              value: value,
-                              child: Center(
-                                child: Text(value),
-                              ));
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            area = value;
-                          });
-                        },
                       ),
                     ),
                   )

@@ -20,13 +20,11 @@ class HomeMenuPage extends StatelessWidget {
 class HomeMenu extends StatefulWidget {
   @override
   HomeMenuState createState() {
-
     return HomeMenuState();
   }
 }
 
 class HomeMenuState extends State<HomeMenu> {
-
   int testTime;
   bool isStraight = false;
   DataBean dataBean = new DataBean();
@@ -42,30 +40,29 @@ class HomeMenuState extends State<HomeMenu> {
     FunHeartProvider fProvider = new FunHeartProvider();
     await fProvider.open();
     await fProvider.getFunHeart().then((value) => this.setState(() {
-          testTime = (value.length)==null?0:value.length;
+          testTime = (value.length) == null ? 0 : value.length;
         }));
     await fProvider.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    if(testTime==null){
+    if (testTime == null) {
       getTestTime();
     }
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
     getCameras();
-    double sizeHeight = isStraight
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height;
+    double sizeHeight = MediaQuery.of(context).size.height;
+    double sizeWidth=MediaQuery.of(context).size.width;
     Widget homeButton = Flex(
       direction: Axis.horizontal,
       children: <Widget>[
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 50, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -74,8 +71,8 @@ class HomeMenuState extends State<HomeMenu> {
               },
               child: Image.asset(
                 'images/setting.png',
-                height: isStraight ? 50 : sizeHeight * 0.03,
-                width: isStraight ? 50 : sizeHeight * 0.03,
+                height: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
+                width: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -84,7 +81,7 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: _launchURLCustomerService,
@@ -131,7 +128,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
                   Text("農食小知識"),
@@ -149,7 +146,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
                   Text("檢測紀錄")
@@ -172,7 +169,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: sizeHeight * 0.3,
+                      width: sizeHeight * 0.25,
                       fit: BoxFit.cover,
                     ),
                     Text("農食地圖"),
@@ -189,7 +186,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
                   Text("放心店家")
@@ -220,7 +217,7 @@ class HomeMenuState extends State<HomeMenu> {
             children: [
               Image.asset(
                 "images/testBox.png",
-                width: sizeHeight * 0.45,
+                width: sizeHeight * 0.3,
                 fit: BoxFit.cover,
               ),
               Text(
@@ -235,23 +232,43 @@ class HomeMenuState extends State<HomeMenu> {
 
     //直立畫面
     if (isStraight) {
+      // return Column(
+      //
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //
+      //   ],
+      // );
+
       return Container(
         color: Theme.of(context).backgroundColor,
-        child: Column(children: <Widget>[
-          homeButton,
-          Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-                  Image.asset(
-                    "images/logo_h.png",
-                    height: 50,
-                  )
-                ] +
-                txtAndTestBtn +
-                linkButtons,
-          ))
-        ]),
+              homeButton,
+              Image.asset(
+                "images/logo_h.png",
+                height: 50,
+              ),
+              Column(
+                children: txtAndTestBtn,
+              ),
+              Column(
+                children: linkButtons,
+              )
+              // Center(
+              //     child: Column(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              //         Image.asset(
+              //           "images/logo_h.png",
+              //           height: 50,
+              //         )
+              //       ] +
+              //       txtAndTestBtn +
+              //       linkButtons,
+              // ))
+            ]),
       );
     } else {
       //橫立畫面
