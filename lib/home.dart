@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/dataBean.dart';
+import 'package:flutter_app/sqlLite.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_better_camera/camera.dart';
@@ -23,25 +25,44 @@ class HomeMenu extends StatefulWidget {
 }
 
 class HomeMenuState extends State<HomeMenu> {
-  int testTime = 0;
+  int testTime;
   bool isStraight = false;
+  DataBean dataBean = new DataBean();
+
+  void toTest() {
+    dataBean.step = 0;
+    dataBean.cameras = cameras;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (content) => CameraApp(dataBean)));
+  }
+
+  Future<void> getTestTime() async {
+    FunHeartProvider fProvider = new FunHeartProvider();
+    await fProvider.open();
+    await fProvider.getFunHeart().then((value) => this.setState(() {
+          testTime = (value.length) == null ? 0 : value.length;
+        }));
+    await fProvider.close();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (testTime == null) {
+      getTestTime();
+    }
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    main();
-    double sizeHeight = isStraight
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height;
+    getCameras();
+    double sizeHeight = MediaQuery.of(context).size.height;
+    double sizeWidth=MediaQuery.of(context).size.width;
     Widget homeButton = Flex(
       direction: Axis.horizontal,
       children: <Widget>[
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 50, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -50,8 +71,8 @@ class HomeMenuState extends State<HomeMenu> {
               },
               child: Image.asset(
                 'images/setting.png',
-                height: isStraight ? 50 : sizeHeight * 0.03,
-                width: isStraight ? 50 : sizeHeight * 0.03,
+                height: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
+                width: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -60,7 +81,7 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 50, 0, 25),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: _launchURLCustomerService,
@@ -82,8 +103,8 @@ class HomeMenuState extends State<HomeMenu> {
         onPressed: () {},
         child: Image.asset(
           "images/setting.png",
-          width: sizeHeight*0.3,
-          ),
+          width: sizeHeight * 0.3,
+        ),
         heroTag: "setting",
       ),
       FloatingActionButton(
@@ -107,7 +128,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
                   Text("農食小知識"),
@@ -125,7 +146,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
                   Text("檢測紀錄")
@@ -148,7 +169,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: sizeHeight * 0.3,
+                      width: sizeHeight * 0.25,
                       fit: BoxFit.cover,
                     ),
                     Text("農食地圖"),
@@ -165,12 +186,10 @@ class HomeMenuState extends State<HomeMenu> {
                 children: [
                   Image.asset(
                     "images/txtBox.png",
-                    width: sizeHeight * 0.3,
+                    width: sizeHeight * 0.25,
                     fit: BoxFit.cover,
                   ),
-                  Text(
-                    "放心店家",
-                  )
+                  Text("放心店家")
                 ],
               ),
             ),
@@ -191,17 +210,14 @@ class HomeMenuState extends State<HomeMenu> {
       Padding(
         padding: EdgeInsets.all(15),
         child: FlatButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (content) => CameraApp(0, cameras)));
-          },
+          onPressed: toTest,
           padding: EdgeInsets.zero,
           child: Stack(
             alignment: const Alignment(0, 0),
             children: [
               Image.asset(
                 "images/testBox.png",
-                width: sizeHeight * 0.45,
+                width: sizeHeight * 0.3,
                 fit: BoxFit.cover,
               ),
               Text(
@@ -216,23 +232,43 @@ class HomeMenuState extends State<HomeMenu> {
 
     //直立畫面
     if (isStraight) {
+      // return Column(
+      //
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //
+      //   ],
+      // );
+
       return Container(
         color: Theme.of(context).backgroundColor,
-        child: Column(children: <Widget>[
-          homeButton,
-          Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-                  Image.asset(
-                    "images/logo_h.png",
-                    height: 50,
-                  )
-                ] +
-                txtAndTestBtn +
-                linkButtons,
-          ))
-        ]),
+              homeButton,
+              Image.asset(
+                "images/logo_h.png",
+                height: 50,
+              ),
+              Column(
+                children: txtAndTestBtn,
+              ),
+              Column(
+                children: linkButtons,
+              )
+              // Center(
+              //     child: Column(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: <Widget>[
+              //         Image.asset(
+              //           "images/logo_h.png",
+              //           height: 50,
+              //         )
+              //       ] +
+              //       txtAndTestBtn +
+              //       linkButtons,
+              // ))
+            ]),
       );
     } else {
       //橫立畫面
@@ -280,7 +316,7 @@ class HomeMenuState extends State<HomeMenu> {
 
 List<CameraDescription> cameras = [];
 
-Future<void> main() async {
+Future<void> getCameras() async {
   // Fetch the available cameras before initializing the app.
   try {
     WidgetsFlutterBinding.ensureInitialized();

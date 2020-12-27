@@ -1,5 +1,6 @@
 // import 'dart:html';
-import 'package:flutter_app/screenArgs.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_app/dataBean.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
@@ -7,77 +8,93 @@ import 'package:csv/csv.dart';
 import 'dart:io';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:ftpclient/ftpclient.dart';
+import 'package:imei_plugin/imei_plugin.dart';
+import 'sqlLite.dart';
+
+// import 'package:permission_handler/permission_handler.dart';
 
 String rate = "0%";
 String content = "合格";
 double result;
-List before;
-List after;
 
 class ResultPage extends StatelessWidget {
-  ResultPage(double r,List b,List a){
-    result=r;
-    rate = result.floor().toString() + "%";
-    before=b;
-    after=a;
+  DataBean dataBean = new DataBean();
+
+  ResultPage(DataBean d) {
+    dataBean = d;
+    rate = dataBean.result.floor().toString() + "%";
+    result = dataBean.result;
+
     getCsv();
-    if (result <= 35)
+    if (dataBean.result <= 35)
       content = "合格";
-    else if (result <= 45)
+    else if (dataBean.result <= 45)
       content = "通知供應單位延期採收\n追蹤農民用藥";
     else
       content = "銷毀或\n將樣品送衛生局複檢";
   }
 
-getCsv() async {
+  getCsv() async {
     print("enter get csv");
+
     //create an element rows of type list of list. All the above data set are stored in associate list
 //Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
 
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>();
-    for (int i = 0; i < before.length; i++) {
+    for (int i = 0; i < dataBean.beforeL.length; i++) {
       List<dynamic> row = List();
       row.add(i);
-      row.addAll(before[i]);
+      row.addAll(dataBean.beforeL[i]);
       rows.add(row);
     }
     rows.add(["----", "----", "----", "----"]);
-    // for (int i = 0; i < (after.length>209?209:after.length); i++) {
-    //   List<dynamic> row = List();
-    //   row.add(i);
-    //   row.addAll(after[i]);
-    //   rows.add(row);
-    // }
-    // rows.add(["----", "----", "----", "----"]);
-    // rows.add(["rate", result]);
-    //------------------------
+    for (int i = 0; i < dataBean.afterL.length; i++) {
+      List<dynamic> row = List();
+      row.add(i);
+      row.addAll(dataBean.afterL[i]);
 
-//     for (int i = 0; i < associateList.length; i++) {
-// //row refer to each column of a row in csv file and rows refer to each row in a file
-//       List<dynamic> row = List();
-//       row.add(associateList[i].name);
-//       row.add(associateList[i].gender);
-//       row.add(associateList[i].age);
-//       rows.add(row);
-//     }
+      rows.add(row);
+    }
+    rows.add(["----", "----", "----", "----"]);
+    rows.add(["rate", result]);
+
+    //------------------------
 
     await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
     bool checkPermission = await SimplePermissions.checkPermission(
         Permission.WriteExternalStorage);
     if (checkPermission) {
 //store file in documents folder
-
-      String dir = (await getExternalStorageDirectory()).absolute.path +
-          "/fun_heart_eating";
+      String platformImei =
+          await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
+      String dir = (await getExternalStorageDirectory()).absolute.path + "/";
       print(dir);
       // file = "$dir";
-      File f = new File(dir + "filename.csv");
+      File f =
+          new File(dir + DateTime.now().toString().substring(0, 19) + ".csv");
 
 // convert rows to String and write as csv file
 
       String csv = const ListToCsvConverter().convert(rows);
-      f.writeAsString(csv);
+      await f.writeAsString(csv);
+      FTPClient ftpClient =
+          FTPClient('ftp.byethost12.com', user: 'b12_27143036', pass: 'xkpt3v');
+      ftpClient.connect();
+      print("platformIemi\t" + platformImei);
+      ftpClient.changeDirectory("htdocs/fun_heart_eating/");
+      ftpClient.makeDirectory(platformImei);
+      ftpClient.changeDirectory(platformImei);
+      await ftpClient.uploadFile(f);
+      ftpClient.disconnect();
+      FunHeartProvider fProvider = new FunHeartProvider();
+      // Get a location using getDatabasesPath
+      await fProvider.open();
+      print(dataBean.area);
+      await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
+          dataBean.fruitName, dataBean.area,dataBean.result));
+      await fProvider.getFunHeart().then((value) => print(value.length));
     }
   }
 
@@ -85,8 +102,7 @@ getCsv() async {
   Widget build(BuildContext context) {
     // final ScreenArgs args = ModalRoute.of(context).settings.arguments;
     // result = args.result;
-   
-    
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -111,11 +127,22 @@ getCsv() async {
   }
 }
 
+// ignore: must_be_immutable
+
+class Result extends StatefulWidget {
+  @override
+  ResultState createState() {
+    return ResultState();
+  }
+}
+
 class ResultState extends State<Result> {
   bool isStraight = false;
 
-
-  // double insideR=rate;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -280,15 +307,6 @@ class ResultState extends State<Result> {
             ]),
       );
     }
-  }
-}
-
-// ignore: must_be_immutable
-
-class Result extends StatefulWidget {
-  @override
-  ResultState createState() {
-    return ResultState();
   }
 }
 

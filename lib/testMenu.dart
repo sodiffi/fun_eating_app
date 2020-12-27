@@ -48,7 +48,7 @@ class _TestMenuPageState extends State<TestMenu> {
         child: FlatButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => TrainPage()));
           },
           child: Stack(
@@ -77,7 +77,7 @@ class _TestMenuPageState extends State<TestMenu> {
         child: FlatButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            Navigator.push(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => TestInputPage()));
           },
           child: Stack(
@@ -111,7 +111,7 @@ class _TestMenuPageState extends State<TestMenu> {
                     Expanded(
                       flex: 1,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                         // child: AspectRatio(
                         //   aspectRatio: 1 / 1,
                         //   child: FlatButton(
@@ -133,7 +133,7 @@ class _TestMenuPageState extends State<TestMenu> {
                         child: FlatButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => HomeMenuPage()));
@@ -147,7 +147,7 @@ class _TestMenuPageState extends State<TestMenu> {
                         ),
                       ),
                     ),
-                    Spacer(flex: isStraight ? 5 : 6),
+                    Spacer(flex: 6),
                   ],
                 )
               ] +

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter_app/dataBean.dart';
 import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_better_camera/camera.dart';
@@ -6,9 +7,10 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class AddFruit extends StatelessWidget {
-  List before;
-  AddFruit(List b) {
-    before = b;
+  DataBean dataBean = new DataBean();
+
+  AddFruit(DataBean d) {
+    dataBean = d;
   }
 
   @override
@@ -26,11 +28,12 @@ class AddFruit extends StatelessWidget {
               Image.asset("images/prompt.png"),
               FlatButton(
                 onPressed: () {
-                  Navigator.push(
+                  print("addFruit" + dataBean.beforeL.length.toString());
+                  dataBean.step = 2;
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          CameraApp.second(2, cameras, before),
+                      builder: (context) => CameraApp(dataBean),
                     ),
                   );
                 },
