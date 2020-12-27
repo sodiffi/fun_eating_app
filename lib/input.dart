@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
-import 'package:flutter_app/screenArgs.dart';
+import 'package:flutter_app/dataBean.dart';
 import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:date_format/date_format.dart';
@@ -43,6 +43,7 @@ class InputWidget extends StatefulWidget {
 
 class InputPageState extends State<InputWidget> {
   bool isStraight = false;
+  DataBean dataBean = new DataBean();
   List<String> items = [
     "雜糧類",
     "葉菜類",
@@ -79,6 +80,10 @@ class InputPageState extends State<InputWidget> {
   ];
   String item = "";
   String area = "";
+  String dateTime = formatDate(
+          DateTime.now(), [yyyy, '-', mm, '-', dd, " ", HH, ':', nn, ':', ss])
+      .toString();
+
   BoxDecoration boxDecoration = BoxDecoration(
       color: Color.fromRGBO(255, 242, 204, 1),
       border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
@@ -96,7 +101,7 @@ class InputPageState extends State<InputWidget> {
         ? MediaQuery.of(context).size.height
         : MediaQuery.of(context).size.width;
 
-    main();
+    getCamera();
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 245, 227, 1),
       body: Center(
@@ -105,7 +110,6 @@ class InputPageState extends State<InputWidget> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
               Flex(
                 direction: Axis.horizontal,
                 children: <Widget>[
@@ -114,7 +118,7 @@ class InputPageState extends State<InputWidget> {
                     child: FlatButton(
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeMenuPage()));
@@ -130,48 +134,24 @@ class InputPageState extends State<InputWidget> {
                   Spacer(flex: 8),
                 ],
               ),
-              Flex(direction: Axis.horizontal,children: [
-                Expanded(child: Container(),flex: 1,),
-                Image.asset(
-                  "images/note.png",
-                  height: 50,
-                ), Text(
-                  "檢測小筆記",
-                  // style: Theme.of(context).textTheme.headline1,
-                ),Expanded(child: Container(),flex: 1,),
-              ],),
-              // Row(
-              //   children: [
-              //     Image.asset(
-              //       "images/note.png",
-              //       height: 50,
-              //     ), Text(
-              //       "檢測小筆記",
-              //       // style: Theme.of(context).textTheme.headline1,
-              //     )
-              //   ],
-              // ),
-              // Flex(
-              //   direction: Axis.horizontal,
-              //   children: [
-              //     isStraight ? Container() : Spacer(flex: 2),
-              //     Expanded(
-              //       child: Image.asset(
-              //         "images/note.png",
-              //         height: 50,
-              //       ),
-              //       flex: 1,
-              //     ),
-              //     Expanded(
-              //       child: Text(
-              //         "檢測小筆記",
-              //         // style: Theme.of(context).textTheme.headline1,
-              //       ),
-              //       flex: 3,
-              //     ),
-              //     isStraight ? Container() : Spacer(flex: 2)
-              //   ],
-              // ),
+              Flex(
+                direction: Axis.horizontal,
+                children: [
+                  Expanded(
+                    child: Container(),
+                    flex: 1,
+                  ),
+                  Image.asset(
+                    "images/note.png",
+                    height: 50,
+                  ),
+                  Text("檢測小筆記"),
+                  Expanded(
+                    child: Container(),
+                    flex: 1,
+                  ),
+                ],
+              ),
               Flex(
                 direction: Axis.horizontal,
                 children: [
@@ -204,7 +184,10 @@ class InputPageState extends State<InputWidget> {
                         ),
                         items: items.map((String value) {
                           return new DropdownMenuItem<String>(
-                              value: value, child: Center(child: Text(value),));
+                              value: value,
+                              child: Center(
+                                child: Text(value),
+                              ));
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
@@ -249,7 +232,10 @@ class InputPageState extends State<InputWidget> {
                         ),
                         items: areas.map((String value) {
                           return new DropdownMenuItem<String>(
-                              value: value, child: Center(child: Text(value),));
+                              value: value,
+                              child: Center(
+                                child: Text(value),
+                              ));
                         }).toList(),
                         onChanged: (value) {
                           setState(() {
@@ -261,77 +247,6 @@ class InputPageState extends State<InputWidget> {
                   )
                 ],
               ),
-              // Row(
-              //   // mainAxisSize: MainAxisSize.min,
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       width: isStraight ? 120 : sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       padding: EdgeInsets.all(10),
-              //       decoration: boxDecoration,
-              //       child: Text("檢測蔬果"),
-              //     ),
-              //     Container(
-              //       width: isStraight ? 175 : sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       padding: EdgeInsets.all(0),
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       decoration: boxDecoration,
-              //       child: DropdownButton<String>(
-              //         hint: Container(
-              //           width: 1,
-              //           child: Text(item == "" ? "請選擇檢測蔬果" : item),
-              //         ),
-              //         items: items.map((String value) {
-              //           return new DropdownMenuItem<String>(
-              //               value: value, child: Text(value));
-              //         }).toList(),
-              //         onChanged: (value) {
-              //           setState(() {
-              //             item = value;
-              //           });
-              //         },
-              //       ),
-              //     )
-              //   ],
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       width: isStraight ? 100 : sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       padding: EdgeInsets.all(10),
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       decoration: boxDecoration,
-              //       child: Text("來自/購買地區"),
-              //     ),
-              //     Container(
-              //       width: isStraight ? 50 : sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       padding: EdgeInsets.all(0),
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       decoration: boxDecoration,
-              //       child: DropdownButton<String>(
-              //         hint: Container(
-              //           width: 150,
-              //           child: Text(area == "" ? "請選擇購買地點" : area),
-              //         ),
-              //         items: areas.map((String value) {
-              //           return new DropdownMenuItem<String>(
-              //               value: value, child: Text(value));
-              //         }).toList(),
-              //         onChanged: (value) {
-              //           setState(() {
-              //             area = value;
-              //           });
-              //         },
-              //       ),
-              //     )
-              //   ],
-              // ),
               Flex(
                 direction: Axis.horizontal,
                 children: [
@@ -355,55 +270,26 @@ class InputPageState extends State<InputWidget> {
                       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
                       decoration: boxDecoration,
                       child: Center(
-                        child: Text(formatDate(DateTime.now(), [
-                          yyyy,
-                          '-',
-                          mm,
-                          '-',
-                          dd,
-                          " ",
-                          HH,
-                          ':',
-                          nn,
-                          ':',
-                          ss
-                        ])),
+                        child: Text(dateTime),
                       ),
                     ),
                   )
                 ],
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       width: isStraight ? 50 : sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       padding: EdgeInsets.all(10),
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       decoration: boxDecoration,
-              //       child: Text("時間"),
-              //     ),
-              //     Container(
-              //       width: sizeWidth * 0.38,
-              //       height: sizeHeight * 0.14,
-              //       padding: EdgeInsets.all(10),
-              //       margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              //       decoration: boxDecoration,
-              //       child: Text(formatDate(DateTime.now(),
-              //           [yyyy, '-', mm, '-', dd, " ", HH, ':', nn, ':', ss])),
-              //     ),
-              //   ],
-              // ),
               FlatButton(
                   onPressed: () {
                     if (area != "" && item != "") {
+                      dataBean.cameras = cameras;
+                      dataBean.step = 1;
+                      dataBean.time = dateTime;
+                      dataBean.fruitClass = item;
+                      dataBean.area = area;
                       // Navigator.pushNamed(context, "/test",
                       //     arguments: ScreenArgs.first(1, cameras));
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CameraApp(1, cameras),
+                          builder: (context) => CameraApp(dataBean),
                         ),
                       );
                     } else {
@@ -428,7 +314,7 @@ class InputPageState extends State<InputWidget> {
 
 List<CameraDescription> cameras = [];
 
-Future<void> main() async {
+Future<void> getCamera() async {
   // Fetch the available cameras before initializing the app.
   print("enter main");
   try {

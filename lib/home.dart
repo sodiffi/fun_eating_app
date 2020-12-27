@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/dataBean.dart';
+import 'package:flutter_app/sqlLite.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_better_camera/camera.dart';
@@ -18,20 +20,42 @@ class HomeMenuPage extends StatelessWidget {
 class HomeMenu extends StatefulWidget {
   @override
   HomeMenuState createState() {
+
     return HomeMenuState();
   }
 }
 
 class HomeMenuState extends State<HomeMenu> {
-  int testTime = 0;
+
+  int testTime;
   bool isStraight = false;
+  DataBean dataBean = new DataBean();
+
+  void toTest() {
+    dataBean.step = 0;
+    dataBean.cameras = cameras;
+    Navigator.push(
+        context, MaterialPageRoute(builder: (content) => CameraApp(dataBean)));
+  }
+
+  Future<void> getTestTime() async {
+    FunHeartProvider fProvider = new FunHeartProvider();
+    await fProvider.open();
+    await fProvider.getFunHeart().then((value) => this.setState(() {
+          testTime = (value.length)==null?0:value.length;
+        }));
+    await fProvider.close();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if(testTime==null){
+      getTestTime();
+    }
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-    main();
+    getCameras();
     double sizeHeight = isStraight
         ? MediaQuery.of(context).size.width
         : MediaQuery.of(context).size.height;
@@ -82,8 +106,8 @@ class HomeMenuState extends State<HomeMenu> {
         onPressed: () {},
         child: Image.asset(
           "images/setting.png",
-          width: sizeHeight*0.3,
-          ),
+          width: sizeHeight * 0.3,
+        ),
         heroTag: "setting",
       ),
       FloatingActionButton(
@@ -168,9 +192,7 @@ class HomeMenuState extends State<HomeMenu> {
                     width: sizeHeight * 0.3,
                     fit: BoxFit.cover,
                   ),
-                  Text(
-                    "放心店家",
-                  )
+                  Text("放心店家")
                 ],
               ),
             ),
@@ -191,10 +213,7 @@ class HomeMenuState extends State<HomeMenu> {
       Padding(
         padding: EdgeInsets.all(15),
         child: FlatButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (content) => CameraApp(0, cameras)));
-          },
+          onPressed: toTest,
           padding: EdgeInsets.zero,
           child: Stack(
             alignment: const Alignment(0, 0),
@@ -280,7 +299,7 @@ class HomeMenuState extends State<HomeMenu> {
 
 List<CameraDescription> cameras = [];
 
-Future<void> main() async {
+Future<void> getCameras() async {
   // Fetch the available cameras before initializing the app.
   try {
     WidgetsFlutterBinding.ensureInitialized();

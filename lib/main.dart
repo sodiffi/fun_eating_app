@@ -1,36 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/itemTheme.dart';
 
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Timer.periodic(
-      Duration(seconds: 5),
-      (timer)  {
-        print("timer");
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
-
-        timer.cancel();
-
-      },
-    );
-
-    return Container(
-      color: Color.fromRGBO(255, 245, 227, 1),
-      child: Center(
-        child: Image.asset(
-          "images/labinhome.png",
-          width: 100,
-          height: 100,
-        ),
-      ),
-    );
-  }
+void main() {
+  runApp(HomePage());
 }
 
 class HomePage extends StatelessWidget {
@@ -61,6 +36,28 @@ class HomePage extends StatelessWidget {
   }
 }
 
-void main() {
-  runApp(HomePage());
+class Home extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Timer.periodic(
+      Duration(seconds: 5),
+      (timer) {
+        print("timer");
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
+        timer.cancel();
+      },
+    );
+
+    return Container(
+      color: Color.fromRGBO(255, 245, 227, 1),
+      child: Center(
+        child: Image.asset(
+          "images/labinhome.png",
+          width: 100,
+          height: 100,
+        ),
+      ),
+    );
+  }
 }
