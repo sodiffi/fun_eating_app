@@ -10,10 +10,7 @@ import 'package:flutter_app/result.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
 
-
 // import 'package:permission_handler/permission_handler.dart';
-
-
 
 class CameraApp extends StatelessWidget {
   DataBean dataBean = new DataBean();
@@ -69,7 +66,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   String min = "";
   String second = "";
   DataBean dataBean = new DataBean();
-
 
   TestState(DataBean d) {
     dataBean = d;
@@ -215,10 +211,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
           dataBean.result = (1 -
-                      ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
-                          (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
-                          (dataBean.beforeAvg[1] / dataBean.afterAvg[1])));
-          if(dataBean.result.isNaN) dataBean.result=0;
+              ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
+                  (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
+                  (dataBean.beforeAvg[1] / dataBean.afterAvg[1])));
+          if (dataBean.result.isNaN) dataBean.result = 0;
 
           Navigator.pushReplacement(cc,
               MaterialPageRoute(builder: (context) => ResultPage(dataBean)));
@@ -327,22 +323,17 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   // }
 
   void getRGB(CameraImage image) async {
-    
     if (getImg) {
+      double r = 0;
+      double g = 0;
+      double b = 0;
       if (Platform.isAndroid) {
-
-
-
-
-
         try {
           final int width = image.width;
           final int height = image.height;
           final int uvRowStride = image.planes[1].bytesPerRow;
           final int uvPixelStride = image.planes[1].bytesPerPixel;
-          double r = 0;
-          double g = 0;
-          double b = 0;
+
           for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
               final int uvIndex = uvPixelStride * (x / 2).floor() +
@@ -363,19 +354,29 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           r /= len;
           g /= len;
           b /= len;
-          if (step == 0) {
-            checkList.add([r, g, b]);
-          } else if (step == 1) {
-            dataBean.beforeL.add([r, g, b]);
-          } else {
-            dataBean.afterL.add([r, g, b]);
-          }
-          print("\t${r}\t${g}\t${b}");
-          getImg = false;
         } catch (e) {
-          print(">>>>>>>>>>>> ERROR:" + e.toString());
+          print(">>>>>>>>>>>> ANDROID ERROR:" + e.toString());
+        }
+      } else if (Platform.isIOS) {
+        try {
+          for (int i = 0; i < image.planes[0].bytes.length; i += 4) {
+            b += image.planes[0].bytes[i].toDouble();
+            g += image.planes[0].bytes[i + 1].toDouble();
+            r += image.planes[0].bytes[i + 2].toDouble();
+          }
+        } catch (e) {
+          print(">>>>>>>>>>>> IOS ERROR:" + e.toString());
         }
       }
+      if (step == 0) {
+        checkList.add([r, g, b]);
+      } else if (step == 1) {
+        dataBean.beforeL.add([r, g, b]);
+      } else {
+        dataBean.afterL.add([r, g, b]);
+      }
+      print("\t${r}\t${g}\t${b}");
+      getImg = false;
     }
   }
 
