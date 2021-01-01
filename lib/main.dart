@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer.periodic(
-      Duration(seconds: 5),
+      Duration(seconds:3),
       (timer) {
         print("timer");
         Navigator.of(context)

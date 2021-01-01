@@ -10,9 +10,9 @@ class ItemTheme {
       elevation: 0,
     ),
     textTheme: TextTheme(
-      bodyText1: TextStyle(fontSize: 20),
-      bodyText2: TextStyle(fontSize: 35),
-      subtitle1: TextStyle(fontSize: 35),
+      bodyText1: TextStyle(fontSize: 18),
+      bodyText2: TextStyle(fontSize: 30),
+      subtitle1: TextStyle(fontSize: 25),
       button: TextStyle(fontSize: 20),
     ),
   );

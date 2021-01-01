@@ -24,6 +24,7 @@ class TrainPage extends StatelessWidget {
             new Image.asset("images/train/step5_pic.png"),
             new Image.asset("images/train/step6_pic.png"),
             new Image.asset("images/train/step7_pic.png"),
+          
             FlatButton(
               onPressed: () {
                 Navigator.push(
@@ -33,7 +34,7 @@ class TrainPage extends StatelessWidget {
                   ),
                 );
               },
-              child: null,
+              child: Text("開始檢測"),
             ),
           ],
         ),
