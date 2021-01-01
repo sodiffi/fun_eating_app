@@ -25,7 +25,7 @@ class HomeMenu extends StatefulWidget {
 }
 
 class HomeMenuState extends State<HomeMenu> {
-  int testTime;
+  int testTime=0;
   bool isStraight = false;
   DataBean dataBean = new DataBean();
 
@@ -62,7 +62,7 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: () {
@@ -81,14 +81,14 @@ class HomeMenuState extends State<HomeMenu> {
         Expanded(
           flex: 1,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
             child: FlatButton(
               padding: EdgeInsets.zero,
               onPressed: _launchURLCustomerService,
               child: Image.asset(
                 'images/customerService.png',
-                height: isStraight ? 50 : sizeHeight * 0.03,
-                width: isStraight ? 50 : sizeHeight * 0.03,
+                height: isStraight ? 45 : sizeHeight * 0.03,
+                width: isStraight ? 45 : sizeHeight * 0.03,
                 fit: BoxFit.cover,
               ),
             ),
@@ -198,7 +198,7 @@ class HomeMenuState extends State<HomeMenu> {
       )
     ];
     List<Widget> txtAndTestBtn = [
-      Padding(padding: EdgeInsets.all(10)),
+      Padding(padding: EdgeInsets.all(5)),
       Text(
         "FUN心吃專家等級",
         style: Theme.of(context).textTheme.bodyText1,
@@ -208,7 +208,7 @@ class HomeMenuState extends State<HomeMenu> {
         style: Theme.of(context).textTheme.bodyText2,
       ),
       Padding(
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         child: FlatButton(
           onPressed: toTest,
           padding: EdgeInsets.zero,
@@ -220,6 +220,7 @@ class HomeMenuState extends State<HomeMenu> {
                 width: sizeHeight * 0.3,
                 fit: BoxFit.cover,
               ),
+
               Text(
                 "開始檢測",
                 style: Theme.of(context).textTheme.subtitle1,
@@ -248,13 +249,16 @@ class HomeMenuState extends State<HomeMenu> {
               homeButton,
               Image.asset(
                 "images/logo_h.png",
-                height: 50,
+                height: 35,
               ),
               Column(
                 children: txtAndTestBtn,
               ),
-              Column(
-                children: linkButtons,
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child:Column(
+                  children: linkButtons,
+                ) ,
               )
               // Center(
               //     child: Column(

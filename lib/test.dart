@@ -66,12 +66,22 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   String min = "";
   String second = "";
   DataBean dataBean = new DataBean();
+  Widget previewCamera = Container();
+  StreamSubscription _homeButtonSubscription;
 
   TestState(DataBean d) {
     dataBean = d;
     step = dataBean.step;
     if (dataBean.step == 0) {
       startCheck();
+      Fluttertoast.showToast(
+          msg: "!注意!請將盡頭對準量測盒內壁",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Color.fromRGBO(64, 64, 64, 1),
+          textColor: Colors.white,
+          fontSize: 20.0);
     } else {
       if (dataBean.step == 1)
         dataBean.beforeL = new List();
@@ -81,9 +91,13 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     }
   }
 
+
+
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
+
   }
 
   @override
@@ -91,6 +105,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
+    print("enter second dispose");
     // controller.setFlashMode(FlashMode.off);
   }
 
@@ -102,6 +117,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
+      if(step!=2){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TestMenuPage()));
+
+      }
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (controller != null) {
@@ -113,17 +132,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /* 第一步驟 檢測光源*/
-  void startCheck() {
-    onNewCameraSelected(dataBean.cameras[0]);
-    Fluttertoast.showToast(
-        msg: "開始裝置及穩定性檢測",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.grey,
-        textColor: Colors.white,
-        fontSize: 16.0);
-
+  Future<void> startCheck() async {
+    await onNewCameraSelected(dataBean.cameras[0]);
+    setState(() {
+      previewCamera = _cameraPreviewWidget();
+    });
     Timer.periodic(Duration(seconds: 1), (timer) {
       if (timer.tick == checkTime) {
         String msg = "";
@@ -261,9 +274,23 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     cc = context;
     if (step == 0) {
-      return Scaffold(
-          key: _scaffoldKey,
-          body: Center(child: Image.asset("images/signal.png")));
+      return Flex(
+        direction: Axis.horizontal,
+        children: [
+          Expanded(
+            child: Image.asset("images/signal.png"),
+            flex: 1,
+          ),
+          Expanded(
+            child: Center(child: previewCamera),
+            flex: 1,
+          ),
+          Expanded(
+            child: Image.asset("images/signal.png"),
+            flex: 1,
+          )
+        ],
+      );
     } else {
       return Scaffold(
         key: _scaffoldKey,
@@ -308,9 +335,15 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
+    print("-----------");
+    print("camera preview widget");
+    print(controller == null);
+    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
-      return Row();
+      print("enter if");
+      return Text("fail");
     } else {
+      print("enter else");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
