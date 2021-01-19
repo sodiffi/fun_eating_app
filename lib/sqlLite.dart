@@ -6,8 +6,7 @@ final String columnId = 'time';
 final String columnClass = 'fruit_class';
 final String columnName = 'fruit_name';
 final String columnArea = 'area';
-final String columnRate='rate';
-
+final String columnRate = 'rate';
 
 class FunHeart {
   String time;
@@ -22,16 +21,16 @@ class FunHeart {
       columnClass: fruitClass,
       columnName: name,
       columnArea: area,
-      columnRate:rate
+      columnRate: rate
     };
   }
 
-  FunHeart(String t, String f, String n, String a,double r) {
+  FunHeart(String t, String f, String n, String a, double r) {
     time = t;
     fruitClass = f;
     name = n;
     area = a;
-    rate=r;
+    rate = r;
   }
 
   FunHeart.fromMap(Map<String, dynamic> map) {
@@ -39,9 +38,9 @@ class FunHeart {
     fruitClass = map[columnClass];
     name = map[columnName];
     area = map[columnArea];
-    rate=map[columnRate];
+    rate = double.parse(map[columnRate].toString());
   }
-  String output(){
+  String output() {
     return "-------\ntime\t${time}\nclass\t${fruitClass}\nname\t${name}\narea\t${area}\nrate\t${rate}\n-------";
   }
 }
@@ -50,7 +49,6 @@ class FunHeartProvider {
   Database db;
 
   Future open() async {
-    print(await getDatabasesPath());
     db = await openDatabase(join(await getDatabasesPath(), "funHeart.db"),
         version: 1, onCreate: (Database db, int version) async {
       await db.execute('''
@@ -71,12 +69,22 @@ class FunHeartProvider {
   }
 
   Future<List<Map>> getFunHeart() async {
-    List<Map> maps = await db
-        .query(table, columns: [columnId, columnClass, columnName, columnArea,columnRate]);
-    if (maps.length > 0) {
-      return maps;
+
+
+    if(db!=null){
+      List<Map> maps = await db.query(table,
+          columns: [columnId, columnClass, columnName, columnArea, columnRate]);
+
+      if (maps.length > 0) {
+
+        return maps;
+      }else{
+        return null;
+      }
+    }else{
+      return null;
     }
-    return null;
+
   }
 
   Future close() async => db.close();

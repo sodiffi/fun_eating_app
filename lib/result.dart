@@ -72,18 +72,17 @@ class ResultPage extends StatelessWidget {
       String dir = (await getExternalStorageDirectory()).absolute.path + "/";
       print(dir);
       // file = "$dir";
-      File f =
-          new File(dir + DateTime.now().toString().substring(0, 19) + ".csv");
+      File f = new File(dir + dataBean.time + ".csv");
 
 // convert rows to String and write as csv file
 
       String csv = const ListToCsvConverter().convert(rows);
       await f.writeAsString(csv);
       FTPClient ftpClient =
-          FTPClient('ftp.byethost12.com', user: 'b12_27143036', pass: 'xkpt3v');
+          FTPClient('120.106.210.250', user: 'admin', pass: 'wj/61j4zj6gk4');
       ftpClient.connect();
       print("platformIemi\t" + platformImei);
-      ftpClient.changeDirectory("htdocs/fun_heart_eating/");
+      ftpClient.changeDirectory("Public/PesticsdeTest_upload/");
       ftpClient.makeDirectory(platformImei);
       ftpClient.changeDirectory(platformImei);
       await ftpClient.uploadFile(f);
@@ -93,7 +92,7 @@ class ResultPage extends StatelessWidget {
       await fProvider.open();
       print(dataBean.area);
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
-          dataBean.fruitName, dataBean.area,dataBean.result));
+          dataBean.fruitName, dataBean.area, dataBean.result));
       await fProvider.getFunHeart().then((value) => print(value.length));
     }
   }
@@ -149,162 +148,174 @@ class ResultState extends State<Result> {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
-
+    double sizeHeight = MediaQuery.of(context).size.height;
+    double sizeWidth = MediaQuery.of(context).size.width;
+    List<Widget> homeButton = [
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
+        },
+        child: Image.asset(
+          'images/home.png',
+          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          fit: BoxFit.cover,
+        ),
+      )
+    ];
     if (isStraight) {
-      return Container(
-        color: Color.fromRGBO(255, 245, 227, 1),
-        child: Column(children: [
-          Row(
-            children: [
-              FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomeMenuPage()));
-                },
-                child: Image.asset("images/home.png"),
-                heroTag: "home",
-              ),
-              FloatingActionButton(
-                onPressed: _launchURLCustomerService,
-                child: Image.asset("images/customerService.png"),
-                heroTag: "customerService",
-              ),
-            ],
-          ),
-          Stack(
-            alignment: const Alignment(0.0, -0.1),
-            children: [
-              Image.asset("images/rateBox.png"),
-              Text(
-                rate,
-                style: new TextStyle(
-                  fontSize: 50,
-                  decoration: TextDecoration.none,
-                  color: Color.fromRGBO(153, 87, 37, 1),
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: []),
-              Stack(
-                alignment: const Alignment(0.0, 0.2),
-                children: [
-                  Stack(
-                    alignment: const Alignment(0.8, -0.8),
-                    children: [
-                      Image.asset("images/report.png"),
-                      Image.asset("images/share.png"),
-                    ],
+      return SafeArea(
+        child: Container(
+          color: Color.fromRGBO(255, 245, 227, 1),
+          child: Column(children: [
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                  child: Row(
+                    children: homeButton,
                   ),
-                  Text(
-                    content,
-                    style: TextStyle(
-                      fontSize: 30,
-                      color: result < 35
-                          ? Colors.green
-                          : (result < 45 ? Colors.amber : Colors.red),
-                      decoration: TextDecoration.none,
+                )
+              ],
+            ),
+            Stack(
+              alignment: const Alignment(0.0, -0.1),
+              children: [
+                Image.asset("images/rateBox.png"),
+                Text(
+                  rate,
+                  style: new TextStyle(
+                    fontSize: 50,
+                    decoration: TextDecoration.none,
+                    color: Color.fromRGBO(153, 87, 37, 1),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: []),
+                Stack(
+                  alignment: const Alignment(0.0, 0.2),
+                  children: [
+                    Stack(
+                      alignment: const Alignment(0.8, -0.8),
+                      children: [
+                        Image.asset("images/report.png"),
+                        Image.asset("images/share.png"),
+                      ],
                     ),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        fontSize: 30,
+                        color: result < 35
+                            ? Colors.green
+                            : (result < 45 ? Colors.amber : Colors.red),
+                        decoration: TextDecoration.none,
+                      ),
 
-                    // rate < 35
-                    //     ? "合格"
-                    //     : rate < 45
-                    //         ? ""
-                    //         : "銷毀或\n將樣品送衛生局複檢",
-                    // style: new TextStyle(fontSize: 45),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ]),
+                      // rate < 35
+                      //     ? "合格"
+                      //     : rate < 45
+                      //         ? ""
+                      //         : "銷毀或\n將樣品送衛生局複檢",
+                      // style: new TextStyle(fontSize: 45),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ]),
+        ),
       );
     } else {
-      return Container(
-        color: Color.fromRGBO(255, 245, 227, 1),
-        child: Column(
+      return SafeArea(
+        child: Container(
+          color: Color.fromRGBO(255, 245, 227, 1),
+          child: Column(
 
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-              ),
-              Row(
-                children: [
-                  FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeMenuPage()));
-                    },
-                    child: Image.asset("images/home.png"),
-                    heroTag: "home",
-                  ),
-                  FloatingActionButton(
-                    onPressed: _launchURLCustomerService,
-                    child: Image.asset("images/customerService.png"),
-                    heroTag: "customerService",
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
+                ),
+                Row(
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeMenuPage()));
+                      },
+                      child: Image.asset("images/home.png"),
+                      heroTag: "home",
+                    ),
+                    FloatingActionButton(
+                      onPressed: _launchURLCustomerService,
+                      child: Image.asset("images/customerService.png"),
+                      heroTag: "customerService",
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Stack(
+                            alignment: const Alignment(0.0, -0.1),
+                            children: [
+                              Image.asset("images/rateBox.png"),
+                              Text(
+                                rate,
+                                style: new TextStyle(
+                                  fontSize: 50,
+                                  decoration: TextDecoration.none,
+                                  color: Color.fromRGBO(153, 87, 37, 1),
+                                ),
+                              )
+                            ],
+                          )
+                        ]),
+                    Stack(
+                      alignment: const Alignment(0.0, 0.2),
                       children: [
                         Stack(
-                          alignment: const Alignment(0.0, -0.1),
+                          alignment: const Alignment(0.8, -0.8),
                           children: [
-                            Image.asset("images/rateBox.png"),
-                            Text(
-                              rate,
-                              style: new TextStyle(
-                                fontSize: 50,
-                                decoration: TextDecoration.none,
-                                color: Color.fromRGBO(153, 87, 37, 1),
-                              ),
-                            )
+                            Image.asset("images/report.png"),
+                            Image.asset("images/share.png"),
                           ],
-                        )
-                      ]),
-                  Stack(
-                    alignment: const Alignment(0.0, 0.2),
-                    children: [
-                      Stack(
-                        alignment: const Alignment(0.8, -0.8),
-                        children: [
-                          Image.asset("images/report.png"),
-                          Image.asset("images/share.png"),
-                        ],
-                      ),
-                      Text(
-                        content,
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: result < 35
-                              ? Colors.green
-                              : (result < 45 ? Colors.amber : Colors.red),
-                          decoration: TextDecoration.none,
                         ),
-                        // (rate<35
-                        //     ? "合格"
-                        //     :(rate<45
-                        //         ? "通知供應單位延期採收\n追蹤農民用藥"
-                        //         : "銷毀或\n將樣品送衛生局複檢")),
-                        // style: new TextStyle(fontSize: 45),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ]),
+                        Text(
+                          content,
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: result < 35
+                                ? Colors.green
+                                : (result < 45 ? Colors.amber : Colors.red),
+                            decoration: TextDecoration.none,
+                          ),
+                          // (rate<35
+                          //     ? "合格"
+                          //     :(rate<45
+                          //         ? "通知供應單位延期採收\n追蹤農民用藥"
+                          //         : "銷毀或\n將樣品送衛生局複檢")),
+                          // style: new TextStyle(fontSize: 45),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
+        ),
       );
     }
   }

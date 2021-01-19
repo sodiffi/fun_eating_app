@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/dataBean.dart';
+import 'package:flutter_app/record.dart';
 import 'package:flutter_app/sqlLite.dart';
 import 'package:flutter_app/test.dart';
 import 'package:flutter_app/itemTheme.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class HomeMenuPage extends StatelessWidget {
   @override
@@ -25,7 +27,7 @@ class HomeMenu extends StatefulWidget {
 }
 
 class HomeMenuState extends State<HomeMenu> {
-  int testTime=0;
+  int testTime = 0;
   bool isStraight = false;
   DataBean dataBean = new DataBean();
 
@@ -36,67 +38,51 @@ class HomeMenuState extends State<HomeMenu> {
         context, MaterialPageRoute(builder: (content) => CameraApp(dataBean)));
   }
 
-  Future<void> getTestTime() async {
+  Future<int> getTestTime() async {
+    int result;
     FunHeartProvider fProvider = new FunHeartProvider();
     await fProvider.open();
-    await fProvider.getFunHeart().then((value) => this.setState(() {
-          testTime = (value.length) == null ? 0 : value.length;
-        }));
+    await fProvider
+        .getFunHeart()
+        .then((value) => result = (value) == null ? 0 : value.length);
     await fProvider.close();
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (testTime == null) {
-      getTestTime();
-    }
+    getTestTime().then((value) => this.setState(() {
+          testTime = value;
+        }));
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
     });
     getCameras();
     double sizeHeight = MediaQuery.of(context).size.height;
-    double sizeWidth=MediaQuery.of(context).size.width;
-    Widget homeButton = Flex(
-      direction: Axis.horizontal,
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-            child: FlatButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => HomeMenuPage()));
-              },
-              child: Image.asset(
-                'images/setting.png',
-                height: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
-                width: isStraight ? sizeWidth/7 : sizeHeight * 0.03,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+    double sizeWidth = MediaQuery.of(context).size.width;
+    List<Widget> homeButton = [
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
+        },
+        child: Image.asset(
+          'images/setting.png',
+          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          fit: BoxFit.cover,
         ),
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-            child: FlatButton(
-              padding: EdgeInsets.zero,
-              onPressed: _launchURLCustomerService,
-              child: Image.asset(
-                'images/customerService.png',
-                height: isStraight ? 45 : sizeHeight * 0.03,
-                width: isStraight ? 45 : sizeHeight * 0.03,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+      ),
+      GestureDetector(
+        onTap: _launchURLCustomerService,
+        child: Image.asset(
+          'images/customerService.png',
+          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
+          fit: BoxFit.cover,
         ),
-        Spacer(flex: 3),
-      ],
-    );
+      )
+    ];
 
     List<Widget> actionButton = [
       FloatingActionButton(
@@ -119,41 +105,67 @@ class HomeMenuState extends State<HomeMenu> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: EdgeInsets.all(5),
-            child: FlatButton(
-              padding: EdgeInsets.zero,
-              onPressed: _launchURLKnowledge,
-              child: Stack(
-                alignment: const Alignment(-0.3, -0.3),
-                children: [
-                  Image.asset(
-                    "images/txtBox.png",
-                    width: sizeHeight * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                  Text("農食小知識"),
-                ],
-              ),
-            ),
-          ),
+              padding: EdgeInsets.all(5),
+              child: GestureDetector(
+                onTap: _launchURLKnowledge,
+                child: Stack(
+                  alignment: const Alignment(0, 0),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                    AutoTextChange(w:  isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                    s: "農食小知識",paddingW: isStraight
+                          ? sizeHeight * 0.25 * 0.14
+                          : sizeWidth * 0.2 * 0.14,paddingH: isStraight
+                        ? sizeHeight * 0.25 * 0.14
+                        : sizeWidth * 0.2 * 0.14,),
+
+                    // Container(
+                    //   width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                    //   child: AutoSizeText(
+                    //     "農食小知識",
+                    //     maxLines: 1,
+                    //     style: ItemTheme.textStyle,
+                    //   ),
+                    //   padding: EdgeInsets.all(isStraight
+                    //       ? sizeHeight * 0.25 * 0.14
+                    //       : sizeWidth * 0.2 * 0.14),
+                    // )
+                  ],
+                ),
+              )),
           Padding(
-            padding: EdgeInsets.all(5),
-            child: FlatButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {},
-              child: Stack(
-                alignment: const Alignment(-0.2, -0.2),
-                children: [
-                  Image.asset(
-                    "images/txtBox.png",
-                    width: sizeHeight * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                  Text("檢測紀錄")
-                ],
-              ),
-            ),
-          ),
+              padding: EdgeInsets.all(5),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (content) => RecordPage()));
+                },
+                child: Stack(
+                  alignment: const Alignment(0, 0),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      child: AutoSizeText(
+                        "檢測紀錄",
+                        maxLines: 1,
+                        style: ItemTheme.textStyle,
+                      ),
+                      padding: EdgeInsets.all(isStraight
+                          ? sizeHeight * 0.25 * 0.14
+                          : sizeWidth * 0.2 * 0.14),
+                    )
+                  ],
+                ),
+              )),
         ],
       ),
       Row(
@@ -161,69 +173,93 @@ class HomeMenuState extends State<HomeMenu> {
         children: [
           Padding(
               padding: EdgeInsets.all(5),
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: _launchURLMap,
+              child: GestureDetector(
+                onTap: _launchURLMap,
                 child: Stack(
-                  alignment: const Alignment(-0.2, -0.2),
+                  alignment: const Alignment(0, 0),
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: sizeHeight * 0.25,
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
                       fit: BoxFit.cover,
                     ),
-                    Text("農食地圖"),
+                    Container(
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      child: AutoSizeText(
+                        "農食地圖",
+                        maxLines: 1,
+                        style: ItemTheme.textStyle,
+                      ),
+                      padding: EdgeInsets.all(isStraight
+                          ? sizeHeight * 0.25 * 0.14
+                          : sizeWidth * 0.2 * 0.14),
+                    )
                   ],
                 ),
               )),
           Padding(
-            padding: EdgeInsets.all(5),
-            child: FlatButton(
-              padding: EdgeInsets.zero,
-              onPressed: _launchURLStore,
-              child: Stack(
-                alignment: const Alignment(-0.2, -0.2),
-                children: [
-                  Image.asset(
-                    "images/txtBox.png",
-                    width: sizeHeight * 0.25,
-                    fit: BoxFit.cover,
-                  ),
-                  Text("放心店家")
-                ],
-              ),
-            ),
-          )
+              padding: EdgeInsets.all(5),
+              child: GestureDetector(
+                onTap: _launchURLStore,
+                child: Stack(
+                  alignment: const Alignment(0, 0),
+                  children: [
+                    Image.asset(
+                      "images/txtBox.png",
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                    Container(
+                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      child: AutoSizeText(
+                        "放心店家",
+                        maxLines: 1,
+                        style: ItemTheme.textStyle,
+                      ),
+                      padding: EdgeInsets.all(isStraight
+                          ? sizeHeight * 0.25 * 0.14
+                          : sizeWidth * 0.2 * 0.14),
+                    )
+                  ],
+                ),
+              ))
         ],
       )
     ];
     List<Widget> txtAndTestBtn = [
-      Padding(padding: EdgeInsets.all(5)),
-      Text(
-        "FUN心吃專家等級",
-        style: Theme.of(context).textTheme.bodyText1,
-      ),
-      Text(
-        "檢測${testTime}次",
-        style: Theme.of(context).textTheme.bodyText2,
-      ),
+      // Padding(padding: EdgeInsets.all(2)),
+      AutoSizeText("FUN心吃專家等級\n檢測${testTime}次",style: ItemTheme.textStyle,maxLines: 2,textAlign: TextAlign.center,),
+      // AutoSizeText("",style: ItemTheme.textStyle,),
+      // Text(
+      //   ,
+      //   style: Theme.of(context).textTheme.bodyText1,
+      // ),
+      // Text(
+      //
+      //   style: Theme.of(context).textTheme.bodyText2,
+      // ),
       Padding(
         padding: EdgeInsets.all(10),
-        child: FlatButton(
-          onPressed: toTest,
-          padding: EdgeInsets.zero,
+        child: GestureDetector(
+          onTap: toTest,
           child: Stack(
             alignment: const Alignment(0, 0),
             children: [
               Image.asset(
                 "images/testBox.png",
-                width: sizeHeight * 0.3,
+                width: isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3,
                 fit: BoxFit.cover,
               ),
-
-              Text(
-                "開始檢測",
-                style: Theme.of(context).textTheme.subtitle1,
+              Container(
+                width: isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3,
+                child: AutoSizeText(
+                  "開始檢測",
+                  maxLines: 1,
+                  style: ItemTheme.textStyle,
+                ),
+                padding: EdgeInsets.all(isStraight
+                    ? sizeHeight * 0.3 * 0.12
+                    : sizeWidth * 0.3 * 0.12),
               )
             ],
           ),
@@ -233,85 +269,70 @@ class HomeMenuState extends State<HomeMenu> {
 
     //直立畫面
     if (isStraight) {
-      // return Column(
-      //
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: [
-      //
-      //   ],
-      // );
-
-      return Container(
-        color: Theme.of(context).backgroundColor,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              homeButton,
-              Image.asset(
-                "images/logo_h.png",
-                height: 35,
-              ),
-              Column(
-                children: txtAndTestBtn,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-                child:Column(
-                  children: linkButtons,
-                ) ,
-              )
-              // Center(
-              //     child: Column(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //         Image.asset(
-              //           "images/logo_h.png",
-              //           height: 50,
-              //         )
-              //       ] +
-              //       txtAndTestBtn +
-              //       linkButtons,
-              // ))
-            ]),
+      return SafeArea(
+        child: Container(
+          color: Theme.of(context).backgroundColor,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                  child: Row(
+                    children: homeButton,
+                  ),
+                ),
+                Image.asset(
+                  "images/logo_h.png",
+                  height: sizeHeight * 0.1,
+                ),
+                Column(
+                  children: txtAndTestBtn,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  child: Column(
+                    children: linkButtons,
+                  ),
+                )
+              ]),
+        ),
       );
     } else {
       //橫立畫面
-      return Container(
-        width: sizeHeight * 1,
-        color: Theme.of(context).backgroundColor,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(5, 25, 0, 0),
-              child: Column(
+      return SafeArea(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          width: sizeHeight * 1,
+          color: Theme.of(context).backgroundColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
                 children: actionButton,
               ),
-            ),
-            Row(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                        Image.asset(
-                          "images/logo.png",
-                          width: sizeHeight * 0.3,
-                        )
-                      ] +
-                      linkButtons,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 0),
+              Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: txtAndTestBtn,
-                  ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                      Image.asset(
+                        "images/logo.png",
+                        width: sizeHeight * 0.35,
+                      )
+                    ] +
+                    linkButtons,
+              )),
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: txtAndTestBtn,
                 ),
-              ],
-            ),
-            Container(),
-            Container(),
-          ],
+              )),
+              Container(),
+              Container(),
+            ],
+          ),
         ),
       );
     }
