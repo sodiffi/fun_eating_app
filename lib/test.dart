@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/result.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 // import 'package:permission_handler/permission_handler.dart';
 
@@ -91,13 +92,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     }
   }
 
-
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
   }
 
   @override
@@ -117,9 +115,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      if(step!=2){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => TestMenuPage()));
-
+      if (step != 2) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => TestMenuPage()));
       }
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
@@ -178,6 +176,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
               fontSize: 16.0);
         }
         timer.cancel();
+
         controller.setFlashMode(FlashMode.off);
         controller.dispose();
         Navigator.pushReplacement(
@@ -202,6 +201,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         getImg = true;
       }
       if (timer.tick > testTime) {
+        FlutterRingtonePlayer.play(
+          android: AndroidSounds.ringtone,
+          ios: const IosSound(1023),
+          looping: false,
+          volume: 0.1,
+        );
         timer.cancel();
         controller.setFlashMode(FlashMode.off);
         if (step == 1) {
@@ -274,60 +279,64 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     cc = context;
     if (step == 0) {
-      return Flex(
-        direction: Axis.horizontal,
-        children: [
-          Expanded(
-            child: Image.asset("images/signal.png"),
-            flex: 1,
-          ),
-          Expanded(
-            child: Center(child: previewCamera),
-            flex: 1,
-          ),
-          Expanded(
-            child: Image.asset("images/signal.png"),
-            flex: 1,
-          )
-        ],
+      return SafeArea(
+        child: Flex(
+          direction: Axis.horizontal,
+          children: [
+            Expanded(
+              child: Image.asset("images/signal.png"),
+              flex: 1,
+            ),
+            Expanded(
+              child: Center(child: previewCamera),
+              flex: 1,
+            ),
+            Expanded(
+              child: Image.asset("images/signal.png"),
+              flex: 1,
+            )
+          ],
+        ),
       );
     } else {
-      return Scaffold(
-        key: _scaffoldKey,
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: Center(
-                      child: Stack(
-                    alignment: Alignment(0.9, 0.7),
-                    children: [
-                      Image.asset("images/seal.gif"),
-                      Container(
-                        decoration: new BoxDecoration(
-                          border: new Border.all(
-                              color: Color.fromRGBO(248, 203, 173, 1),
-                              width: 5),
-                          color: Color.fromRGBO(255, 242, 204, 1),
-                          shape: BoxShape.rectangle,
-                          borderRadius: new BorderRadius.circular(15),
+      return SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          body: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(1.0),
+                    child: Center(
+                        child: Stack(
+                      alignment: Alignment(0.9, 0.7),
+                      children: [
+                        Image.asset("images/seal.gif"),
+                        Container(
+                          decoration: new BoxDecoration(
+                            border: new Border.all(
+                                color: Color.fromRGBO(248, 203, 173, 1),
+                                width: 5),
+                            color: Color.fromRGBO(255, 242, 204, 1),
+                            shape: BoxShape.rectangle,
+                            borderRadius: new BorderRadius.circular(15),
+                          ),
+                          child: Text(
+                            "${min}:${second}",
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Color.fromRGBO(105, 57, 8, 1)),
+                          ),
+                          padding: EdgeInsets.all(5),
                         ),
-                        child: Text(
-                          "${min}:${second}",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Color.fromRGBO(105, 57, 8, 1)),
-                        ),
-                        padding: EdgeInsets.all(5),
-                      ),
-                    ],
-                  )),
+                      ],
+                    )),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }

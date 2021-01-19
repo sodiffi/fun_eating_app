@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/itemTheme.dart';
+import 'package:flutter_app/inputN.dart';
 
 void main() {
   runApp(HomePage());
@@ -40,7 +41,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer.periodic(
-      Duration(seconds:3),
+      Duration(seconds: 3),
       (timer) {
         print("timer");
         Navigator.of(context)

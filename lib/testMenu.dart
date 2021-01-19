@@ -6,6 +6,8 @@ import 'package:flutter/rendering.dart';
 import 'input.dart';
 import 'train.dart';
 import 'home.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'itemTheme.dart';
 
 class TestMenu extends StatefulWidget {
   @override
@@ -31,42 +33,42 @@ class TestMenuPage extends StatelessWidget {
 
 class _TestMenuPageState extends State<TestMenu> {
   bool isStraight = false;
+  double imgW = 0;
 
   @override
   Widget build(BuildContext context) {
+    double sizeHeight = MediaQuery.of(context).size.height;
+    double sizeWidth = MediaQuery.of(context).size.width;
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+      imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.5;
     });
-    double sizeHeight = isStraight
-        ? MediaQuery.of(context).size.width
-        : MediaQuery.of(context).size.height;
-
     Widget buttonTrainBox = (Padding(
       padding: EdgeInsets.all(10),
       child: Container(
         padding: EdgeInsets.zero,
-        child: FlatButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => TrainPage()));
-          },
+        child: GestureDetector(
           child: Stack(
             alignment: const Alignment(0, 0),
             children: [
               Image.asset(
                 'images/trainBox.png',
-                width: isStraight
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : MediaQuery.of(context).size.height * 0.5,
-                height: isStraight
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : MediaQuery.of(context).size.height * 0.5,
+                width: imgW,
+                height: imgW,
                 fit: BoxFit.cover,
               ),
-              Text('操作教學')
+              AutoTextChange(
+                w: imgW,
+                s: "操作教學",
+                paddingW: imgW * 0.14,
+                paddingH: imgW * 0.14,
+              )
             ],
           ),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => TrainPage()));
+          },
         ),
       ),
     ));
@@ -74,10 +76,9 @@ class _TestMenuPageState extends State<TestMenu> {
       padding: EdgeInsets.all(10),
       child: Container(
         padding: EdgeInsets.zero,
-        child: FlatButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            Navigator.pushReplacement(context,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(context,
                 MaterialPageRoute(builder: (context) => TestInputPage()));
           },
           child: Stack(
@@ -85,54 +86,36 @@ class _TestMenuPageState extends State<TestMenu> {
             children: [
               Image.asset(
                 'images/testBox.png',
-                width: isStraight
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : MediaQuery.of(context).size.height * 0.5,
-                height: isStraight
-                    ? MediaQuery.of(context).size.height * 0.3
-                    : MediaQuery.of(context).size.height * 0.5,
+                width: imgW,
+                height: imgW,
                 fit: BoxFit.cover,
               ),
-              Text('開始檢測')
+              AutoTextChange(
+                w: imgW,
+                s: "開始檢測",
+                paddingW: imgW * 0.14,
+                paddingH: imgW * 0.14,
+              )
+              // Text('開始檢測',style: Theme.of(context).textTheme.subtitle1,)
             ],
           ),
         ),
       ),
     );
 
-    return Container(
-      color: Theme.of(context).backgroundColor,
-      child: SizedBox(
-        child: Column(
-          children: <Widget>[
-                Flex(
-                  direction: Axis.horizontal,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                        // child: AspectRatio(
-                        //   aspectRatio: 1 / 1,
-                        //   child: FlatButton(
-                        //     padding: EdgeInsets.zero,
-                        //     onPressed: () {
-                        //       Navigator.push(
-                        //           context,
-                        //           MaterialPageRoute(
-                        //               builder: (context) => HomeMenuPage()));
-                        //     },
-                        //     child: Image.asset(
-                        //       'images/home.png',
-                        //       height: 50,
-                        //       width: 50,
-                        //       fit: BoxFit.fill,
-                        //     ),
-                        //   ),
-                        // ),
-                        child: FlatButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
+    return SafeArea(
+      child: Container(
+        color: Theme.of(context).backgroundColor,
+        child: SizedBox(
+          child: Column(
+            children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -144,49 +127,48 @@ class _TestMenuPageState extends State<TestMenu> {
                             width: isStraight ? 50 : sizeHeight * 0.15,
                             fit: BoxFit.cover,
                           ),
-                        ),
-                      ),
+                        )
+                      ],
                     ),
-                    Spacer(flex: 6),
-                  ],
-                )
-              ] +
-              (isStraight
-                  ? [
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.85,
-                        child: Flex(
-                          direction: Axis.vertical,
-                          children: [
-                            Spacer(flex: 1),
-                            Expanded(
-                              flex: 9,
-                              child: Column(
-                                children: [
-                                  buttonTrainBox,
-                                  buttonTestBox,
-                                ],
+                  )
+                ] +
+                (isStraight
+                    ? [
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.85,
+                          child: Flex(
+                            direction: Axis.vertical,
+                            children: [
+                              Spacer(flex: 1),
+                              Expanded(
+                                flex: 9,
+                                child: Column(
+                                  children: [
+                                    buttonTrainBox,
+                                    buttonTestBox,
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ]
-                  : [
-                      Row(
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.02),
-                              child: buttonTrainBox),
-                          Padding(
-                              padding: EdgeInsets.all(
-                                  MediaQuery.of(context).size.width * 0.02),
-                              child: buttonTestBox)
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      ),
-                    ]),
+                      ]
+                    : [
+                        Row(
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.all(
+                                    MediaQuery.of(context).size.width * 0.02),
+                                child: buttonTrainBox),
+                            Padding(
+                                padding: EdgeInsets.all(
+                                    MediaQuery.of(context).size.width * 0.02),
+                                child: buttonTestBox)
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                      ]),
+          ),
         ),
       ),
     );
