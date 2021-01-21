@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
 import 'package:flutter_app/dataBean.dart';
+import 'package:flutter_app/customeItem.dart';
 import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class TestInputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    getCamera();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          fontFamily: "openhuninn",
-          textTheme: TextTheme(
-              bodyText1: TextStyle(fontSize: 20),
-              bodyText2: TextStyle(fontSize: 20),
-              subtitle1: TextStyle(fontSize: 20),
-              headline1: TextStyle(fontSize: 30, color: Colors.black))),
+      theme: ItemTheme.themeData,
       home: Scaffold(
           backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+          resizeToAvoidBottomPadding: false,
           body: Container(
             child: InputWidget(),
           )),
@@ -36,6 +34,9 @@ class InputWidget extends StatefulWidget {
 
 class InputPageState extends State<InputWidget> {
   bool isStraight = false;
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize;
   DataBean dataBean = new DataBean();
   List<String> items = [
     "雜糧類",
@@ -85,221 +86,259 @@ class InputPageState extends State<InputWidget> {
   Widget build(BuildContext context) {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+      sizeHeight = MediaQuery.of(context).size.height;
+      sizeWidth = MediaQuery.of(context).size.width;
+      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
-    double sizeHeight = MediaQuery.of(context).size.height;
 
-    double sizeWidth = MediaQuery.of(context).size.width;
+    Widget homeButton = Padding(
+      padding: EdgeInsets.all(5),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
+        },
+        child: Image.asset(
+          'images/home.png',
+          height: iconSize,
+          width: iconSize,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
-    getCamera();
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-        body: Center(
-          child: Container(
-            height: sizeHeight,
+    Widget sureButton = FlatButton(
+        onPressed: () {
+          if (area != "" && item != "") {
+            dataBean.cameras = cameras;
+            dataBean.step = 1;
+            dataBean.time = dateTime;
+            dataBean.fruitClass = item;
+            dataBean.area = area;
+            _asyncInputDialog(context, dataBean);
+          } else {
+            Fluttertoast.showToast(
+                msg: "請選擇蔬果類型與購買地點",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        },
+        child: Text("確定"));
+
+    Widget classDown = DropdownButton<String>(
+      hint: Container(
+        width: 150,
+        child: Center(
+          child: Text(item == "" ? "請選擇檢測蔬果" : item),
+        ),
+      ),
+      items: items.map((String value) {
+        return new DropdownMenuItem<String>(
+            value: value,
+            child: Center(
+              child: Text(value),
+            ));
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          item = value;
+        });
+      },
+    );
+    Widget areaDown = DropdownButton<String>(
+      hint: Container(
+        width: 150,
+        child: Center(
+          child: Text(area == "" ? "請選擇購買地點" : area),
+        ),
+      ),
+      items: areas.map((String value) {
+        return new DropdownMenuItem<String>(
+            value: value,
+            child: Center(
+              child: Text(value),
+            ));
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          area = value;
+        });
+      },
+    );
+
+
+
+    if (isStraight) {
+      return SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(5),
+          color: Color.fromRGBO(255, 245, 227, 1),
+          child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                  child: Row(
-                    children:[GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeMenuPage()));
-                      },
-                      child: Image.asset(
-                        'images/home.png',
-                        height: 45,
-                        width: 45,
-                        fit: BoxFit.cover,
-                      ),
-                    )] ,
-                  ),
-                )
-               ,
-                Flex(
-                  direction: Axis.horizontal,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [homeButton],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Container(),
-                      flex: 1,
-                    ),
                     Image.asset(
                       "images/note.png",
                       height: 50,
                     ),
-                    Text("檢測小筆記"),
-                    Expanded(
-                      child: Container(),
-                      flex: 1,
+                    AutoSizeText(
+                      "檢測小筆記",
+                      maxLines: 1,
+                      minFontSize: 28,
+
                     ),
                   ],
                 ),
-                Flex(
-                  direction: Axis.horizontal,
+                Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        width: isStraight ? 120 : sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        padding: EdgeInsets.all(0),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: Text("檢測蔬果"),
-                        ),
-                      ),
-                      flex: 1,
+                    Image.asset(
+                      'images/inputClass.png',
+                      width: sizeWidth * 0.2,
+                      fit: BoxFit.cover,
                     ),
-                    Expanded(
-                      child: Container(
-                        // width: isStraight ? 175 : sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        padding: EdgeInsets.all(0),
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: DropdownButton<String>(
-                            hint: Container(
-                              width: 150,
-                              child: Center(
-                                child: Text(item == "" ? "請選擇檢測蔬果" : item),
-                              ),
-                            ),
-                            items: items.map((String value) {
-                              return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Center(
-                                    child: Text(value),
-                                  ));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                item = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      flex: 1,
-                    ),
+                    AutoSizeText(
+                      "檢測蔬果",
+                      maxLines: 1,
+                      minFontSize: 28,
+                    )
+                    // Expanded(child: Padding(padding: EdgeInsets.all(5),child: ,)),
                   ],
                 ),
-                Flex(
-                  direction: Axis.horizontal,
+                classDown,
+                Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        width: isStraight ? 100 : sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        padding: EdgeInsets.all(0),
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: Text("來自/購買地區"),
-                        ),
-                      ),
-                      flex: 1,
+                    Image.asset(
+                      'images/inputArea.png',
+                      width: sizeWidth * 0.2,
+                      fit: BoxFit.cover,
                     ),
-                    Expanded(
-                      child: Container(
-                        // width: isStraight ? 50 : sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        padding: EdgeInsets.all(0),
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: DropdownButton<String>(
-                            hint: Container(
-                              width: 150,
-                              child: Center(
-                                child: Text(area == "" ? "請選擇購買地點" : area),
-                              ),
-                            ),
-                            items: areas.map((String value) {
-                              return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Center(
-                                    child: Text(value),
-                                  ));
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                area = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
+                    AutoSizeText(
+                      "來自/購買地區",
+                      maxLines: 1,
+                      minFontSize: 28,
+                    )
+
+                  ],
+                ),
+                areaDown,
+                Row(
+                  children: [
+                    Image.asset(
+                      'images/inputTime.png',
+                      width: sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                    AutoSizeText(
+                      "時間",
+                      maxLines: 1,
+                      minFontSize: 28,
                     )
                   ],
                 ),
-                Flex(
-                  direction: Axis.horizontal,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        width: isStraight ? 50 : sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        padding: EdgeInsets.all(0),
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: Text("時間"),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: sizeWidth * 0.38,
-                        height: sizeHeight * 0.14,
-                        padding: EdgeInsets.all(0),
-                        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        decoration: boxDecoration,
-                        child: Center(
-                          child: Text(dateTime),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                FlatButton(
-                    onPressed: () {
-                      if (area != "" && item != "") {
-                        dataBean.cameras = cameras;
-                        dataBean.step = 1;
-                        dataBean.time = dateTime;
-                        dataBean.fruitClass = item;
-                        dataBean.area = area;
-                        // Navigator.pushNamed(context, "/test",
-                        //     arguments: ScreenArgs.first(1, cameras));
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CameraApp(dataBean),
-                          ),
-                        );
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "請選擇蔬果類型與購買地點",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.grey,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                      }
-                    },
-                    child: Text("確定"))
+                Text(dateTime),
+                sureButton
               ],
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SafeArea(
+          child: Container(
+        color: Color.fromRGBO(255, 245, 227, 1),
+        padding: EdgeInsets.all(5),
+        child: Column(
+          children: [
+            Row(
+              children: [homeButton],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                    child: Center(
+                  child: Text("蔬果種類"),
+                )),
+                Expanded(
+                    child: Center(
+                  child: Text("購買地點"),
+                )),
+                Expanded(
+                    child: Center(
+                  child: Text("測驗時間"),
+                )),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: classDown,
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: areaDown,
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(dateTime),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                    child: Center(
+                  child: Image.asset(
+                    'images/inputClass.png',
+                    width: sizeWidth * 0.2,
+                    fit: BoxFit.cover,
+                  ),
+                )),
+                Expanded(
+                  child: Center(
+                    child: Image.asset(
+                      'images/inputArea.png',
+                      width: sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Image.asset(
+                      'images/inputTime.png',
+                      width: sizeWidth * 0.2,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [sureButton],
+            )
+          ],
+        ),
+      ));
+    }
   }
 }
 
@@ -316,4 +355,51 @@ Future<void> getCamera() async {
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
+}
+
+Future _asyncInputDialog(BuildContext context, DataBean dataBean) async {
+  String teamName = '';
+  return showDialog(
+    context: context,
+    barrierDismissible:
+        false, // dialog is dismissible with a tap on the barrier
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('開始測驗'),
+        content: new Row(
+          children: [
+            new Expanded(
+                child: new TextField(
+              autofocus: true,
+              decoration: new InputDecoration(
+                  labelText: '請輸入蔬果名稱(非必填)', hintText: '(非必填)'),
+              onChanged: (value) {
+                teamName = value;
+              },
+            ))
+          ],
+        ),
+        actions: [
+          FlatButton(
+            child: Text('開始'),
+            onPressed: () {
+              dataBean.fruitName = teamName;
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CameraApp(dataBean),
+                ),
+              );
+            },
+          ),
+          FlatButton(
+            child: Text('關閉'),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          )
+        ],
+      );
+    },
+  );
 }
