@@ -39,7 +39,9 @@ class AutoTextChange extends StatefulWidget  {
   final String s;
   final double paddingW;
   final double paddingH;
-  const AutoTextChange({Key key, this.w, this.s, this.paddingW, this.paddingH}): super(key: key);
+  AutoSizeGroup autoSizeGroup;
+   AutoTextChange({Key key, this.w, this.s, this.paddingW, this.paddingH}): super(key: key);
+   AutoTextChange.group({Key key, this.w, this.s, this.paddingW, this.paddingH,this.autoSizeGroup}): super(key: key);
 
   @override
   State<StatefulWidget> createState() {

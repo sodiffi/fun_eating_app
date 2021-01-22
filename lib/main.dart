@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/dataBean.dart';
 import 'package:flutter_app/home.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/itemTheme.dart';
-import 'package:flutter_app/inputN.dart';
+import 'package:flutter_app/customeItem.dart';
+
+import 'package:flutter_app/result.dart';
 
 void main() {
+  DataBean dataBean=new DataBean();
+  dataBean.result=0.3;
+
   runApp(HomePage());
 }
 

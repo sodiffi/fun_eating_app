@@ -231,7 +231,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           dataBean.result = (1 -
               ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
                   (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
-                  (dataBean.beforeAvg[1] / dataBean.afterAvg[1])));
+                  (dataBean.beforeAvg[1] / dataBean.afterAvg[1])))*100;
           if (dataBean.result.isNaN) dataBean.result = 0;
 
           Navigator.pushReplacement(cc,
@@ -429,7 +429,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     controller = CameraController(
       cameraDescription,
       ResolutionPreset.medium,
-      enableAudio: enableAudio,
     );
 
     // If the controller is updated then update the UI.

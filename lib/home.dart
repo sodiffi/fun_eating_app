@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/dataBean.dart';
 import 'package:flutter_app/record.dart';
 import 'package:flutter_app/sqlLite.dart';
 import 'package:flutter_app/test.dart';
-import 'package:flutter_app/itemTheme.dart';
+import 'package:flutter_app/customeItem.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -30,6 +32,11 @@ class HomeMenuState extends State<HomeMenu> {
   int testTime = 0;
   bool isStraight = false;
   DataBean dataBean = new DataBean();
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize;
+  double linkSize;
+  int temp;
 
   void toTest() {
     dataBean.step = 0;
@@ -56,48 +63,44 @@ class HomeMenuState extends State<HomeMenu> {
         }));
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+      sizeHeight = MediaQuery.of(context).size.height;
+      sizeWidth = MediaQuery.of(context).size.width;
+      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+      linkSize = isStraight
+          ? min(sizeHeight * 0.25, sizeWidth * 0.4)
+          : sizeWidth * 0.17;
     });
     getCameras();
-    double sizeHeight = MediaQuery.of(context).size.height;
-    double sizeWidth = MediaQuery.of(context).size.width;
+    AutoSizeGroup linkGroup = AutoSizeGroup();
+    AutoSizeGroup LargeGroup = AutoSizeGroup();
     List<Widget> homeButton = [
-      GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
-        },
-        child: Image.asset(
-          'images/setting.png',
-          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          fit: BoxFit.cover,
+      Padding(
+        padding: EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => HomeMenuPage()));
+          },
+          child: Image.asset(
+            'images/setting.png',
+            height: iconSize,
+            width: iconSize,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
-      GestureDetector(
-        onTap: _launchURLCustomerService,
-        child: Image.asset(
-          'images/customerService.png',
-          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          fit: BoxFit.cover,
+      Padding(
+        padding: EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: _launchURLCustomerService,
+          child: Image.asset(
+            'images/customerService.png',
+            height: iconSize,
+            width: iconSize,
+            fit: BoxFit.cover,
+          ),
         ),
       )
-    ];
-
-    List<Widget> actionButton = [
-      FloatingActionButton(
-        onPressed: () {},
-        child: Image.asset(
-          "images/setting.png",
-          width: sizeHeight * 0.3,
-        ),
-        heroTag: "setting",
-      ),
-      FloatingActionButton(
-        onPressed: _launchURLCustomerService,
-        child: Image.asset("images/customerService.png"),
-        heroTag: "customerService",
-      ),
     ];
 
     List<Widget> linkButtons = [
@@ -113,27 +116,16 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      width: linkSize,
                       fit: BoxFit.cover,
                     ),
-                    AutoTextChange(w:  isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
-                    s: "農食小知識",paddingW: isStraight
-                          ? sizeHeight * 0.25 * 0.14
-                          : sizeWidth * 0.2 * 0.14,paddingH: isStraight
-                        ? sizeHeight * 0.25 * 0.14
-                        : sizeWidth * 0.2 * 0.14,),
-
-                    // Container(
-                    //   width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
-                    //   child: AutoSizeText(
-                    //     "農食小知識",
-                    //     maxLines: 1,
-                    //     style: ItemTheme.textStyle,
-                    //   ),
-                    //   padding: EdgeInsets.all(isStraight
-                    //       ? sizeHeight * 0.25 * 0.14
-                    //       : sizeWidth * 0.2 * 0.14),
-                    // )
+                    AutoTextChange.group(
+                      w: linkSize,
+                      s: "農食小知識",
+                      paddingW: linkSize * 0.14,
+                      paddingH: 0,
+                      autoSizeGroup: linkGroup,
+                    ),
                   ],
                 ),
               )),
@@ -149,19 +141,15 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      width: linkSize,
                       fit: BoxFit.cover,
                     ),
-                    Container(
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
-                      child: AutoSizeText(
-                        "檢測紀錄",
-                        maxLines: 1,
-                        style: ItemTheme.textStyle,
-                      ),
-                      padding: EdgeInsets.all(isStraight
-                          ? sizeHeight * 0.25 * 0.14
-                          : sizeWidth * 0.2 * 0.14),
+                    AutoTextChange.group(
+                      w: linkSize,
+                      s: "檢測紀錄",
+                      paddingW: linkSize * 0.14,
+                      paddingH: 0,
+                      autoSizeGroup: linkGroup,
                     )
                   ],
                 ),
@@ -180,19 +168,15 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      width: linkSize,
                       fit: BoxFit.cover,
                     ),
-                    Container(
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
-                      child: AutoSizeText(
-                        "農食地圖",
-                        maxLines: 1,
-                        style: ItemTheme.textStyle,
-                      ),
-                      padding: EdgeInsets.all(isStraight
-                          ? sizeHeight * 0.25 * 0.14
-                          : sizeWidth * 0.2 * 0.14),
+                    AutoTextChange.group(
+                      w: linkSize,
+                      s: "農食地圖",
+                      paddingW: linkSize * 0.14,
+                      paddingH: 0,
+                      autoSizeGroup: linkGroup,
                     )
                   ],
                 ),
@@ -206,19 +190,15 @@ class HomeMenuState extends State<HomeMenu> {
                   children: [
                     Image.asset(
                       "images/txtBox.png",
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
+                      width: linkSize,
                       fit: BoxFit.cover,
                     ),
-                    Container(
-                      width: isStraight ? sizeHeight * 0.25 : sizeWidth * 0.2,
-                      child: AutoSizeText(
-                        "放心店家",
-                        maxLines: 1,
-                        style: ItemTheme.textStyle,
-                      ),
-                      padding: EdgeInsets.all(isStraight
-                          ? sizeHeight * 0.25 * 0.14
-                          : sizeWidth * 0.2 * 0.14),
+                    AutoTextChange.group(
+                      w: linkSize,
+                      s: "放心店家",
+                      paddingW: linkSize * 0.14,
+                      paddingH: 0,
+                      autoSizeGroup: linkGroup,
                     )
                   ],
                 ),
@@ -228,18 +208,15 @@ class HomeMenuState extends State<HomeMenu> {
     ];
     List<Widget> txtAndTestBtn = [
       // Padding(padding: EdgeInsets.all(2)),
-      AutoSizeText("FUN心吃專家等級\n檢測${testTime}次",style: ItemTheme.textStyle,maxLines: 2,textAlign: TextAlign.center,),
-      // AutoSizeText("",style: ItemTheme.textStyle,),
-      // Text(
-      //   ,
-      //   style: Theme.of(context).textTheme.bodyText1,
-      // ),
-      // Text(
-      //
-      //   style: Theme.of(context).textTheme.bodyText2,
-      // ),
+      AutoSizeText(
+        "FUN心吃專家等級\n檢測${testTime}次",
+        style: ItemTheme.textStyle,
+        maxLines: 2,
+        textAlign: TextAlign.center,
+
+      ),
       Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
         child: GestureDetector(
           onTap: toTest,
           child: Stack(
@@ -275,11 +252,8 @@ class HomeMenuState extends State<HomeMenu> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                  child: Row(
-                    children: homeButton,
-                  ),
+                Row(
+                  children: homeButton,
                 ),
                 Image.asset(
                   "images/logo_h.png",
@@ -289,7 +263,7 @@ class HomeMenuState extends State<HomeMenu> {
                   children: txtAndTestBtn,
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
                   child: Column(
                     children: linkButtons,
                   ),
@@ -300,15 +274,15 @@ class HomeMenuState extends State<HomeMenu> {
     } else {
       //橫立畫面
       return SafeArea(
+
         child: Container(
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          width: sizeHeight * 1,
+          padding: EdgeInsets.all(5),
           color: Theme.of(context).backgroundColor,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                children: actionButton,
+                children: homeButton,
               ),
               Expanded(
                   child: Column(
@@ -316,7 +290,7 @@ class HomeMenuState extends State<HomeMenu> {
                 children: <Widget>[
                       Image.asset(
                         "images/logo.png",
-                        width: sizeHeight * 0.35,
+                        width: sizeHeight * 0.4,
                       )
                     ] +
                     linkButtons,

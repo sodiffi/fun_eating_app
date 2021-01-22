@@ -1,6 +1,7 @@
 // import 'dart:html';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_app/dataBean.dart';
+import 'package:flutter_app/customeItem.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/home.dart';
@@ -11,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
 import 'sqlLite.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 // import 'package:permission_handler/permission_handler.dart';
 
@@ -79,10 +81,10 @@ class ResultPage extends StatelessWidget {
       String csv = const ListToCsvConverter().convert(rows);
       await f.writeAsString(csv);
       FTPClient ftpClient =
-          FTPClient('120.106.210.250', user: 'admin', pass: 'wj/61j4zj6gk4');
+      FTPClient('ftp.byethost12.com', user: 'b12_27143036', pass: 'xkpt3v');
       ftpClient.connect();
       print("platformIemi\t" + platformImei);
-      ftpClient.changeDirectory("Public/PesticsdeTest_upload/");
+      ftpClient.changeDirectory("htdocs/fun_heart_eating/");
       ftpClient.makeDirectory(platformImei);
       ftpClient.changeDirectory(platformImei);
       await ftpClient.uploadFile(f);
@@ -104,25 +106,11 @@ class ResultPage extends StatelessWidget {
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-          fontFamily: "openhuninn",
-          floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-            shape: RoundedRectangleBorder(),
-            elevation: 0,
-          ),
-          textTheme: TextTheme(
-            bodyText1: TextStyle(
-              fontSize: 30,
-              color: result < 35
-                  ? Colors.green
-                  : (result < 45 ? Colors.amber : Colors.red),
-              decoration: TextDecoration.none,
-            ),
-          ),
-        ),
-        home: Result());
+        theme: ItemTheme.themeData,
+        home: Scaffold(
+          resizeToAvoidBottomPadding: false,
+          body: Result(),
+        ));
   }
 }
 
@@ -137,6 +125,11 @@ class Result extends StatefulWidget {
 
 class ResultState extends State<Result> {
   bool isStraight = false;
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize;
+  double reportBoxW;
+  double reportBoxH;
 
   @override
   void initState() {
@@ -147,174 +140,215 @@ class ResultState extends State<Result> {
   Widget build(BuildContext context) {
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+      sizeHeight = MediaQuery.of(context).size.height;
+      sizeWidth = MediaQuery.of(context).size.width;
+      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+      reportBoxW=isStraight? sizeWidth * 0.8:sizeWidth*0.3 ;
+      reportBoxH=isStraight?sizeHeight * 0.4:sizeHeight*0.7;
     });
-    double sizeHeight = MediaQuery.of(context).size.height;
-    double sizeWidth = MediaQuery.of(context).size.width;
+
     List<Widget> homeButton = [
-      GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
-        },
-        child: Image.asset(
-          'images/home.png',
-          height: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          width: isStraight ? sizeWidth / 7 : sizeHeight * 0.03,
-          fit: BoxFit.cover,
+      Padding(
+        padding: EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => HomeMenuPage()));
+          },
+          child: Image.asset(
+            'images/home.png',
+            height: iconSize,
+            width: iconSize,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: _launchURLCustomerService,
+          child: Image.asset(
+            'images/customerService.png',
+            height: iconSize,
+            width: iconSize,
+            fit: BoxFit.cover,
+          ),
         ),
       )
     ];
+
+    Widget report=Stack(
+      alignment: const Alignment(0.0, 0.0),
+      children: [
+        Image.asset(
+          "images/report.png",
+          width: reportBoxW,
+          height: reportBoxH,
+          fit: BoxFit.fill,
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(reportBoxW*0.1, reportBoxH*0.1, reportBoxW*0.1,  reportBoxH*0.1),
+          width: reportBoxW,
+          height: reportBoxH,
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+
+                    width: reportBoxW*0.8 - iconSize,
+                    height: iconSize,
+                    child: Center(child: AutoSizeText(
+
+                      "檢測報告",
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 100,
+                        color: Color.fromRGBO(177, 48, 5, 1),
+                      ),
+                    ),),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Image.asset(
+                      'images/share.png',
+                      height: iconSize,
+                      width: iconSize,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                width: reportBoxW* 0.8 - iconSize,
+                height: iconSize,
+                child: AutoSizeText(
+                  "農試所判定標準",
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 100,
+                    color: Color.fromRGBO(177, 48, 5, 1),
+                  ),
+                ),
+              ),
+              Text(
+                content,
+                style: TextStyle(
+                  fontSize: 30,
+                  color: result < 35
+                      ? Colors.green
+                      : (result < 45
+                      ? Colors.amber
+                      : Colors.red),
+                  decoration: TextDecoration.none,
+                ),
+              )
+            ],
+          ),
+        )
+      ],
+    );
+
     if (isStraight) {
       return SafeArea(
         child: Container(
           color: Color.fromRGBO(255, 245, 227, 1),
-          child: Column(children: [
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                  child: Row(
-                    children: homeButton,
-                  ),
-                )
-              ],
-            ),
-            Stack(
-              alignment: const Alignment(0.0, -0.1),
-              children: [
-                Image.asset("images/rateBox.png"),
-                Text(
-                  rate,
-                  style: new TextStyle(
-                    fontSize: 50,
-                    decoration: TextDecoration.none,
-                    color: Color.fromRGBO(153, 87, 37, 1),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: []),
-                Stack(
-                  alignment: const Alignment(0.0, 0.2),
-                  children: [
-                    Stack(
-                      alignment: const Alignment(0.8, -0.8),
-                      children: [
-                        Image.asset("images/report.png"),
-                        Image.asset("images/share.png"),
-                      ],
-                    ),
-                    Text(
-                      content,
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: result < 35
-                            ? Colors.green
-                            : (result < 45 ? Colors.amber : Colors.red),
-                        decoration: TextDecoration.none,
-                      ),
-
-                      // rate < 35
-                      //     ? "合格"
-                      //     : rate < 45
-                      //         ? ""
-                      //         : "銷毀或\n將樣品送衛生局複檢",
-                      // style: new TextStyle(fontSize: 45),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          ]),
-        ),
-      );
-    } else {
-      return SafeArea(
-        child: Container(
-          color: Color.fromRGBO(255, 245, 227, 1),
+          width: sizeWidth,
+          height: sizeHeight,
+          padding: EdgeInsets.all(5),
           child: Column(
-
-              // mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                ),
                 Row(
+                  children:                     homeButton
+                  ,
+                ),
+                SizedBox(
+                  width: reportBoxW* 0.8 ,
+                  height: iconSize,
+                  child: AutoSizeText(
+                    "蔬果汁抑制率",
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontSize: 150,
+                      color: Color.fromRGBO(177, 48, 5, 1),
+                    ),
+                  ),
+                ),
+                Stack(
+                  alignment: const Alignment(0.0, -0.1),
                   children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeMenuPage()));
-                      },
-                      child: Image.asset("images/home.png"),
-                      heroTag: "home",
-                    ),
-                    FloatingActionButton(
-                      onPressed: _launchURLCustomerService,
-                      child: Image.asset("images/customerService.png"),
-                      heroTag: "customerService",
-                    ),
+                    Image.asset("images/rateBox.png"),
+                    Text(
+                      rate,
+                      style: new TextStyle(
+                        fontSize: 50,
+                        decoration: TextDecoration.none,
+                        color: Color.fromRGBO(153, 87, 37, 1),
+                      ),
+                    )
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Stack(
-                            alignment: const Alignment(0.0, -0.1),
-                            children: [
-                              Image.asset("images/rateBox.png"),
-                              Text(
-                                rate,
-                                style: new TextStyle(
-                                  fontSize: 50,
-                                  decoration: TextDecoration.none,
-                                  color: Color.fromRGBO(153, 87, 37, 1),
-                                ),
-                              )
-                            ],
-                          )
-                        ]),
-                    Stack(
-                      alignment: const Alignment(0.0, 0.2),
-                      children: [
-                        Stack(
-                          alignment: const Alignment(0.8, -0.8),
-                          children: [
-                            Image.asset("images/report.png"),
-                            Image.asset("images/share.png"),
-                          ],
-                        ),
-                        Text(
-                          content,
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: result < 35
-                                ? Colors.green
-                                : (result < 45 ? Colors.amber : Colors.red),
-                            decoration: TextDecoration.none,
-                          ),
-                          // (rate<35
-                          //     ? "合格"
-                          //     :(rate<45
-                          //         ? "通知供應單位延期採收\n追蹤農民用藥"
-                          //         : "銷毀或\n將樣品送衛生局複檢")),
-                          // style: new TextStyle(fontSize: 45),
-                        )
-                      ],
-                    ),
+                    report
                   ],
                 ),
               ]),
+        ),
+      );
+    } else {
+      return SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(5),
+          color: Color.fromRGBO(255, 245, 227, 1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: homeButton,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: reportBoxW* 0.8 ,
+                    height: iconSize,
+                    child: AutoSizeText(
+                      "蔬果汁抑制率",
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 150,
+                        color: Color.fromRGBO(177, 48, 5, 1),
+                      ),
+                    ),
+                  )
+                  ,
+                  Stack(
+                    alignment: const Alignment(0.0, -0.2),
+                    children: [
+                      Image.asset("images/rateBox.png"),
+                      Text(
+                        rate,
+                        style: new TextStyle(
+                          fontSize: 50,
+                          decoration: TextDecoration.none,
+                          color: Color.fromRGBO(153, 87, 37, 1),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              )
+              ,
+              report
+            ],
+          ),
         ),
       );
     }

@@ -7,7 +7,7 @@ import 'input.dart';
 import 'train.dart';
 import 'home.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'itemTheme.dart';
+import 'customeItem.dart';
 
 class TestMenu extends StatefulWidget {
   @override
@@ -33,17 +33,21 @@ class TestMenuPage extends StatelessWidget {
 
 class _TestMenuPageState extends State<TestMenu> {
   bool isStraight = false;
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize;
   double imgW = 0;
 
   @override
   Widget build(BuildContext context) {
-    double sizeHeight = MediaQuery.of(context).size.height;
-    double sizeWidth = MediaQuery.of(context).size.width;
     this.setState(() {
+      sizeHeight = MediaQuery.of(context).size.height;
+      sizeWidth = MediaQuery.of(context).size.width;
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.5;
+      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+      imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3;
     });
-    Widget buttonTrainBox = (Padding(
+    Widget buttonTrainBox = Padding(
       padding: EdgeInsets.all(10),
       child: Container(
         padding: EdgeInsets.zero,
@@ -71,7 +75,7 @@ class _TestMenuPageState extends State<TestMenu> {
           },
         ),
       ),
-    ));
+    );
     Widget buttonTestBox = Padding(
       padding: EdgeInsets.all(10),
       child: Container(
@@ -96,7 +100,6 @@ class _TestMenuPageState extends State<TestMenu> {
                 paddingW: imgW * 0.14,
                 paddingH: imgW * 0.14,
               )
-              // Text('開始檢測',style: Theme.of(context).textTheme.subtitle1,)
             ],
           ),
         ),
@@ -105,31 +108,32 @@ class _TestMenuPageState extends State<TestMenu> {
 
     return SafeArea(
       child: Container(
+        padding: EdgeInsets.all(5),
         color: Theme.of(context).backgroundColor,
         child: SizedBox(
           child: Column(
             children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: GestureDetector(
                           onTap: () {
-                            Navigator.pushReplacement(
+                            Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => HomeMenuPage()));
                           },
                           child: Image.asset(
                             'images/home.png',
-                            height: isStraight ? 50 : sizeHeight * 0.15,
-                            width: isStraight ? 50 : sizeHeight * 0.15,
+                            height: iconSize,
+                            width: iconSize,
                             fit: BoxFit.cover,
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      )
+                    ],
                   )
                 ] +
                 (isStraight
@@ -158,11 +162,11 @@ class _TestMenuPageState extends State<TestMenu> {
                           children: [
                             Padding(
                                 padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.02),
+                                    MediaQuery.of(context).size.width * 0.01),
                                 child: buttonTrainBox),
                             Padding(
                                 padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.02),
+                                    MediaQuery.of(context).size.width * 0.01),
                                 child: buttonTestBox)
                           ],
                           mainAxisAlignment: MainAxisAlignment.center,
