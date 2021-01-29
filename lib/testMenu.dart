@@ -106,72 +106,75 @@ class _TestMenuPageState extends State<TestMenu> {
       ),
     );
 
-    return SafeArea(
-      child: Container(
-        padding: EdgeInsets.all(5),
-        color: Theme.of(context).backgroundColor,
-        child: SizedBox(
-          child: Column(
-            children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeMenuPage()));
-                          },
-                          child: Image.asset(
-                            'images/home.png',
-                            height: iconSize,
-                            width: iconSize,
-                            fit: BoxFit.cover,
+    return Container(
+      color:Theme.of(context).backgroundColor,
+      child: SafeArea(
+        child: Container(
+          padding: EdgeInsets.all(5),
+          color: Theme.of(context).backgroundColor,
+          child: SizedBox(
+            child: Column(
+              children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => HomeMenuPage()));
+                            },
+                            child: Image.asset(
+                              'images/home.png',
+                              height: iconSize,
+                              width: iconSize,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-                ] +
-                (isStraight
-                    ? [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.85,
-                          child: Flex(
-                            direction: Axis.vertical,
-                            children: [
-                              Spacer(flex: 1),
-                              Expanded(
-                                flex: 9,
-                                child: Column(
-                                  children: [
-                                    buttonTrainBox,
-                                    buttonTestBox,
-                                  ],
+                        )
+                      ],
+                    )
+                  ] +
+                  (isStraight
+                      ? [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            child: Flex(
+                              direction: Axis.vertical,
+                              children: [
+                                Spacer(flex: 1),
+                                Expanded(
+                                  flex: 9,
+                                  child: Column(
+                                    children: [
+                                      buttonTrainBox,
+                                      buttonTestBox,
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ]
-                    : [
-                        Row(
-                          children: [
-                            Padding(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.01),
-                                child: buttonTrainBox),
-                            Padding(
-                                padding: EdgeInsets.all(
-                                    MediaQuery.of(context).size.width * 0.01),
-                                child: buttonTestBox)
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.center,
-                        ),
-                      ]),
+                        ]
+                      : [
+                          Row(
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.width * 0.01),
+                                  child: buttonTrainBox),
+                              Padding(
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context).size.width * 0.01),
+                                  child: buttonTestBox)
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                        ]),
+            ),
           ),
         ),
       ),

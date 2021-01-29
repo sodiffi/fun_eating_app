@@ -262,68 +262,21 @@ class ResultState extends State<Result> {
     );
 
     if (isStraight) {
-      return SafeArea(
-        child: Container(
-          color: Color.fromRGBO(255, 245, 227, 1),
-          width: sizeWidth,
-          height: sizeHeight,
-          padding: EdgeInsets.all(5),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children:                     homeButton
-                  ,
-                ),
-                SizedBox(
-                  width: reportBoxW* 0.8 ,
-                  height: iconSize,
-                  child: AutoSizeText(
-                    "蔬果汁抑制率",
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 150,
-                      color: Color.fromRGBO(177, 48, 5, 1),
-                    ),
-                  ),
-                ),
-                Stack(
-                  alignment: const Alignment(0.0, -0.1),
-                  children: [
-                    Image.asset("images/rateBox.png"),
-                    Text(
-                      rate,
-                      style: new TextStyle(
-                        fontSize: 50,
-                        decoration: TextDecoration.none,
-                        color: Color.fromRGBO(153, 87, 37, 1),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    report
-                  ],
-                ),
-              ]),
-        ),
-      );
-    } else {
-      return SafeArea(
-        child: Container(
-          padding: EdgeInsets.all(5),
-          color: Color.fromRGBO(255, 245, 227, 1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: homeButton,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      return Container(
+        color: Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Container(
+            color: Color.fromRGBO(255, 245, 227, 1),
+            width: sizeWidth,
+            height: sizeHeight,
+            padding: EdgeInsets.all(5),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    children:                     homeButton
+                    ,
+                  ),
                   SizedBox(
                     width: reportBoxW* 0.8 ,
                     height: iconSize,
@@ -335,10 +288,9 @@ class ResultState extends State<Result> {
                         color: Color.fromRGBO(177, 48, 5, 1),
                       ),
                     ),
-                  )
-                  ,
+                  ),
                   Stack(
-                    alignment: const Alignment(0.0, -0.2),
+                    alignment: const Alignment(0.0, -0.1),
                     children: [
                       Image.asset("images/rateBox.png"),
                       Text(
@@ -350,12 +302,66 @@ class ResultState extends State<Result> {
                         ),
                       )
                     ],
-                  )
-                ],
-              )
-              ,
-              report
-            ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      report
+                    ],
+                  ),
+                ]),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        color: Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            color: Color.fromRGBO(255, 245, 227, 1),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: homeButton,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: reportBoxW* 0.8 ,
+                      height: iconSize,
+                      child: AutoSizeText(
+                        "蔬果汁抑制率",
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 150,
+                          color: Color.fromRGBO(177, 48, 5, 1),
+                        ),
+                      ),
+                    )
+                    ,
+                    Stack(
+                      alignment: const Alignment(0.0, -0.2),
+                      children: [
+                        Image.asset("images/rateBox.png"),
+                        Text(
+                          rate,
+                          style: new TextStyle(
+                            fontSize: 50,
+                            decoration: TextDecoration.none,
+                            color: Color.fromRGBO(153, 87, 37, 1),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                )
+                ,
+                report
+              ],
+            ),
           ),
         ),
       );

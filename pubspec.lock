@@ -156,6 +156,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  lamp:
+    dependency: "direct dev"
+    description:
+      name: lamp
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.6"
   matcher:
     dependency: transitive
     description:

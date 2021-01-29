@@ -31,6 +31,7 @@ dev_dependencies:
   vibration: ^1.7.3
   shared_preferences: ^0.5.12
   flutter_share: ^1.0.5
+  lamp:
 
 flutter:
   uses-material-design: true
