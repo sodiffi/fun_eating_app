@@ -40,6 +40,7 @@ class FunHeart {
     area = map[columnArea];
     rate = double.parse(map[columnRate].toString());
   }
+
   String output() {
     return "-------\ntime\t${time}\nclass\t${fruitClass}\nname\t${name}\narea\t${area}\nrate\t${rate}\n-------";
   }
@@ -68,23 +69,39 @@ class FunHeartProvider {
     return funHeart;
   }
 
-  Future<List<Map>> getFunHeart() async {
+  Future<List<FunHeart>> getFunHeartList() async {
+    List<FunHeart> result = new List();
+    if (db != null) {
 
-
-    if(db!=null){
       List<Map> maps = await db.query(table,
           columns: [columnId, columnClass, columnName, columnArea, columnRate]);
 
       if (maps.length > 0) {
-
-        return maps;
-      }else{
+        maps.forEach((element) {
+          result.add(FunHeart.fromMap(element));
+        });
+        return result;
+      } else {
         return null;
       }
-    }else{
+    } else {
       return null;
     }
+  }
 
+  Future<List<Map>> getFunHeart() async {
+    if (db != null) {
+      List<Map> maps = await db.query(table,
+          columns: [columnId, columnClass, columnName, columnArea, columnRate]);
+
+      if (maps.length > 0) {
+        return maps;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   Future close() async => db.close();
