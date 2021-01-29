@@ -246,66 +246,71 @@ class HomeMenuState extends State<HomeMenu> {
 
     //直立畫面
     if (isStraight) {
-      return SafeArea(
-        child: Container(
-          color: Theme.of(context).backgroundColor,
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: homeButton,
-                ),
-                Image.asset(
-                  "images/logo_h.png",
-                  height: sizeHeight * 0.1,
-                ),
-                Column(
-                  children: txtAndTestBtn,
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                  child: Column(
-                    children: linkButtons,
+      return Container(
+        color:Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Container(
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: homeButton,
                   ),
-                )
-              ]),
+                  Image.asset(
+                    "images/logo_h.png",
+                    height: sizeHeight * 0.1,
+                  ),
+                  Column(
+                    children: txtAndTestBtn,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    child: Column(
+                      children: linkButtons,
+                    ),
+                  )
+                ]),
+          ),
         ),
       );
     } else {
       //橫立畫面
-      return SafeArea(
-
-        child: Container(
-          padding: EdgeInsets.all(5),
-          color: Theme.of(context).backgroundColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: homeButton,
-              ),
-              Expanded(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                      Image.asset(
-                        "images/logo.png",
-                        width: sizeHeight * 0.4,
-                      )
-                    ] +
-                    linkButtons,
-              )),
-              Expanded(
-                  child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: txtAndTestBtn,
+      return Container(
+        color: Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Container(
+            padding: EdgeInsets.all(5),
+            color: Theme.of(context).backgroundColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: homeButton,
                 ),
-              )),
-              Container(),
-              Container(),
-            ],
+                Expanded(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                        Image.asset(
+                          "images/logo.png",
+                          width: sizeHeight * 0.4,
+                        )
+                      ] +
+                      linkButtons,
+                )),
+                Expanded(
+                    child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: txtAndTestBtn,
+                  ),
+                )),
+                Container(),
+                Container(),
+              ],
+            ),
           ),
         ),
       );

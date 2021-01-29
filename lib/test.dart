@@ -16,6 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
+import 'package:lamp/lamp.dart';
+
 class CameraApp extends StatelessWidget {
   DataBean dataBean = new DataBean();
 
@@ -127,7 +129,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    controller.setFlashMode(FlashMode.off);
+    if(Platform.isIOS) Lamp.turnOff();
+    else controller.setFlashMode(FlashMode.off);
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
@@ -195,7 +198,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         }
         timer.cancel();
 
-        controller.setFlashMode(FlashMode.off);
+        if(Platform.isIOS) Lamp.turnOff();
+        else controller.setFlashMode(FlashMode.off);
         controller.dispose();
         Navigator.pushReplacement(
             cc, MaterialPageRoute(builder: (context) => TestMenuPage()));
@@ -219,7 +223,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         getImg = true;
       }
       if (timer.tick > testTime) {
-        if (isRing??false) {
+        if (isRing??true) {
           FlutterRingtonePlayer.play(
             android: AndroidSounds.ringtone,
             ios: const IosSound(1023),
@@ -227,13 +231,14 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
             volume: 0.1,
           );
         }
-        if (isShock??false) {
+        if (isShock??true) {
           Vibration.vibrate(duration: 1000);
           Vibration.cancel();
         }
 
         timer.cancel();
-        controller.setFlashMode(FlashMode.off);
+        if(Platform.isIOS) Lamp.turnOff();
+        else controller.setFlashMode(FlashMode.off);
         if (step == 1) {
           print("before List" + dataBean.beforeL.toString());
           dataBean.beforeAvg = getData(dataBean.beforeL);
@@ -471,7 +476,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       _showCameraException(e);
     }
     controller.startImageStream((image) => {getRGB(image)});
+    
     await controller.setFlashMode(FlashMode.torch);
+    if(Platform.isIOS) Lamp.turnOn();
   }
 
   void _showCameraException(CameraException e) {

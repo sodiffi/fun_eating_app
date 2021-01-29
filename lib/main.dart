@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/home.dart';
+import 'dataBean.dart';
+import 'home.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/customeItem.dart';
+import 'customeItem.dart';
 
-import 'package:flutter_app/result.dart';
+import 'result.dart';
+import 'package:vibration/vibration.dart';
 
 void main() {
   DataBean dataBean=new DataBean();
@@ -48,6 +49,8 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
+        Vibration.vibrate(duration: 1000);
+        Vibration.cancel();
         print("timer");
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);

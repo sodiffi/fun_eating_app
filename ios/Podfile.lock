@@ -2,6 +2,10 @@ PODS:
   - Flutter (1.0.0)
   - flutter_better_camera (0.6.0):
     - Flutter
+  - flutter_ringtone_player (0.0.1):
+    - Flutter
+  - flutter_share (0.0.1):
+    - Flutter
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
@@ -10,9 +14,11 @@ PODS:
   - FMDB/standard (2.7.5)
   - imei_plugin (0.0.1):
     - Flutter
+  - lamp (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (5.0.1+1)":
+  - shared_preferences (0.0.1):
     - Flutter
   - simple_permissions (0.0.1):
     - Flutter
@@ -22,17 +28,23 @@ PODS:
   - Toast (4.0.0)
   - url_launcher (0.0.1):
     - Flutter
+  - vibration (1.7.3):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_better_camera (from `.symlinks/plugins/flutter_better_camera/ios`)
+  - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
+  - flutter_share (from `.symlinks/plugins/flutter_share/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - imei_plugin (from `.symlinks/plugins/imei_plugin/ios`)
+  - lamp (from `.symlinks/plugins/lamp/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - simple_permissions (from `.symlinks/plugins/simple_permissions/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - vibration (from `.symlinks/plugins/vibration/ios`)
 
 SPEC REPOS:
   trunk:
@@ -44,34 +56,46 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_better_camera:
     :path: ".symlinks/plugins/flutter_better_camera/ios"
+  flutter_ringtone_player:
+    :path: ".symlinks/plugins/flutter_ringtone_player/ios"
+  flutter_share:
+    :path: ".symlinks/plugins/flutter_share/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   imei_plugin:
     :path: ".symlinks/plugins/imei_plugin/ios"
+  lamp:
+    :path: ".symlinks/plugins/lamp/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
-  permission_handler:
-    :path: ".symlinks/plugins/permission_handler/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
   simple_permissions:
     :path: ".symlinks/plugins/simple_permissions/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
+  vibration:
+    :path: ".symlinks/plugins/vibration/ios"
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_better_camera: f0dcb72bf079742d017c71b67d42324d9987fa30
+  flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
+  flutter_share: 4be0208963c60b537e6255ed2ce1faae61cd9ac2
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   imei_plugin: cb1af7c223ac2d82dcd1457a7137d93d65d2a3cd
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  permission_handler: eac8e15b4a1a3fba55b761d19f3f4e6b005d15b6
+  lamp: d36cd3552d535c77ab49112704c0c9386b9268bb
+  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   simple_permissions: 149cd87a11f83c24bf99f6e8a82f9fc8b70be233
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
+  vibration: b5a33e764c3f609a975b9dca73dce20fdde627dc
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: a43819370a64fa7f8f56d72a1e1e14e81047883a
 
 COCOAPODS: 1.10.0
