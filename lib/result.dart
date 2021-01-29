@@ -1,10 +1,10 @@
 // import 'dart:html';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/customeItem.dart';
+import 'dataBean.dart';
+import 'customeItem.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/home.dart';
+import 'home.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
 import 'package:simple_permissions/simple_permissions.dart';
@@ -13,6 +13,7 @@ import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
 import 'sqlLite.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_share/flutter_share.dart';
 
 // import 'package:permission_handler/permission_handler.dart';
 
@@ -131,6 +132,13 @@ class ResultState extends State<Result> {
   double reportBoxW;
   double reportBoxH;
 
+  Future<void> share() async {
+    await FlutterShare.share(
+        title: '蔬果農藥檢測',
+      text: '蔬果抑制率為:'+rate,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -213,7 +221,7 @@ class ResultState extends State<Result> {
                     ),),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: share,
                     child: Image.asset(
                       'images/share.png',
                       height: iconSize,

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/home.dart';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/sqlLite.dart';
+import 'home.dart';
+import 'dataBean.dart';
+import 'sqlLite.dart';
 import 'test.dart';
-import 'package:flutter_better_camera/camera.dart';
-import 'package:date_format/date_format.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    getData();
+    // print("\trecordpage build");
+    // getData();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -37,6 +35,8 @@ class RecordWidget extends StatefulWidget {
 }
 
 class RecordState extends State<RecordWidget> {
+  List<FunHeart> data = new List();
+
   bool isStraight = false;
   DataBean dataBean = new DataBean();
   double sizeHeight;
@@ -48,6 +48,10 @@ class RecordState extends State<RecordWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (data.isEmpty) {
+      getData();
+    }
+    print("build before" + data.length.toString());
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
       sizeHeight = MediaQuery.of(context).size.height;
@@ -57,7 +61,6 @@ class RecordState extends State<RecordWidget> {
 
     return SafeArea(
       child: Container(
-
         padding: EdgeInsets.all(5),
         color: Color.fromRGBO(255, 245, 227, 1),
         height: sizeHeight,
@@ -87,87 +90,121 @@ class RecordState extends State<RecordWidget> {
               ],
             ),
             ((!data.isEmpty)
-                ? ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text("時間"),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(data[index].time),
-                              ))
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text("蔬果種類"),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(data[index].fruitClass),
-                              ))
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text("購買地點"),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(data[index].area),
-                              ))
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text("蔬果汁抑制率"),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text(data[index].rate.toString() + "%"),
-                              ))
-                            ],
-                          ),
-                        ],
-                      );
-                    })
-                : Container(child: Text("暫無紀錄"),))
+                ? Flexible(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: EdgeInsets.fromLTRB(5, 5, 5, 10),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/inputTime.png",
+                                            width: 30,
+                                          ),
+                                          Text("測驗時間")
+                                        ],
+                                      ),
+                                      flex: 2,
+                                    ),
+                                    Flexible(
+                                      child: Text(data[index].time),
+                                      flex: 3,
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            "images/inputClass.png",
+                                            width: 30,
+                                          ),
+                                          Text("蔬果種類")
+                                        ],
+                                      ),
+                                      flex: 2,
+                                    ),
+                                    Flexible(
+                                      child: Text(data[index].fruitClass),
+                                      flex: 3,
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                        flex: 2,
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              "images/inputArea.png",
+                                              width: 30,
+                                            ),
+                                            Text("購買地點"),
+                                          ],
+                                        )),
+                                    Flexible(
+                                        flex: 3, child: Text(data[index].area))
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                        flex: 2,
+                                        child: Row(
+                                          children: [Text("蔬果抑制率")],
+                                        )),
+                                    Flexible(
+                                      flex: 3,
+                                      child: Text(
+                                          data[index].rate.toString() + "%"),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                                        width: 1, color: Color(0xffe5e5e5)))),
+                          );
+                        }),
+                  )
+                : Container(
+                    child: Text("暫無紀錄"),
+                  ))
           ],
         ),
       ),
     );
   }
-}
 
-List<FunHeart> data = new List();
-
-Future<void> getData() async {
-  // Fetch the available cameras before initializing the app.
-  FunHeartProvider funHeartProvider = new FunHeartProvider();
-  await funHeartProvider.open();
-  data = new List();
-  var it;
-  await funHeartProvider.getFunHeart().then((value) {
-    for (var item in value) {
-      data.add(FunHeart.fromMap(item));
-    }
-  });
+  Future<void> getData() async {
+    print("getData");
+    // Fetch the available cameras before initializing the app.
+    FunHeartProvider funHeartProvider = new FunHeartProvider();
+    await funHeartProvider.open();
+    data.clear();
+    await funHeartProvider.getFunHeartList().then((value) {
+      print("value.length" + value.length.toString());
+      setState(() {
+        data = value;
+      });
+    });
+    // funHeartProvider.getFunHeart().then((value) {
+    //   for (var item in value) {
+    //     data.add(FunHeart.fromMap(item));
+    //   }
+    // });
+  }
 }

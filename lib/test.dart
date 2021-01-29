@@ -2,19 +2,23 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_app/addFruit.dart';
+import 'package:fun_Heart_eat/customeItem.dart';
+import 'addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/result.dart';
+import 'result.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:vibration/vibration.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
 class CameraApp extends StatelessWidget {
   DataBean dataBean = new DataBean();
+
   CameraApp(DataBean d) {
     dataBean = d;
   }
@@ -22,9 +26,7 @@ class CameraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        accentTextTheme: TextTheme(body2: TextStyle(color: Colors.white)),
-      ),
+      theme: ItemTheme.themeData,
       home: CameraHome(dataBean),
       debugShowCheckedModeBanner: false,
     );
@@ -46,17 +48,28 @@ class CameraHome extends StatefulWidget {
 
 class TestState extends State<CameraHome> with WidgetsBindingObserver {
   CameraController controller;
+
   //啟用音效(暫不使用)
-  bool enableAudio = true;
+  static const String isRingProp = "isRing";
+  static const String isShockProp = "isShock";
+  bool isRing;
+
+  bool isShock;
+
   List checkList = new List();
+
   //測驗時間210
-  int testTime = 10;
+  int testTime = 21;
+
   //裝置穩定性檢查時間15
   int checkTime = 3;
+
   //在測驗時間中，不要讀取圖片的時間30
   int notGetImgTime = 3;
+
   //讀取圖片
   bool getImg = false;
+
   /*
   0-裝置位置及穩定性檢測
   1-第一階段檢測
@@ -68,7 +81,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   String second = "";
   DataBean dataBean = new DataBean();
   Widget previewCamera = Container();
-  StreamSubscription _homeButtonSubscription;
 
   TestState(DataBean d) {
     dataBean = d;
@@ -90,6 +102,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         dataBean.afterL = new List();
       startTest();
     }
+  }
+
+  Future<void> getRing() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isRing = (prefs.getBool(isRingProp) ?? true);
+    isShock = (prefs.getBool(isShockProp) ?? true);
   }
 
   @override
@@ -201,12 +219,19 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         getImg = true;
       }
       if (timer.tick > testTime) {
-        FlutterRingtonePlayer.play(
-          android: AndroidSounds.ringtone,
-          ios: const IosSound(1023),
-          looping: false,
-          volume: 0.1,
-        );
+        if (isRing??false) {
+          FlutterRingtonePlayer.play(
+            android: AndroidSounds.ringtone,
+            ios: const IosSound(1023),
+            looping: false,
+            volume: 0.1,
+          );
+        }
+        if (isShock??false) {
+          Vibration.vibrate(duration: 1000);
+          Vibration.cancel();
+        }
+
         timer.cancel();
         controller.setFlashMode(FlashMode.off);
         if (step == 1) {
@@ -229,9 +254,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
           dataBean.result = (1 -
-              ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
-                  (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
-                  (dataBean.beforeAvg[1] / dataBean.afterAvg[1])))*100;
+                  ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
+                      (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
+                      (dataBean.beforeAvg[1] / dataBean.afterAvg[1]))) *
+              100;
           if (dataBean.result.isNaN) dataBean.result = 0;
 
           Navigator.pushReplacement(cc,

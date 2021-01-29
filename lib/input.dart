@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/home.dart';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/customeItem.dart';
+import 'home.dart';
+import 'dataBean.dart';
+import 'customeItem.dart';
 import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:date_format/date_format.dart';

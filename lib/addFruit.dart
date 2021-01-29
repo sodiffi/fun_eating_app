@@ -1,7 +1,7 @@
 import 'dart:ui';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/customeItem.dart';
-import 'package:flutter_app/test.dart';
+import 'dataBean.dart';
+import 'customeItem.dart';
+import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 

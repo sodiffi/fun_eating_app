@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/dataBean.dart';
-import 'package:flutter_app/record.dart';
-import 'package:flutter_app/sqlLite.dart';
-import 'package:flutter_app/test.dart';
-import 'package:flutter_app/customeItem.dart';
+import 'dataBean.dart';
+import 'record.dart';
+import 'sqlLite.dart';
+import 'test.dart';
+import 'customeItem.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';

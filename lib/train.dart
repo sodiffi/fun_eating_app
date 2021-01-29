@@ -3,7 +3,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/testMenu.dart';
+import 'testMenu.dart';
 
 // ignore: must_be_immutable
 class TrainPage extends StatelessWidget {
