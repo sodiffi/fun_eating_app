@@ -108,6 +108,7 @@ class InputPageState extends State<InputWidget> {
     );
 
     Widget sureButton = FlatButton(
+        //沒有邊框的確定按鈕
         onPressed: () {
           if (area != "" && item != "") {
             dataBean.cameras = cameras;
@@ -128,6 +129,36 @@ class InputPageState extends State<InputWidget> {
           }
         },
         child: Text("確定"));
+
+    Widget okBtn = OutlineButton(
+      onPressed: () {
+        if (area != "" && item != "") {
+          dataBean.cameras = cameras;
+          dataBean.step = 1;
+          dataBean.time = dateTime;
+          dataBean.fruitClass = item;
+          dataBean.area = area;
+          _asyncInputDialog(context, dataBean);
+        } else {
+          Fluttertoast.showToast(
+              msg: "請選擇蔬果類型與購買地點",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.grey,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      },
+      child: Text('確定'),
+      textColor: Color.fromRGBO(105, 57, 8, 1),
+      color: Color.fromRGBO(255, 242, 204, 1),
+      borderSide: BorderSide(
+        color: Color.fromRGBO(248, 203, 173, 1),
+        width: 5,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    );
 
     Widget classDown = DropdownButton<String>(
       hint: Container(
@@ -170,8 +201,6 @@ class InputPageState extends State<InputWidget> {
       },
     );
 
-
-
     if (isStraight) {
       return SafeArea(
         child: Container(
@@ -196,11 +225,11 @@ class InputPageState extends State<InputWidget> {
                       "檢測小筆記",
                       maxLines: 1,
                       minFontSize: 28,
-
                     ),
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'images/inputClass.png',
@@ -217,6 +246,7 @@ class InputPageState extends State<InputWidget> {
                 ),
                 classDown,
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'images/inputArea.png',
@@ -228,11 +258,11 @@ class InputPageState extends State<InputWidget> {
                       maxLines: 1,
                       minFontSize: 28,
                     )
-
                   ],
                 ),
                 areaDown,
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
                       'images/inputTime.png',
@@ -247,7 +277,8 @@ class InputPageState extends State<InputWidget> {
                   ],
                 ),
                 Text(dateTime),
-                sureButton
+                //sureButton, 原本的確定按鈕
+                okBtn
               ],
             ),
           ),
