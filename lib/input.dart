@@ -107,30 +107,30 @@ class InputPageState extends State<InputWidget> {
       ),
     );
 
-    Widget sureButton = FlatButton(
-        //沒有邊框的確定按鈕
-        onPressed: () {
-          if (area != "" && item != "") {
-            dataBean.cameras = cameras;
-            dataBean.step = 1;
-            dataBean.time = dateTime;
-            dataBean.fruitClass = item;
-            dataBean.area = area;
-            _asyncInputDialog(context, dataBean);
-          } else {
-            Fluttertoast.showToast(
-                msg: "請選擇蔬果類型與購買地點",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 16.0);
-          }
-        },
-        child: Text("確定"));
+    // Widget sureButton = FlatButton(
+    //     //沒有邊框的確定按鈕
+    //     onPressed: () {
+    //       if (area != "" && item != "") {
+    //         dataBean.cameras = cameras;
+    //         dataBean.step = 1;
+    //         dataBean.time = dateTime;
+    //         dataBean.fruitClass = item;
+    //         dataBean.area = area;
+    //         _asyncInputDialog(context, dataBean);
+    //       } else {
+    //         Fluttertoast.showToast(
+    //             msg: "請選擇蔬果類型與購買地點",
+    //             toastLength: Toast.LENGTH_SHORT,
+    //             gravity: ToastGravity.BOTTOM,
+    //             timeInSecForIosWeb: 1,
+    //             backgroundColor: Colors.grey,
+    //             textColor: Colors.white,
+    //             fontSize: 16.0);
+    //       }
+    //     },
+    //     child: Text("確定"));
 
-    Widget okBtn = OutlineButton(
+    Widget sureButton = OutlineButton(
       onPressed: () {
         if (area != "" && item != "") {
           dataBean.cameras = cameras;
@@ -277,8 +277,7 @@ class InputPageState extends State<InputWidget> {
                   ],
                 ),
                 Text(dateTime),
-                //sureButton, 原本的確定按鈕
-                okBtn
+                sureButton
               ],
             ),
           ),
