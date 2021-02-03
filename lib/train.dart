@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:fun_Heart_eat/customeItem.dart';
 import 'testMenu.dart';
 
 // ignore: must_be_immutable
@@ -27,38 +28,16 @@ class TrainPage extends StatelessWidget {
                 new Image.asset("images/train/step5_pic.png"),
                 new Image.asset("images/train/step6_pic.png"),
                 new Image.asset("images/train/step7_pic.png"),
-                // FlatButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => TestMenu(),
-                //         ),
-                //       );
-                //     },
-                //     child: Text("開始檢測"))
-                Padding(
-                  padding: EdgeInsets.fromLTRB(100, 30, 100, 10),
-                  child: OutlineButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TestMenu(),
-                        ),
-                      );
-                    },
-                    child: Text('確定'),
-                    textColor: Color.fromRGBO(105, 57, 8, 1),
-                    color: Color.fromRGBO(255, 242, 204, 1),
-                    borderSide: BorderSide(
-                      color: Color.fromRGBO(248, 203, 173, 1),
-                      width: 5,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                  ),
-                )
+                Center(
+                  child: CustomButton("確定", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TestMenu(),
+                      ),
+                    );
+                  }),
+                ),
               ],
             ),
           ),

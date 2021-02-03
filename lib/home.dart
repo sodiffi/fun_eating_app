@@ -213,7 +213,6 @@ class HomeMenuState extends State<HomeMenu> {
         style: ItemTheme.textStyle,
         maxLines: 2,
         textAlign: TextAlign.center,
-
       ),
       Padding(
         padding: EdgeInsets.all(5),
