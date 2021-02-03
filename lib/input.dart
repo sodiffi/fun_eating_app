@@ -37,6 +37,7 @@ class InputPageState extends State<InputWidget> {
   double sizeHeight;
   double sizeWidth;
   double iconSize;
+  final TextEditingController frultNameController = new TextEditingController();
   DataBean dataBean = new DataBean();
   List<String> items = [
     "雜糧類",
@@ -107,39 +108,23 @@ class InputPageState extends State<InputWidget> {
       ),
     );
 
-    // Widget sureButton = FlatButton(
-    //     //沒有邊框的確定按鈕
-    //     onPressed: () {
-    //       if (area != "" && item != "") {
-    //         dataBean.cameras = cameras;
-    //         dataBean.step = 1;
-    //         dataBean.time = dateTime;
-    //         dataBean.fruitClass = item;
-    //         dataBean.area = area;
-    //         _asyncInputDialog(context, dataBean);
-    //       } else {
-    //         Fluttertoast.showToast(
-    //             msg: "請選擇蔬果類型與購買地點",
-    //             toastLength: Toast.LENGTH_SHORT,
-    //             gravity: ToastGravity.BOTTOM,
-    //             timeInSecForIosWeb: 1,
-    //             backgroundColor: Colors.grey,
-    //             textColor: Colors.white,
-    //             fontSize: 16.0);
-    //       }
-    //     },
-    //     child: Text("確定"));
-
-    Widget sureButton = OutlineButton(
-      onPressed: () {
+    Widget sureButton = Center(child: CustomButton(
+      "確定",
+          () {
         if (area != "" && item != "") {
           dataBean.cameras = cameras;
           dataBean.step = 1;
           dataBean.time = dateTime;
           dataBean.fruitClass = item;
           dataBean.area = area;
-          _asyncInputDialog(context, dataBean);
-        } else {
+          dataBean.fruitName = frultNameController.text;
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CameraApp(dataBean),
+            ),
+          );
+                } else {
           Fluttertoast.showToast(
               msg: "請選擇蔬果類型與購買地點",
               toastLength: Toast.LENGTH_SHORT,
@@ -150,15 +135,7 @@ class InputPageState extends State<InputWidget> {
               fontSize: 16.0);
         }
       },
-      child: Text('確定'),
-      textColor: Color.fromRGBO(105, 57, 8, 1),
-      color: Color.fromRGBO(255, 242, 204, 1),
-      borderSide: BorderSide(
-        color: Color.fromRGBO(248, 203, 173, 1),
-        width: 5,
-      ),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-    );
+    ),);
 
     Widget classDown = DropdownButton<String>(
       hint: Container(
@@ -209,6 +186,7 @@ class InputPageState extends State<InputWidget> {
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -228,56 +206,68 @@ class InputPageState extends State<InputWidget> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/inputClass.png',
-                      width: sizeWidth * 0.2,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoSizeText(
-                      "檢測蔬果",
-                      maxLines: 1,
-                      minFontSize: 28,
-                    )
-                    // Expanded(child: Padding(padding: EdgeInsets.all(5),child: ,)),
-                  ],
-                ),
-                classDown,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/inputArea.png',
-                      width: sizeWidth * 0.2,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoSizeText(
-                      "來自/購買地區",
-                      maxLines: 1,
-                      minFontSize: 28,
-                    )
-                  ],
-                ),
-                areaDown,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'images/inputTime.png',
-                      width: sizeWidth * 0.2,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoSizeText(
-                      "時間",
-                      maxLines: 1,
-                      minFontSize: 28,
-                    )
-                  ],
-                ),
-                Text(dateTime),
-                sureButton
+               Expanded(
+                 // flex: 1,
+                 child: ListView(
+                   children: [
+
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Image.asset(
+                           'images/inputClass.png',
+                           width: sizeWidth * 0.2,
+                           fit: BoxFit.cover,
+                         ),
+                         AutoSizeText(
+                           "檢測蔬果",
+                           maxLines: 1,
+                           minFontSize: 28,
+                         )
+                         // Expanded(child: Padding(padding: EdgeInsets.all(5),child: ,)),
+                       ],
+                     ),
+                     classDown,
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Image.asset(
+                           'images/inputArea.png',
+                           width: sizeWidth * 0.2,
+                           fit: BoxFit.cover,
+                         ),
+                         AutoSizeText(
+                           "來自/購買地區",
+                           maxLines: 1,
+                           minFontSize: 28,
+                         )
+                       ],
+                     ),
+                     areaDown,
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Image.asset(
+                           'images/inputTime.png',
+                           width: sizeWidth * 0.2,
+                           fit: BoxFit.cover,
+                         ),
+                         AutoSizeText(
+                           "蔬菜名稱",
+                           maxLines: 1,
+                           minFontSize: 28,
+                         )
+                       ],
+                     ),
+                     TextField(
+                       decoration: InputDecoration(hintText: "(選填)"),
+                       controller: frultNameController,
+                     ),
+                     Text("時間" + dateTime),
+                     sureButton
+                   ],
+                 ),
+               )
               ],
             ),
           ),
@@ -385,51 +375,4 @@ Future<void> getCamera() async {
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
-}
-
-Future _asyncInputDialog(BuildContext context, DataBean dataBean) async {
-  String teamName = '';
-  return showDialog(
-    context: context,
-    barrierDismissible:
-        false, // dialog is dismissible with a tap on the barrier
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('開始測驗'),
-        content: new Row(
-          children: [
-            new Expanded(
-                child: new TextField(
-              autofocus: true,
-              decoration: new InputDecoration(
-                  labelText: '請輸入蔬果名稱(非必填)', hintText: '(非必填)'),
-              onChanged: (value) {
-                teamName = value;
-              },
-            ))
-          ],
-        ),
-        actions: [
-          FlatButton(
-            child: Text('開始'),
-            onPressed: () {
-              dataBean.fruitName = teamName;
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CameraApp(dataBean),
-                ),
-              );
-            },
-          ),
-          FlatButton(
-            child: Text('關閉'),
-            onPressed: () {
-              Navigator.pop(context, true);
-            },
-          )
-        ],
-      );
-    },
-  );
 }

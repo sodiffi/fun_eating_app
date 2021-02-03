@@ -112,6 +112,13 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     isShock = (prefs.getBool(isShockProp) ?? true);
   }
 
+  Future<void> off() async{
+    if(Platform.isAndroid){
+      await controller.setFlashMode(FlashMode.off);
+    }
+    else Lamp.turnOff();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -129,8 +136,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(Platform.isIOS) Lamp.turnOff();
-    else controller.setFlashMode(FlashMode.off);
+    off();
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
@@ -198,8 +204,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         }
         timer.cancel();
 
-        if(Platform.isIOS) Lamp.turnOff();
-        else controller.setFlashMode(FlashMode.off);
+        off();
         controller.dispose();
         Navigator.pushReplacement(
             cc, MaterialPageRoute(builder: (context) => TestMenuPage()));
@@ -237,8 +242,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         }
 
         timer.cancel();
-        if(Platform.isIOS) Lamp.turnOff();
-        else controller.setFlashMode(FlashMode.off);
+        off();
         if (step == 1) {
           print("before List" + dataBean.beforeL.toString());
           dataBean.beforeAvg = getData(dataBean.beforeL);

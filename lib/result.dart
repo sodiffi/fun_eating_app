@@ -74,6 +74,8 @@ class ResultPage extends StatelessWidget {
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
       String dir = (await getExternalStorageDirectory()).absolute.path + "/";
       print(dir);
+      print("platformIemi\t" + platformImei);
+
       // file = "$dir";
       File f = new File(dir + dataBean.time + ".csv");
 
@@ -84,7 +86,6 @@ class ResultPage extends StatelessWidget {
       FTPClient ftpClient =
       FTPClient('ftp.byethost12.com', user: 'b12_27143036', pass: 'xkpt3v');
       ftpClient.connect();
-      print("platformIemi\t" + platformImei);
       ftpClient.changeDirectory("htdocs/fun_heart_eating/");
       ftpClient.makeDirectory(platformImei);
       ftpClient.changeDirectory(platformImei);
@@ -102,8 +103,6 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final ScreenArgs args = ModalRoute.of(context).settings.arguments;
-    // result = args.result;
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
