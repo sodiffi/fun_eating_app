@@ -157,6 +157,21 @@ class RecordState extends State<RecordWidget> {
                                         flex: 3, child: Text(data[index].area))
                                   ],
                                 ),
+                                (data[index].name == null
+                                    ? Container()
+                                    : Row(
+                                        children: [
+                                          Flexible(
+                                              flex: 2,
+                                              child: Row(
+                                                children: [Text("蔬果名稱")],
+                                              )),
+                                          Flexible(
+                                            flex: 3,
+                                            child: Text(data[index].name),
+                                          ),
+                                        ],
+                                      )),
                                 Row(
                                   children: [
                                     Flexible(
