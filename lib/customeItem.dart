@@ -88,6 +88,7 @@ class CustomButton extends StatelessWidget {
       child: Text(text),
       textColor: Color.fromRGBO(105, 57, 8, 1),
       color: Color.fromRGBO(255, 242, 204, 1),
+        highlightedBorderColor:Color.fromRGBO(105, 57, 8, 1),
       borderSide: BorderSide(
         color: Color.fromRGBO(248, 203, 173, 1),
         width: 3,

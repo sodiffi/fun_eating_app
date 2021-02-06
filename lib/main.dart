@@ -48,13 +48,12 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     Timer.periodic(
       Duration(seconds: 3),
-      (timer) {
-        Vibration.vibrate(duration: 1000);
-        Vibration.cancel();
+      (timer)  {
         print("timer");
+        timer.cancel();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
-        timer.cancel();
+
       },
     );
 

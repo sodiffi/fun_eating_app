@@ -37,7 +37,7 @@ class HomeMenuState extends State<HomeMenu> {
   double iconSize;
   double linkSize;
   int temp;
-
+  FunHeartProvider fProvider = new FunHeartProvider();
   void toTest() {
     dataBean.step = 0;
     dataBean.cameras = cameras;
@@ -47,19 +47,25 @@ class HomeMenuState extends State<HomeMenu> {
 
   Future<int> getTestTime() async {
     int result;
-    FunHeartProvider fProvider = new FunHeartProvider();
     await fProvider.open();
+    result=await getest();
+    return result;
+  }
+  Future<int> getest() async {
+    int res;
     await fProvider
         .getFunHeart()
-        .then((value) => result = (value) == null ? 0 : value.length);
-    await fProvider.close();
-    return result;
+        .then((value) => res = (value) == null ? -1 : value.length);
+    if(res==-1){
+      res=await getest();
+    }
+    return res;
   }
 
   @override
   Widget build(BuildContext context) {
     getTestTime().then((value) => this.setState(() {
-          testTime = value;
+      testTime = value;
         }));
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;

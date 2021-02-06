@@ -217,7 +217,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   void startTest() {
     //開相機
     onNewCameraSelected(dataBean.cameras[0]);
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) async {
       setState(() {
         min = ((timer.tick + (step == 2 ? 210 : 0)) / 60).floor().toString();
         second = ((timer.tick + (step == 2 ? 210 : 0)) % 60).floor().toString();
@@ -237,8 +237,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           );
         }
         if (isShock??true) {
-          Vibration.vibrate(duration: 1000);
-          Vibration.cancel();
+          Vibration.vibrate();
         }
 
         timer.cancel();

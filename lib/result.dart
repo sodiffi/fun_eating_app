@@ -96,7 +96,7 @@ class ResultPage extends StatelessWidget {
       await fProvider.open();
       print(dataBean.area);
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
-          dataBean.fruitName, dataBean.area, dataBean.result));
+          dataBean.fruitName, dataBean.area, dataBean.result.floor()));
     }
 //     await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
 //     bool checkPermission = await SimplePermissions.checkPermission(

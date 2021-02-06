@@ -180,6 +180,8 @@ class InputPageState extends State<InputWidget> {
       },
     );
     AutoSizeGroup subTitleGroup = AutoSizeGroup();
+
+    AutoSizeGroup subTitleGroupH=AutoSizeGroup();
     if (isStraight) {
       return SafeArea(
         child: Container(
@@ -207,7 +209,7 @@ class InputPageState extends State<InputWidget> {
                         child: AutoSizeText(
                           "檢測小筆記",
                           maxLines: 1,
-                          style: TextStyle(fontSize: 99),
+                          style: TextStyle(fontSize: 50),
                         ),
                       )),
                     )
@@ -223,6 +225,7 @@ class InputPageState extends State<InputWidget> {
                         children: [
                           SizedBox(
                             width: sizeWidth * 0.7,
+
                             child: Column(
                               children: [
                                 Row(
@@ -237,9 +240,7 @@ class InputPageState extends State<InputWidget> {
                                       child: AutoSizeText(
                                         "檢測蔬果",
                                         maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 99,
-                                        ),
+                                        style: TextStyle(fontSize: 30),
                                         group: subTitleGroup,
                                       ),
                                     )
@@ -258,7 +259,7 @@ class InputPageState extends State<InputWidget> {
                                         "來自/購買地區",
                                         maxLines: 1,
                                         style: TextStyle(
-                                          fontSize: 99,
+                                          fontSize: 30,
                                         ),
                                         group: subTitleGroup,
                                       ),
@@ -278,7 +279,7 @@ class InputPageState extends State<InputWidget> {
                                         "蔬菜名稱",
                                         maxLines: 1,
                                         style: TextStyle(
-                                          fontSize: 99,
+                                          fontSize: 30,
                                         ),
                                         group: subTitleGroup,
                                       ),
@@ -297,7 +298,7 @@ class InputPageState extends State<InputWidget> {
                                 //         "時間" + dateTime,
                                 //         maxLines: 1,
                                 //         style: TextStyle(
-                                //           fontSize: 99,
+                                //           fontSize: 50,
                                 //         ),
                                 //         // group: subTitleGroup,
                                 //       ),
@@ -325,6 +326,7 @@ class InputPageState extends State<InputWidget> {
         color: Color.fromRGBO(255, 245, 227, 1),
         padding: EdgeInsets.all(5),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [homeButton],
@@ -340,8 +342,8 @@ class InputPageState extends State<InputWidget> {
                       child: AutoSizeText(
                         "蔬果種類",
                         maxLines: 1,
-                        style: TextStyle(fontSize: 99),
-                        group: subTitleGroup,
+                        style: TextStyle(fontSize: 30),
+                        group: subTitleGroupH,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -355,9 +357,9 @@ class InputPageState extends State<InputWidget> {
                     child: AutoSizeText(
                       "來自/購買地點",
                       maxLines: 1,
-                      style: TextStyle(fontSize: 99),
+                      style: TextStyle(fontSize: 30),
                       textAlign: TextAlign.center,
-                      group: subTitleGroup,
+                      group: subTitleGroupH,
                     ),
                   ),
                 )),
@@ -369,8 +371,8 @@ class InputPageState extends State<InputWidget> {
                     child: AutoSizeText(
                       "蔬果名稱",
                       maxLines: 1,
-                      style: TextStyle(fontSize: 99),
-                      group: subTitleGroup,
+                      style: TextStyle(fontSize: 30),
+                      group: subTitleGroupH,
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -416,7 +418,7 @@ class InputPageState extends State<InputWidget> {
                   child: Center(
                     child: Image.asset(
                       'images/inputArea.png',
-                      width: sizeWidth * 0.2,
+                      width: min(sizeWidth * 0.2, sizeHeight * 0.3),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -425,7 +427,7 @@ class InputPageState extends State<InputWidget> {
                   child: Center(
                     child: Image.asset(
                       'images/inputTime.png',
-                      width: sizeWidth * 0.2,
+                      width: min(sizeWidth * 0.2, sizeHeight * 0.3),
                       fit: BoxFit.cover,
                     ),
                   ),
