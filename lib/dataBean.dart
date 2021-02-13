@@ -12,4 +12,6 @@ class DataBean {
   String fruitClass;
   String area;
   String fruitName;
+  bool isRing;
+  bool isShock;
 }

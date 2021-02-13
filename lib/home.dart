@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fun_Heart_eat/setting.dart';
 import 'dataBean.dart';
 import 'record.dart';
 import 'sqlLite.dart';
@@ -85,7 +86,7 @@ class HomeMenuState extends State<HomeMenu> {
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeMenuPage()));
+                MaterialPageRoute(builder: (context) => SettingPage()));
           },
           child: Image.asset(
             'images/setting.png',

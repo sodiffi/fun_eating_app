@@ -14,7 +14,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:vibration/vibration.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:lamp/lamp.dart';
 
@@ -51,7 +51,7 @@ class CameraHome extends StatefulWidget {
 class TestState extends State<CameraHome> with WidgetsBindingObserver {
   CameraController controller;
 
-  //啟用音效(暫不使用)
+  //啟用音效
   static const String isRingProp = "isRing";
   static const String isShockProp = "isShock";
   bool isRing;
@@ -130,7 +130,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
-    print("enter second dispose");
+    print("\tenter second dispose");
     // controller.setFlashMode(FlashMode.off);
   }
 
@@ -223,12 +223,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         second = ((timer.tick + (step == 2 ? 210 : 0)) % 60).floor().toString();
         if (second.length == 1) second = "0" + second;
       });
-      print("${step} ${timer.tick}");
+      print("\t${step} ${timer.tick}");
       if (timer.tick > notGetImgTime) {
         getImg = true;
       }
       if (timer.tick > testTime) {
-        if (isRing??true) {
+        if (isRing ?? true) {
           FlutterRingtonePlayer.play(
             android: AndroidSounds.ringtone,
             ios: const IosSound(1023),
@@ -236,14 +236,14 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
             volume: 0.1,
           );
         }
-        if (isShock??true) {
+        if (isShock ?? true) {
           Vibration.vibrate();
         }
 
         timer.cancel();
         off();
         if (step == 1) {
-          print("before List" + dataBean.beforeL.toString());
+          print("\tbefore List" + dataBean.beforeL.toString());
           dataBean.beforeAvg = getData(dataBean.beforeL);
           //酵素棒似乎有問題，請更換酵素棒，再試一次
           if (dataBean.beforeAvg[2] > 0.008) {
@@ -261,12 +261,23 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
               cc, MaterialPageRoute(builder: (context) => AddFruit(dataBean)));
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
+          print("\t"+dataBean.beforeAvg.toString());
+          print("\t"+dataBean.afterAvg.toString());
           dataBean.result = (1 -
                   ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
                       (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
                       (dataBean.beforeAvg[1] / dataBean.afterAvg[1]))) *
               100;
           if (dataBean.result.isNaN) dataBean.result = 0;
+          if(dataBean.result>100){
+            dataBean.result=100;
+          }
+          else if(dataBean.result<0){
+            dataBean.result=0;
+          }
+          else{
+            dataBean.result=double.parse(dataBean.result.floor().toString());
+          }
 
           Navigator.pushReplacement(cc,
               MaterialPageRoute(builder: (context) => ResultPage(dataBean)));
@@ -280,32 +291,45 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     List<double> gList = new List();
     List<double> bList = new List();
     List<double> result = [0, 0, 0];
-    int countTime = 0;
+    int countTimeB = 0;
+    int countTimeRG=0;
     //計算斜率
     for (int i = 1; i < data.length; i++) {
-      rList.add(data[i][0] - data[i - 1][0]);
-      gList.add(data[i][1] - data[i - 1][1]);
       bList.add(data[i][2] - data[i - 1][2]);
-      print("count " + (data[i][2] - data[i - 1][2]).toString());
+      print("\tcount " + (data[i][2] - data[i - 1][2]).toString());
+    }
+    for (int i = 0; i < data.length; i++) {
+      gList.add(data[i][1]);
+      rList.add(data[i][0]);
     }
     //排序
-    print(bList);
+    print("\t"+bList.toString());
     bList.sort();
+    rList.sort();
+    gList.sort();
+    print("\t"+bList.toString());
     //取中間25%~75%的資料
     for (int i = (bList.length * 0.25).floor();
         i < (bList.length * 0.75).floor();
         i++) {
+      result[2] += bList[i];
+      countTimeB++;
+      print("\tfifter " + i.toString() + result.toString());
+    }
+    for (int i = (rList.length*0.25).floor(); i < (rList.length*0.75).floor(); i++) {
       result[0] += rList[i];
       result[1] += gList[i];
-      result[2] += bList[i];
-      countTime++;
-      print("result " + i.toString() + result.toString());
-    }
-    print("countTime" + countTime.toString());
-    result[0] = result[0] / countTime;
-    result[1] /= countTime;
-    result[2] /= countTime;
+      countTimeRG++;
 
+      print("\tfifter 2" + i.toString() + result.toString());
+    }
+    print("\tcountTimeB" + countTimeB.toString());
+    result[2] /= countTimeB;
+    print("\tcountTimeRG" + countTimeB.toString());
+
+    result[1] /= countTimeRG;
+    result[0] /= countTimeRG;
+    print("\tresult\t" + result.toString());
     return result;
   }
 
