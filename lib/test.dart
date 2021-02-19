@@ -52,8 +52,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   CameraController controller;
 
   //啟用音效
-  static const String isRingProp = "isRing";
-  static const String isShockProp = "isShock";
+  final String isRingProp = "isRing";
+  final String isShockProp = "isShock";
   bool isRing;
 
   bool isShock;

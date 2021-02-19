@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:fun_Heart_eat/result.dart';
 import 'package:fun_Heart_eat/setting.dart';
 import 'dataBean.dart';
 import 'record.dart';
@@ -49,16 +50,17 @@ class HomeMenuState extends State<HomeMenu> {
   Future<int> getTestTime() async {
     int result;
     await fProvider.open();
-    result=await getest();
+    result = await getest();
     return result;
   }
+
   Future<int> getest() async {
     int res;
     await fProvider
         .getFunHeart()
         .then((value) => res = (value) == null ? -1 : value.length);
-    if(res==-1){
-      res=await getest();
+    if (res == -1) {
+      res = await getest();
     }
     return res;
   }
@@ -66,7 +68,7 @@ class HomeMenuState extends State<HomeMenu> {
   @override
   Widget build(BuildContext context) {
     getTestTime().then((value) => this.setState(() {
-      testTime = value;
+          testTime = value;
         }));
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -253,7 +255,7 @@ class HomeMenuState extends State<HomeMenu> {
     //直立畫面
     if (isStraight) {
       return Container(
-        color:Theme.of(context).backgroundColor,
+        color: Theme.of(context).backgroundColor,
         child: SafeArea(
           child: Container(
             color: Theme.of(context).backgroundColor,

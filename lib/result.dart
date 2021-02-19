@@ -23,14 +23,15 @@ String content = "合格";
 double result;
 
 class ResultPage extends StatelessWidget {
-  final String ftpHost="ftp.byethost12.com";
-  // final String ftpHost="120.106.210.250";
-  final String ftpName="b12_27143036";
-  // final String ftpName="admin";
-  final String ftpPsw="xkpt3v";
-  // final String ftpPsw="wj/61j4zj6gk4";
-  // final String changeDir="Public/PesticsdeTest_upload/";
-  final String changeDir="htdocs/fun_heart_eating/";
+  final String ftpHost = "120.106.210.250";
+  final String ftpName = "admin";
+  final String ftpPsw = "wj/61j4zj6gk4";
+  final String changeDir = "Public/PesticsdeTest_upload/";
+  // final String ftpHost = "ftp.byethost12.com";
+  // final String ftpName = "b12_27143036";
+  // final String ftpPsw = "xkpt3v";
+  // final String changeDir = "htdocs/fun_heart_eating/";
+
   DataBean dataBean = new DataBean();
 
   ResultPage(DataBean d) {
@@ -55,19 +56,22 @@ class ResultPage extends StatelessWidget {
 
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>();
-    for (int i = 0; i < dataBean.beforeL.length-1; i++) {
+    for (int i = 0; i < dataBean.beforeL.length; i++) {
       List<dynamic> row = List();
-      row.add(i);
-      row.addAll(dataBean.beforeL[i]);
-      rows.add(row);
+      if (i < 180) {
+        row.add(i);
+        row.addAll(dataBean.beforeL[i]);
+        rows.add(row);
+      }
     }
     rows.add(["----", "----", "----", "----"]);
-    for (int i = 0; i < dataBean.afterL.length-1; i++) {
+    for (int i = 0; i < dataBean.afterL.length; i++) {
       List<dynamic> row = List();
-      row.add(i);
-      row.addAll(dataBean.afterL[i]);
-
-      rows.add(row);
+      if (i < 180) {
+        row.add(i);
+        row.addAll(dataBean.afterL[i]);
+        rows.add(row);
+      }
     }
     rows.add(["----", "----", "----", "----"]);
     rows.add(["rate", result]);
@@ -76,9 +80,9 @@ class ResultPage extends StatelessWidget {
     if (await Permission.storage.request().isGranted) {
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      Directory tempDir = await getApplicationDocumentsDirectory();
-      String dir = tempDir.path + "/";
-      // String dir = (await getExternalStorageDirectory()).absolute.path + "/";
+      // Directory tempDir = await getApplicationDocumentsDirectory();
+      // String dir = tempDir.path + "/";
+      String dir = (await getExternalStorageDirectory()).absolute.path + "/";
       print(dir);
       print("platformIemi\t" + platformImei);
 
@@ -90,15 +94,14 @@ class ResultPage extends StatelessWidget {
 
         String csv = const ListToCsvConverter().convert(rows);
         await f.writeAsString(csv);
-        FTPClient ftpClient = FTPClient(ftpHost,
-            user: ftpName, pass: ftpPsw);
+        FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
         ftpClient.connect();
         ftpClient.changeDirectory(changeDir);
         ftpClient.makeDirectory(platformImei);
         ftpClient.changeDirectory(platformImei);
         await ftpClient.uploadFile(f);
         ftpClient.disconnect();
-      });
+      }).catchError((onError) => {print(onError)});
 
       FunHeartProvider fProvider = new FunHeartProvider();
       await fProvider.open();
@@ -106,13 +109,6 @@ class ResultPage extends StatelessWidget {
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
           dataBean.fruitName, dataBean.area, dataBean.result.floor()));
     }
-//     await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
-//     bool checkPermission = await SimplePermissions.checkPermission(
-//         Permission.WriteExternalStorage);
-//     if (checkPermission) {
-// //store file in documents folder
-//
-//     }
   }
 
   @override
