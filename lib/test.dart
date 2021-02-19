@@ -61,13 +61,13 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   List checkList = new List();
 
   //測驗時間210
-  int testTime = 21;
+  int testTime = 210;
 
   //裝置穩定性檢查時間15
-  int checkTime = 3;
+  int checkTime = 15;
 
   //在測驗時間中，不要讀取圖片的時間30
-  int notGetImgTime = 3;
+  int notGetImgTime = 30;
 
   //讀取圖片
   bool getImg = false;
@@ -108,8 +108,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   Future<void> getRing() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isRing = (prefs.getBool(isRingProp) ?? true);
+    // isRing = (prefs.getBool(isRingProp) ?? true);
     isShock = (prefs.getBool(isShockProp) ?? true);
+    isRing = false;
   }
 
   Future<void> off() async{
@@ -225,16 +226,25 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       });
       print("\t${step} ${timer.tick}");
       if (timer.tick > notGetImgTime) {
-        getImg = true;
+        if (step == 1) {
+          if (dataBean.beforeL.length <= 180) {
+            getImg = true;
+          }
+        }
+        else {
+          if(dataBean.afterL.length<=180){
+            getImg=true;
+          }
+        }
       }
       if (timer.tick > testTime) {
         if (isRing ?? true) {
-          FlutterRingtonePlayer.play(
-            android: AndroidSounds.ringtone,
-            ios: const IosSound(1023),
-            looping: false,
-            volume: 0.1,
-          );
+          // FlutterRingtonePlayer.play(
+          //   android: AndroidSounds.ringtone,
+          //   ios: const IosSound(1023),
+          //   looping: false,
+          //   volume: 0.1,
+          // );
         }
         if (isShock ?? true) {
           Vibration.vibrate();
@@ -261,22 +271,20 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
               cc, MaterialPageRoute(builder: (context) => AddFruit(dataBean)));
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
-          print("\t"+dataBean.beforeAvg.toString());
-          print("\t"+dataBean.afterAvg.toString());
+          print("\t" + dataBean.beforeAvg.toString());
+          print("\t" + dataBean.afterAvg.toString());
           dataBean.result = (1 -
                   ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
                       (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
                       (dataBean.beforeAvg[1] / dataBean.afterAvg[1]))) *
               100;
           if (dataBean.result.isNaN) dataBean.result = 0;
-          if(dataBean.result>100){
-            dataBean.result=100;
-          }
-          else if(dataBean.result<0){
-            dataBean.result=0;
-          }
-          else{
-            dataBean.result=double.parse(dataBean.result.floor().toString());
+          if (dataBean.result > 100) {
+            dataBean.result = 100;
+          } else if (dataBean.result < 0) {
+            dataBean.result = 0;
+          } else {
+            dataBean.result = double.parse(dataBean.result.floor().toString());
           }
 
           Navigator.pushReplacement(cc,
@@ -292,8 +300,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     List<double> bList = new List();
     List<double> result = [0, 0, 0];
     int countTimeB = 0;
-    int countTimeRG=0;
+    int countTimeRG = 0;
     //計算斜率
+    print("\tdata length" + data.length.toString());
     for (int i = 1; i < data.length; i++) {
       bList.add(data[i][2] - data[i - 1][2]);
       print("\tcount " + (data[i][2] - data[i - 1][2]).toString());
@@ -303,11 +312,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       rList.add(data[i][0]);
     }
     //排序
-    print("\t"+bList.toString());
+    print("\t" + bList.toString());
     bList.sort();
     rList.sort();
     gList.sort();
-    print("\t"+bList.toString());
+    print("\t" + bList.toString());
     //取中間25%~75%的資料
     for (int i = (bList.length * 0.25).floor();
         i < (bList.length * 0.75).floor();
@@ -316,7 +325,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       countTimeB++;
       print("\tfifter " + i.toString() + result.toString());
     }
-    for (int i = (rList.length*0.25).floor(); i < (rList.length*0.75).floor(); i++) {
+    for (int i = (rList.length * 0.25).floor();
+        i < (rList.length * 0.75).floor();
+        i++) {
       result[0] += rList[i];
       result[1] += gList[i];
       countTimeRG++;
@@ -326,6 +337,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     print("\tcountTimeB" + countTimeB.toString());
     result[2] /= countTimeB;
     print("\tcountTimeRG" + countTimeB.toString());
+    print("\t blist length" + bList.length.toString());
+    print("\t glist length" + gList.length.toString());
 
     result[1] /= countTimeRG;
     result[0] /= countTimeRG;
@@ -510,7 +523,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       _showCameraException(e);
     }
     controller.startImageStream((image) => {getRGB(image)});
-    
+
     await controller.setFlashMode(FlashMode.torch);
     if(Platform.isIOS) Lamp.turnOn();
   }
