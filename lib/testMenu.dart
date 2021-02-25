@@ -6,7 +6,6 @@ import 'package:flutter/rendering.dart';
 import 'input.dart';
 import 'train.dart';
 import 'home.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'customeItem.dart';
 
 class TestMenu extends StatefulWidget {

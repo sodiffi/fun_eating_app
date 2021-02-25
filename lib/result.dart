@@ -8,7 +8,6 @@ import 'home.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
 
-// import 'package:simple_permissions/simple_permissions.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';

@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'dataBean.dart';
 import 'sqlLite.dart';
-import 'test.dart';
 
 class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // print("\trecordpage build");
-    // getData();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -90,8 +87,11 @@ class RecordState extends State<RecordWidget> {
                 )
               ],
             ),
-            ((!data.isEmpty)
-                ? Flexible(
+            ((data.isEmpty)
+                ? Container(
+                    child: Text("暫無紀錄"),
+                  )
+                : Flexible(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -195,9 +195,6 @@ class RecordState extends State<RecordWidget> {
                                         width: 1, color: Color(0xffe5e5e5)))),
                           );
                         }),
-                  )
-                : Container(
-                    child: Text("暫無紀錄"),
                   ))
           ],
         ),

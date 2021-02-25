@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fun_Heart_eat/result.dart';
 import 'package:fun_Heart_eat/setting.dart';
 import 'dataBean.dart';
 import 'record.dart';
@@ -81,7 +80,6 @@ class HomeMenuState extends State<HomeMenu> {
     });
     getCameras();
     AutoSizeGroup linkGroup = AutoSizeGroup();
-    AutoSizeGroup LargeGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
         padding: EdgeInsets.all(5),

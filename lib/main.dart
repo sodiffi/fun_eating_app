@@ -5,12 +5,10 @@ import 'home.dart';
 import 'package:flutter/services.dart';
 import 'customeItem.dart';
 
-import 'result.dart';
-import 'package:vibration/vibration.dart';
 
 void main() {
-  DataBean dataBean=new DataBean();
-  dataBean.result=0.3;
+  DataBean dataBean = new DataBean();
+  dataBean.result = 0.3;
 
   runApp(HomePage());
 }
@@ -48,12 +46,11 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     Timer.periodic(
       Duration(seconds: 3),
-      (timer)  {
-        print("timer");
+      (timer) {
+        print("timer");       
         timer.cancel();
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
-
       },
     );
 

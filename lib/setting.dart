@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:fun_Heart_eat/dataBean.dart';
 import 'package:fun_Heart_eat/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
