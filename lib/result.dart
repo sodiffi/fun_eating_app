@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
-
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
@@ -74,6 +74,9 @@ class ResultPage extends StatelessWidget {
     }
     rows.add(["----", "----", "----", "----"]);
     rows.add(["rate", result]);
+    rows.add(["蔬菜種類", dataBean.fruitClass]);
+    rows.add(["購買地點", dataBean.area]);
+    rows.add(["蔬菜名稱", dataBean.fruitName]);
 
     //------------------------
     if (await Permission.storage.request().isGranted) {
@@ -86,13 +89,14 @@ class ResultPage extends StatelessWidget {
       print("platformIemi\t" + platformImei);
 
       // file = "$dir";
-      new File(dir + dataBean.time + ".csv")
+      new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
         // convert rows to String and write as csv file
 
         String csv = const ListToCsvConverter().convert(rows);
-        await f.writeAsString(csv);
+        
+        await f.writeAsString(csv,encoding: utf8);
         FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
         ftpClient.connect();
         ftpClient.changeDirectory(changeDir);

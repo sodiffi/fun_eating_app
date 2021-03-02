@@ -53,8 +53,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   //啟用音效
   final String isRingProp = "isRing";
   final String isShockProp = "isShock";
+  final String isoutProp = "isOut";
   bool isRing;
   bool isShock;
+  bool isOut = false;
   List checkList = new List();
   //測驗時間210
   int testTime = 210;
@@ -76,12 +78,15 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   String second = "";
   DataBean dataBean = new DataBean();
   Widget previewCamera = Container();
+  Timer testTimer;
+  Timer checkTimer;
 
   TestState(DataBean d) {
     dataBean = d;
     step = dataBean.step;
     Wakelock.enable();
     if (dataBean.step == 0) {
+      getSP();
       startCheck();
       Fluttertoast.showToast(
           msg: "!注意!請將盡頭對準量測盒內壁",
@@ -100,10 +105,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> getRing() async {
+  Future<void> getSP() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isRing = (prefs.getBool(isRingProp) ?? true);
     isShock = (prefs.getBool(isShockProp) ?? true);
+    // isout = (prefs.getBool(isoutProp) ?? false);
   }
 
   Future<void> off() async {
@@ -137,15 +143,19 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
+      isOut = true;
+      if (testTimer != null) {
+        testTimer.cancel();
+      }
+      startTest();
       if (step != 2) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => TestMenuPage()));
+        print("enter applifecycle state inactive");        
       }
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (controller != null) {
-        onNewCameraSelected(controller.description);
-      }
+      print(isOut);      
+    } else if (state == AppLifecycleState.paused) {
+      // startCheck();
     }
   }
 
@@ -212,26 +222,32 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   void startTest() {
     //開相機
     onNewCameraSelected(dataBean.cameras[0]);
-
-    Timer.periodic(Duration(seconds: 1), (timer) async {
-      setState(() {
-        min = ((timer.tick + (step == 2 ? 210 : 0)) / 60).floor().toString();
-        second = ((timer.tick + (step == 2 ? 210 : 0)) % 60).floor().toString();
-        if (second.length == 1) second = "0" + second;
-      });
+    int count;
+    testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
+      
+     
       print("\t${step} ${timer.tick}");
-      if (timer.tick > notGetImgTime) {
-        if (step == 1) {
-          if (dataBean.beforeL.length <= 180) {
-            getImg = true;
-          }
-        } else {
-          if (dataBean.afterL.length <= 180) {
-            getImg = true;
-          }
+      // if (timer.tick > notGetImgTime) {
+      if (step == 1) {
+        if (dataBean.beforeL.length <= testTime - notGetImgTime) {
+          count = dataBean.beforeL.length;
+          getImg = true;
+        }
+      } else {
+        if (dataBean.afterL.length <= testTime - notGetImgTime) {
+          count = dataBean.afterL.length;
+          getImg = true;
         }
       }
-      if (timer.tick > testTime) {
+       setState(() {
+        min = ((count + (step == 2 ? 210 : 0)) / 60).floor().toString();
+        second = ((count + (step == 2 ? 210 : 0)) % 60).floor().toString();
+        if (second.length == 1) second = "0" + second;
+      });
+      // }
+      print(count);
+      print(count == testTime-notGetImgTime);
+      if (count == testTime-notGetImgTime) {
         if (isRing ?? true) {
           FlutterRingtonePlayer.play(
             android: AndroidSounds.notification,
@@ -416,10 +432,6 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    print("-----------");
-    print("camera preview widget");
-    print(controller == null);
-    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
       print("enter if");
       return Text("fail");
@@ -489,12 +501,12 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       } else {
         dataBean.afterL.add([r, g, b]);
       }
-      print("\t${r}\t${g}\t${b}");
+      print("\there is rgb \t${r}\t${g}\t${b}");
       getImg = false;
     }
   }
 
-  void onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
