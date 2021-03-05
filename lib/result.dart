@@ -21,6 +21,7 @@ String rate = "0%";
 String content = "合格";
 double result;
 
+// ignore: must_be_immutable
 class ResultPage extends StatelessWidget {
   final String ftpHost = "120.106.210.250";
   final String ftpName = "admin";

@@ -52,12 +52,9 @@ List<CameraDescription> cameras = [];
 
 Future<void> main() async {
   // Fetch the available cameras before initializing the app.
-  print("enter main");
   try {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
-
-    print(cameras.length);
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }

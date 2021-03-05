@@ -6,6 +6,9 @@ import 'package:fun_Heart_eat/customeItem.dart';
 
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:fun_Heart_eat/home.dart';
+import 'package:fun_Heart_eat/input.dart';
+import 'package:fun_Heart_eat/main.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
 import 'package:wakelock/wakelock.dart';
@@ -63,30 +66,13 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
     dataBean = d;
     Wakelock.enable();
     open();
-    // if (dataBean.step == 0) {
-    //   startCheck();
-    //   Fluttertoast.showToast(
-    //       msg: "!注意!請將盡頭對準量測盒內壁",
-    //       toastLength: Toast.LENGTH_LONG,
-    //       gravity: ToastGravity.BOTTOM,
-    //       timeInSecForIosWeb: 1,
-    //       backgroundColor: Color.fromRGBO(64, 64, 64, 1),
-    //       textColor: Colors.white,
-    //       fontSize: 20.0);
-    // } else {
-    //   if (dataBean.step == 1)
-    //     dataBean.beforeL = new List();
-    //   else
-    //     dataBean.afterL = new List();
-    //   startTest();
-    // }
   }
 
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
       // try {
-      //   await controller.setFlashMode(FlashMode.off);
+      await controller.setFlashMode(FlashMode.off);
       // } on FlutterError {
       //   print("enter flutter error");
       // } catch (e) {
@@ -120,7 +106,6 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // off();
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
@@ -128,12 +113,10 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
     if (state == AppLifecycleState.inactive) {
       // Navigator.pushReplacement(
       //     context, MaterialPageRoute(builder: (context) => TestMenuPage()));
-
+      off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (controller != null) {
-        onNewCameraSelected(controller.description);
-      }
+      open();
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
@@ -151,71 +134,201 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
     });
     cc = context;
 
-    return Container(
-      color: Theme.of(context).backgroundColor,
-      child: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+    if (isStraight) {
+      return Container(
+        color: Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                    child: GestureDetector(
+                      onTap: () {
+                        off();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeMenuPage()));
+                      },
+                      child: Image.asset(
+                        'images/home.png',
+                        height: iconSize,
+                        width: iconSize,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Image.asset("images/signal.png"),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Center(child: previewCamera),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Image.asset("images/signal.png"),
+                        flex: 1,
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomButton("開始檢測", () {
+                        off();
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TestMenuPage()));
-                    },
-                    child: Image.asset(
-                      'images/home.png',
-                      height: iconSize,
-                      width: iconSize,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Image.asset("images/signal.png"),
-                  flex: 1,
-                ),
-                Expanded(
-                  child: Center(child: previewCamera),
-                  flex: 1,
-                ),
-                Expanded(
-                  child: Image.asset("images/signal.png"),
-                  flex: 1,
-                )
-              ],
-            ),
-            Row(
-              children: [
-                CustomButton("開始檢測", () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TestMenu(),
-                    ),
-                  );
-                })
-              ],
-            )
-            // Flex(
-            //   direction: Axis.horizontal,
-            //   children: [
-
-            //   ],
-            // )
-          ],
+                            builder: (context) => TestInputPage(),
+                          ),
+                        );
+                      })
+                    ],
+                  )
+                ],
+              ),
+              Container()
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Container(
+        color: Theme.of(context).backgroundColor,
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Padding(
+                  //   padding: EdgeInsets.all(5),
+                  //   child: GestureDetector(
+                  //     onTap: () {
+                  //       off();
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => HomeMenuPage()));
+                  //     },
+                  //     child: Image.asset(
+                  //       'images/home.png',
+                  //       height: iconSize,
+                  //       width: iconSize,
+                  //       fit: BoxFit.cover,
+                  //     ),
+                  //   ),
+                  // )
+                ],
+              ),
+              Column(
+                children: [
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(iconSize*2, 0, iconSize*2, 0),
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: Image.asset("images/signal.png"),
+                  //         flex: 1,
+                  //       ),
+                  //       Expanded(
+                  //         child: Center(child: previewCamera),
+                  //         flex: 1,
+                  //       ),
+                  //       Expanded(
+                  //         child: Image.asset("images/signal.png"),
+                  //         flex: 1,
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          // alignment: const Alignment(0, 0),
+                          children: [
+                            Image.asset("images/signal.png"),
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  off();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              HomeMenuPage()));
+                                },
+                                child: Image.asset(
+                                  'images/home.png',
+                                  height: iconSize,
+                                  width: iconSize,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Center(child: previewCamera),
+                            CustomButton("開始檢測", () {
+                              off();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TestInputPage(),
+                                ),
+                              );
+                            })
+                          ],
+                        ),
+                        flex: 1,
+                      ),
+                      Expanded(
+                        child: Image.asset("images/signal.png"),
+                        flex: 1,
+                      )
+                    ],
+                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     CustomButton("開始檢測", () {
+                  //       off();
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => TestInputPage(),
+                  //         ),
+                  //       );
+                  //     })
+                  //   ],
+                  // )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
 
   /// Display the preview from the camera (or a message if the preview is not available).

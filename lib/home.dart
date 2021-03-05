@@ -10,6 +10,7 @@ import 'customeItem.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeMenuPage extends StatelessWidget {
   @override
@@ -327,18 +328,24 @@ class HomeMenuState extends State<HomeMenu> {
 List<CameraDescription> cameras = [];
 
 Future<void> getCameras() async {
-  // Fetch the available cameras before initializing the app.
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    logError(e.code, e.description);
+
+
+
+  if (await Permission.camera.request().isGranted) {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      cameras = await availableCameras();
+    } on CameraException catch (e) {
+      logError(e.code, e.description);
+    }
   }
+
+  // Fetch the available cameras before initializing the app.
 }
 
 _launchURLKnowledge() async {
   const url = 'http://www.labinhand.com.tw/new.html';
-  // const url = 'https://www.google.com';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
