@@ -53,10 +53,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   //啟用音效
   final String isRingProp = "isRing";
   final String isShockProp = "isShock";
-  final String isoutProp = "isOut";
   bool isRing;
   bool isShock;
-  bool isOut = false;
   List checkList = new List();
   //測驗時間210
   int testTime = 210;
@@ -76,6 +74,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   BuildContext cc;
   String min = "";
   String second = "";
+  int passTime = 0;
   DataBean dataBean = new DataBean();
   Widget previewCamera = Container();
   Timer testTimer;
@@ -109,13 +108,18 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isRing = (prefs.getBool(isRingProp) ?? true);
     isShock = (prefs.getBool(isShockProp) ?? true);
-    // isout = (prefs.getBool(isoutProp) ?? false);
   }
 
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
-      await controller.setFlashMode(FlashMode.off);
+      try {
+        await controller.setFlashMode(FlashMode.off);
+      } on FlutterError {
+        print("enter flutter error");
+      } catch (e) {
+        print(e);
+      }
     }
     else Lamp.turnOff();
   }
@@ -131,32 +135,26 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
-    print("\tenter second dispose");
     // controller.setFlashMode(FlashMode.off);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    off();
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      isOut = true;
-      if (testTimer != null) {
-        testTimer.cancel();
-      }
-      startTest();
-      if (step != 2) {
-        print("enter applifecycle state inactive");        
-      }
-      controller.dispose();
+      // controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      print(isOut);      
-    } else if (state == AppLifecycleState.paused) {
-      // startCheck();
-    }
+      if (step == 0) {
+        checkTimer.cancel();
+        startCheck();
+      } else {
+        testTimer.cancel();
+        startTest();
+      }
+    } else if (state == AppLifecycleState.paused) {}
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -167,8 +165,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     setState(() {
       previewCamera = _cameraPreviewWidget();
     });
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (timer.tick == checkTime) {
+    checkTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      print("\t " + step.toString() + "\t" + checkList.length.toString());
+      if (checkList.length == checkTime) {
         String msg = "";
         double sumr = 0, sumg = 0, sumb = 0;
         for (int i = 0; i < checkList.length; i++) {
@@ -223,31 +222,29 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     //開相機
     onNewCameraSelected(dataBean.cameras[0]);
     int count;
+
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
-      
-     
-      print("\t${step} ${timer.tick}");
-      // if (timer.tick > notGetImgTime) {
+      passTime++;
+      print("\t${step} ${timer.tick} ");
       if (step == 1) {
-        if (dataBean.beforeL.length <= testTime - notGetImgTime) {
+        if (dataBean.beforeL.length <= testTime - notGetImgTime &&
+            passTime > notGetImgTime) {
           count = dataBean.beforeL.length;
           getImg = true;
         }
       } else {
-        if (dataBean.afterL.length <= testTime - notGetImgTime) {
+        if (dataBean.afterL.length <= testTime - notGetImgTime &&
+            passTime > notGetImgTime) {
           count = dataBean.afterL.length;
           getImg = true;
         }
       }
-       setState(() {
-        min = ((count + (step == 2 ? 210 : 0)) / 60).floor().toString();
-        second = ((count + (step == 2 ? 210 : 0)) % 60).floor().toString();
+      setState(() {
+        min = ((passTime + (step == 2 ? 210 : 0)) / 60).floor().toString();
+        second = ((passTime + (step == 2 ? 210 : 0)) % 60).floor().toString();
         if (second.length == 1) second = "0" + second;
       });
-      // }
-      print(count);
-      print(count == testTime-notGetImgTime);
-      if (count == testTime-notGetImgTime) {
+      if (count == testTime - notGetImgTime) {
         if (isRing ?? true) {
           FlutterRingtonePlayer.play(
             android: AndroidSounds.notification,
@@ -259,8 +256,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         if (isShock ?? true) {
           Vibration.vibrate();
         }
-
-        timer.cancel();
+        testTimer.cancel();
         off();
         if (step == 1) {
           print("\tbefore List" + dataBean.beforeL.toString());
@@ -312,28 +308,23 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     int countTimeB = 0;
     int countTimeRG = 0;
     //計算斜率
-    print("\tdata length" + data.length.toString());
     for (int i = 1; i < data.length; i++) {
       bList.add(data[i][2] - data[i - 1][2]);
-      print("\tcount " + (data[i][2] - data[i - 1][2]).toString());
     }
     for (int i = 0; i < data.length; i++) {
       gList.add(data[i][1]);
       rList.add(data[i][0]);
     }
     //排序
-    print("\t" + bList.toString());
     bList.sort();
     rList.sort();
     gList.sort();
-    print("\t" + bList.toString());
     //取中間25%~75%的資料
     for (int i = (bList.length * 0.25).floor();
         i < (bList.length * 0.75).floor();
         i++) {
       result[2] += bList[i];
       countTimeB++;
-      print("\tfifter " + i.toString() + result.toString());
     }
     for (int i = (rList.length * 0.25).floor();
         i < (rList.length * 0.75).floor();
@@ -341,18 +332,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       result[0] += rList[i];
       result[1] += gList[i];
       countTimeRG++;
-
-      print("\tfifter 2" + i.toString() + result.toString());
     }
-    print("\tcountTimeB" + countTimeB.toString());
     result[2] /= countTimeB;
-    print("\tcountTimeRG" + countTimeB.toString());
-    print("\t blist length" + bList.length.toString());
-    print("\t glist length" + gList.length.toString());
-
     result[1] /= countTimeRG;
     result[0] /= countTimeRG;
-    print("\tresult\t" + result.toString());
     return result;
   }
 
@@ -433,10 +416,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
     if (controller == null || !controller.value.isInitialized) {
-      print("enter if");
       return Text("fail");
     } else {
-      print("enter else");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
@@ -480,6 +461,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           r /= len;
           g /= len;
           b /= len;
+          print("------");
         } catch (e) {
           print(">>>>>>>>>>>> ANDROID ERROR:" + e.toString());
         }
@@ -501,7 +483,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       } else {
         dataBean.afterL.add([r, g, b]);
       }
-      print("\there is rgb \t${r}\t${g}\t${b}");
+      print("\there is rgb 原版: \t${r}\t${g}\t${b}");
+
       getImg = false;
     }
   }
