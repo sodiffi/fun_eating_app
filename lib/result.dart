@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:csv/csv.dart';
 import 'dart:io';
-import 'package:simple_permissions/simple_permissions.dart';
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
@@ -15,13 +15,23 @@ import 'sqlLite.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_share/flutter_share.dart';
 
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 String rate = "0%";
 String content = "合格";
 double result;
 
+// ignore: must_be_immutable
 class ResultPage extends StatelessWidget {
+  final String ftpHost = "120.106.210.250";
+  final String ftpName = "admin";
+  final String ftpPsw = "wj/61j4zj6gk4";
+  final String changeDir = "Public/PesticsdeTest_upload/";
+  // final String ftpHost = "ftp.byethost12.com";
+  // final String ftpName = "b12_27143036";
+  // final String ftpPsw = "xkpt3v";
+  // final String changeDir = "htdocs/fun_heart_eating/";
+
   DataBean dataBean = new DataBean();
 
   ResultPage(DataBean d) {
@@ -48,62 +58,65 @@ class ResultPage extends StatelessWidget {
     List<List<dynamic>> rows = List<List<dynamic>>();
     for (int i = 0; i < dataBean.beforeL.length; i++) {
       List<dynamic> row = List();
-      row.add(i);
-      row.addAll(dataBean.beforeL[i]);
-      rows.add(row);
+      if (i < 180) {
+        row.add(i);
+        row.addAll(dataBean.beforeL[i]);
+        rows.add(row);
+      }
     }
     rows.add(["----", "----", "----", "----"]);
     for (int i = 0; i < dataBean.afterL.length; i++) {
       List<dynamic> row = List();
-      row.add(i);
-      row.addAll(dataBean.afterL[i]);
-
-      rows.add(row);
+      if (i < 180) {
+        row.add(i);
+        row.addAll(dataBean.afterL[i]);
+        rows.add(row);
+      }
     }
     rows.add(["----", "----", "----", "----"]);
     rows.add(["rate", result]);
+    rows.add(["蔬菜種類", dataBean.fruitClass]);
+    rows.add(["購買地點", dataBean.area]);
+    rows.add(["蔬菜名稱", dataBean.fruitName]);
 
     //------------------------
-
-    await SimplePermissions.requestPermission(Permission.WriteExternalStorage);
-    bool checkPermission = await SimplePermissions.checkPermission(
-        Permission.WriteExternalStorage);
-    if (checkPermission) {
-//store file in documents folder
+    if (await Permission.storage.request().isGranted) {
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
+      // Directory tempDir = await getApplicationDocumentsDirectory();
+      // String dir = tempDir.path + "/";
       String dir = (await getExternalStorageDirectory()).absolute.path + "/";
       print(dir);
       print("platformIemi\t" + platformImei);
 
       // file = "$dir";
-      File f = new File(dir + dataBean.time + ".csv");
+      new File(dir + dataBean.time + "__" + platformImei + ".csv")
+          .create(recursive: true)
+          .then((f) async {
+        // convert rows to String and write as csv file
 
-// convert rows to String and write as csv file
+        String csv = const ListToCsvConverter().convert(rows);
+        
+        await f.writeAsString(csv,encoding: utf8);
+        FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
+        ftpClient.connect();
+        ftpClient.changeDirectory(changeDir);
+        ftpClient.makeDirectory(platformImei);
+        ftpClient.changeDirectory(platformImei);
+        await ftpClient.uploadFile(f);
+        ftpClient.disconnect();
+      }).catchError((onError) => {print(onError)});
 
-      String csv = const ListToCsvConverter().convert(rows);
-      await f.writeAsString(csv);
-      FTPClient ftpClient =
-      FTPClient('ftp.byethost12.com', user: 'b12_27143036', pass: 'xkpt3v');
-      ftpClient.connect();
-      ftpClient.changeDirectory("htdocs/fun_heart_eating/");
-      ftpClient.makeDirectory(platformImei);
-      ftpClient.changeDirectory(platformImei);
-      await ftpClient.uploadFile(f);
-      ftpClient.disconnect();
       FunHeartProvider fProvider = new FunHeartProvider();
-      // Get a location using getDatabasesPath
       await fProvider.open();
       print(dataBean.area);
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
-          dataBean.fruitName, dataBean.area, dataBean.result));
-      await fProvider.getFunHeart().then((value) => print(value.length));
+          dataBean.fruitName, dataBean.area, dataBean.result.floor()));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ItemTheme.themeData,
@@ -133,8 +146,8 @@ class ResultState extends State<Result> {
 
   Future<void> share() async {
     await FlutterShare.share(
-        title: '蔬果農藥檢測',
-      text: '蔬果抑制率為:'+rate,
+      title: '蔬果農藥檢測',
+      text: '蔬果抑制率為:' + rate,
     );
   }
 
@@ -150,8 +163,8 @@ class ResultState extends State<Result> {
       sizeHeight = MediaQuery.of(context).size.height;
       sizeWidth = MediaQuery.of(context).size.width;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-      reportBoxW=isStraight? sizeWidth * 0.8:sizeWidth*0.3 ;
-      reportBoxH=isStraight?sizeHeight * 0.4:sizeHeight*0.7;
+      reportBoxW = isStraight ? sizeWidth * 0.8 : sizeWidth * 0.3;
+      reportBoxH = isStraight ? sizeHeight * 0.4 : sizeHeight * 0.7;
     });
 
     List<Widget> homeButton = [
@@ -184,7 +197,7 @@ class ResultState extends State<Result> {
       )
     ];
 
-    Widget report=Stack(
+    Widget report = Stack(
       alignment: const Alignment(0.0, 0.0),
       children: [
         Image.asset(
@@ -194,30 +207,30 @@ class ResultState extends State<Result> {
           fit: BoxFit.fill,
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(reportBoxW*0.1, reportBoxH*0.1, reportBoxW*0.1,  reportBoxH*0.1),
+          padding: EdgeInsets.fromLTRB(reportBoxW * 0.1, reportBoxH * 0.1,
+              reportBoxW * 0.1, reportBoxH * 0.1),
           width: reportBoxW,
           height: reportBoxH,
-          child:
-          Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-
-                    width: reportBoxW*0.8 - iconSize,
+                    width: reportBoxW * 0.8 - iconSize,
                     height: iconSize,
-                    child: Center(child: AutoSizeText(
-
-                      "檢測報告",
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 100,
-                        color: Color.fromRGBO(177, 48, 5, 1),
+                    child: Center(
+                      child: AutoSizeText(
+                        "檢測報告",
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 100,
+                          color: Color.fromRGBO(177, 48, 5, 1),
+                        ),
                       ),
-                    ),),
+                    ),
                   ),
                   GestureDetector(
                     onTap: share,
@@ -231,7 +244,7 @@ class ResultState extends State<Result> {
                 ],
               ),
               SizedBox(
-                width: reportBoxW* 0.8 - iconSize,
+                width: reportBoxW * 0.8 - iconSize,
                 height: iconSize,
                 child: AutoSizeText(
                   "農試所判定標準",
@@ -248,9 +261,7 @@ class ResultState extends State<Result> {
                   fontSize: 30,
                   color: result < 35
                       ? Colors.green
-                      : (result < 45
-                      ? Colors.amber
-                      : Colors.red),
+                      : (result < 45 ? Colors.amber : Colors.red),
                   decoration: TextDecoration.none,
                 ),
               )
@@ -273,11 +284,10 @@ class ResultState extends State<Result> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
-                    children:                     homeButton
-                    ,
+                    children: homeButton,
                   ),
                   SizedBox(
-                    width: reportBoxW* 0.8 ,
+                    width: reportBoxW * 0.8,
                     height: iconSize,
                     child: AutoSizeText(
                       "蔬果汁抑制率",
@@ -304,9 +314,7 @@ class ResultState extends State<Result> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      report
-                    ],
+                    children: <Widget>[report],
                   ),
                 ]),
           ),
@@ -329,7 +337,7 @@ class ResultState extends State<Result> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: reportBoxW* 0.8 ,
+                      width: reportBoxW * 0.8,
                       height: iconSize,
                       child: AutoSizeText(
                         "蔬果汁抑制率",
@@ -339,8 +347,7 @@ class ResultState extends State<Result> {
                           color: Color.fromRGBO(177, 48, 5, 1),
                         ),
                       ),
-                    )
-                    ,
+                    ),
                     Stack(
                       alignment: const Alignment(0.0, -0.2),
                       children: [
@@ -356,8 +363,7 @@ class ResultState extends State<Result> {
                       ],
                     )
                   ],
-                )
-                ,
+                ),
                 report
               ],
             ),

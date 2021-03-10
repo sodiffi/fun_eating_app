@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'dataBean.dart';
@@ -17,10 +19,8 @@ class TestInputPage extends StatelessWidget {
       theme: ItemTheme.themeData,
       home: Scaffold(
           backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-          resizeToAvoidBottomPadding: false,
-          body: Container(
-            child: InputWidget(),
-          )),
+          // resizeToAvoidBottomPadding: false,
+          body: InputWidget()),
     );
   }
 }
@@ -37,7 +37,7 @@ class InputPageState extends State<InputWidget> {
   double sizeHeight;
   double sizeWidth;
   double iconSize;
-  final TextEditingController frultNameController = new TextEditingController();
+  final TextEditingController fruitNameController = new TextEditingController();
   DataBean dataBean = new DataBean();
   List<String> items = [
     "雜糧類",
@@ -108,34 +108,36 @@ class InputPageState extends State<InputWidget> {
       ),
     );
 
-    Widget sureButton = Center(child: CustomButton(
-      "確定",
-          () {
-        if (area != "" && item != "") {
-          dataBean.cameras = cameras;
-          dataBean.step = 1;
-          dataBean.time = dateTime;
-          dataBean.fruitClass = item;
-          dataBean.area = area;
-          dataBean.fruitName = frultNameController.text;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CameraApp(dataBean),
-            ),
-          );
-                } else {
-          Fluttertoast.showToast(
-              msg: "請選擇蔬果類型與購買地點",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      },
-    ),);
+    Widget sureButton = Center(
+      child: CustomButton(
+        "確定",
+        () {
+          if (area != "" && item != "") {
+            dataBean.cameras = cameras;
+            dataBean.step = 1;
+            dataBean.time = dateTime;
+            dataBean.fruitClass = item;
+            dataBean.area = area;
+            dataBean.fruitName = fruitNameController.text;
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CameraApp(dataBean),
+              ),
+            );
+          } else {
+            Fluttertoast.showToast(
+                msg: "請選擇蔬果類型與購買地點",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        },
+      ),
+    );
 
     Widget classDown = DropdownButton<String>(
       hint: Container(
@@ -177,7 +179,9 @@ class InputPageState extends State<InputWidget> {
         });
       },
     );
+    AutoSizeGroup subTitleGroup = AutoSizeGroup();
 
+    AutoSizeGroup subTitleGroupH = AutoSizeGroup();
     if (isStraight) {
       return SafeArea(
         child: Container(
@@ -199,75 +203,105 @@ class InputPageState extends State<InputWidget> {
                       "images/note.png",
                       height: 50,
                     ),
-                    AutoSizeText(
-                      "檢測小筆記",
-                      maxLines: 1,
-                      minFontSize: 28,
-                    ),
+                    Expanded(
+                      child: (Padding(
+                        padding: EdgeInsets.all(10),
+                        child: AutoSizeText(
+                          "檢測小筆記",
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 50),
+                          textAlign: TextAlign.center,
+                        ),
+                      )),
+                    )
                   ],
                 ),
-               Expanded(
-                 // flex: 1,
-                 child: ListView(
-                   children: [
-
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Image.asset(
-                           'images/inputClass.png',
-                           width: sizeWidth * 0.2,
-                           fit: BoxFit.cover,
-                         ),
-                         AutoSizeText(
-                           "檢測蔬果",
-                           maxLines: 1,
-                           minFontSize: 28,
-                         )
-                         // Expanded(child: Padding(padding: EdgeInsets.all(5),child: ,)),
-                       ],
-                     ),
-                     classDown,
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Image.asset(
-                           'images/inputArea.png',
-                           width: sizeWidth * 0.2,
-                           fit: BoxFit.cover,
-                         ),
-                         AutoSizeText(
-                           "來自/購買地區",
-                           maxLines: 1,
-                           minFontSize: 28,
-                         )
-                       ],
-                     ),
-                     areaDown,
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.center,
-                       children: [
-                         Image.asset(
-                           'images/inputTime.png',
-                           width: sizeWidth * 0.2,
-                           fit: BoxFit.cover,
-                         ),
-                         AutoSizeText(
-                           "蔬菜名稱",
-                           maxLines: 1,
-                           minFontSize: 28,
-                         )
-                       ],
-                     ),
-                     TextField(
-                       decoration: InputDecoration(hintText: "(選填)"),
-                       controller: frultNameController,
-                     ),
-                     Text("時間" + dateTime),
-                     sureButton
-                   ],
-                 ),
-               )
+                Expanded(
+                  child: Center(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: sizeWidth * 0.7,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'images/inputClass.png',
+                                        width: sizeWidth * 0.2,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      // AutoTextChange(w: sizeWidth*0.5,s: "檢測蔬果",paddingW: 0,paddingH: 0,),
+                                      Expanded(
+                                        child: AutoSizeText(
+                                          "檢測蔬果",
+                                          maxLines: 1,
+                                          style: TextStyle(fontSize: 30),
+                                          group: subTitleGroup,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  classDown,
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'images/inputArea.png',
+                                        width: sizeWidth * 0.2,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Expanded(
+                                        child: AutoSizeText(
+                                          "來自/購買地區",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: 30,
+                                          ),
+                                          group: subTitleGroup,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  areaDown,
+                                  Row(
+                                    children: [
+                                      Image.asset(
+                                        'images/inputTime.png',
+                                        width: sizeWidth * 0.2,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      Expanded(
+                                        child: AutoSizeText(
+                                          "蔬菜名稱",
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            fontSize: 30,
+                                          ),
+                                          group: subTitleGroup,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  TextField(
+                                    decoration:
+                                        InputDecoration(hintText: "(選填)"),
+                                    controller: fruitNameController,
+                                    autofocus: false,
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                sureButton
               ],
             ),
           ),
@@ -275,89 +309,169 @@ class InputPageState extends State<InputWidget> {
       );
     } else {
       return SafeArea(
-          child: Container(
-        color: Color.fromRGBO(255, 245, 227, 1),
-        padding: EdgeInsets.all(5),
-        child: Column(
-          children: [
-            Row(
-              children: [homeButton],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Container(
+          color: Color.fromRGBO(255, 245, 227, 1),
+          padding: EdgeInsets.all(5),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                    child: Center(
-                  child: Text("蔬果種類"),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text("購買地點"),
-                )),
-                Expanded(
-                    child: Center(
-                  child: Text("測驗時間"),
-                )),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                  child: Center(
-                    child: classDown,
-                  ),
+                Row(
+                  children: [
+                    homeButton,
+                    Expanded(
+                      child: (Padding(
+                        padding: EdgeInsets.all(10),
+                        child: AutoSizeText(
+                          "檢測小筆記",
+                          maxLines: 1,
+                          style: TextStyle(fontSize: 50),
+                          textAlign: TextAlign.center,
+                        ),
+                      )),
+                    )
+                  ],
                 ),
                 Expanded(
                   child: Center(
-                    child: areaDown,
-                  ),
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(dateTime),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Expanded(
-                    child: Center(
-                  child: Image.asset(
-                    'images/inputClass.png',
-                    width: sizeWidth * 0.2,
-                    fit: BoxFit.cover,
-                  ),
-                )),
-                Expanded(
-                  child: Center(
-                    child: Image.asset(
-                      'images/inputArea.png',
-                      width: sizeWidth * 0.2,
-                      fit: BoxFit.cover,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        SizedBox(
+                          width: sizeWidth * 0.7,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: SizedBox(
+                                        // height: sizeHeight * 0.3,
+                                        width: sizeWidth * 0.3,
+                                        child: AutoSizeText(
+                                          "蔬果種類",
+                                          maxLines: 1,
+                                          style: TextStyle(fontSize: 30),
+                                          group: subTitleGroupH,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: SizedBox(
+                                        // height: sizeHeight * 0.3,
+                                        width: sizeWidth * 0.3,
+                                        child: AutoSizeText(
+                                          "來自/購買地點",
+                                          maxLines: 1,
+                                          style: TextStyle(fontSize: 30),
+                                          textAlign: TextAlign.center,
+                                          group: subTitleGroupH,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: SizedBox(
+                                        // height: sizeHeight * 0.3,
+                                        width: sizeWidth * 0.3,
+                                        child: AutoSizeText(
+                                          "蔬果名稱",
+                                          maxLines: 1,
+                                          style: TextStyle(fontSize: 30),
+                                          group: subTitleGroupH,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: classDown,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: areaDown,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: TextField(
+                                        decoration:
+                                            InputDecoration(hintText: "(選填)"),
+                                        controller: fruitNameController,
+                                        autofocus: false,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: Image.asset(
+                                        'images/inputClass.png',
+                                        width: min(
+                                            sizeWidth * 0.2, sizeHeight * 0.3),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Image.asset(
+                                        'images/inputArea.png',
+                                        width: min(
+                                            sizeWidth * 0.2, sizeHeight * 0.3),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Image.asset(
+                                        'images/inputTime.png',
+                                        width: min(
+                                            sizeWidth * 0.2, sizeHeight * 0.3),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Center(
-                    child: Image.asset(
-                      'images/inputTime.png',
-                      width: sizeWidth * 0.2,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [sureButton],
+                )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [sureButton],
-            )
-          ],
+          ),
         ),
-      ));
+      );
     }
   }
 }
@@ -366,12 +480,9 @@ List<CameraDescription> cameras = [];
 
 Future<void> getCamera() async {
   // Fetch the available cameras before initializing the app.
-  print("enter main");
   try {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
-
-    print(cameras.length);
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }

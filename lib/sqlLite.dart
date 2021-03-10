@@ -13,7 +13,7 @@ class FunHeart {
   String fruitClass;
   String name;
   String area;
-  double rate;
+  int rate;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -25,7 +25,7 @@ class FunHeart {
     };
   }
 
-  FunHeart(String t, String f, String n, String a, double r) {
+  FunHeart(String t, String f, String n, String a, int r) {
     time = t;
     fruitClass = f;
     name = n;
@@ -38,7 +38,7 @@ class FunHeart {
     fruitClass = map[columnClass];
     name = map[columnName];
     area = map[columnArea];
-    rate = double.parse(map[columnRate].toString());
+    rate = int.parse(map[columnRate].toString());
   }
 
   String output() {
@@ -72,7 +72,6 @@ class FunHeartProvider {
   Future<List<FunHeart>> getFunHeartList() async {
     List<FunHeart> result = new List();
     if (db != null) {
-
       List<Map> maps = await db.query(table,
           columns: [columnId, columnClass, columnName, columnArea, columnRate]);
 
@@ -80,10 +79,8 @@ class FunHeartProvider {
         maps.forEach((element) {
           result.add(FunHeart.fromMap(element));
         });
-        return result;
-      } else {
-        return null;
       }
+      return result;
     } else {
       return null;
     }

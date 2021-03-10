@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'dataBean.dart';
 import 'sqlLite.dart';
-import 'test.dart';
 
 class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // print("\trecordpage build");
-    // getData();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -45,6 +42,7 @@ class RecordState extends State<RecordWidget> {
   BoxDecoration boxDecoration = BoxDecoration(
       color: Color.fromRGBO(255, 242, 204, 1),
       border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
+  FunHeartProvider funHeartProvider = new FunHeartProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +87,11 @@ class RecordState extends State<RecordWidget> {
                 )
               ],
             ),
-            ((!data.isEmpty)
-                ? Flexible(
+            ((data.isEmpty)
+                ? Container(
+                    child: Text("暫無紀錄"),
+                  )
+                : Flexible(
                     child: ListView.builder(
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -104,13 +105,7 @@ class RecordState extends State<RecordWidget> {
                                   children: [
                                     Flexible(
                                       child: Row(
-                                        children: [
-                                          Image.asset(
-                                            "images/inputTime.png",
-                                            width: 30,
-                                          ),
-                                          Text("測驗時間")
-                                        ],
+                                        children: [Text("測驗時間")],
                                       ),
                                       flex: 2,
                                     ),
@@ -157,6 +152,27 @@ class RecordState extends State<RecordWidget> {
                                         flex: 3, child: Text(data[index].area))
                                   ],
                                 ),
+                                (data[index].name.isEmpty
+                                    ? Container()
+                                    : Row(
+                                        children: [
+                                          Flexible(
+                                              flex: 2,
+                                              child: Row(
+                                                children: [
+                                                  Image.asset(
+                                                    "images/inputTime.png",
+                                                    width: 30,
+                                                  ),
+                                                  Text("蔬果名稱")
+                                                ],
+                                              )),
+                                          Flexible(
+                                            flex: 3,
+                                            child: Text(data[index].name),
+                                          ),
+                                        ],
+                                      )),
                                 Row(
                                   children: [
                                     Flexible(
@@ -179,9 +195,6 @@ class RecordState extends State<RecordWidget> {
                                         width: 1, color: Color(0xffe5e5e5)))),
                           );
                         }),
-                  )
-                : Container(
-                    child: Text("暫無紀錄"),
                   ))
           ],
         ),
@@ -192,7 +205,7 @@ class RecordState extends State<RecordWidget> {
   Future<void> getData() async {
     print("getData");
     // Fetch the available cameras before initializing the app.
-    FunHeartProvider funHeartProvider = new FunHeartProvider();
+
     await funHeartProvider.open();
     data.clear();
     await funHeartProvider.getFunHeartList().then((value) {
