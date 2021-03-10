@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_app">
+    package="tw.edu.ntub.birc.fun_sin_chin">
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-feature android:name="android.hardware.camera" />
@@ -17,7 +17,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"  
-        android:label="Fun心吃"
+        android:label="FUN心吃"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         >

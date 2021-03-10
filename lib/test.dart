@@ -16,7 +16,7 @@ import 'package:wakelock/wakelock.dart';
 
 import 'package:vibration/vibration.dart';
 
-import 'package:lamp/lamp.dart';
+// import 'package:lamp/lamp.dart';
 
 class CameraApp extends StatelessWidget {
   DataBean dataBean = new DataBean();
@@ -121,7 +121,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
         print(e);
       }
     }
-    else Lamp.turnOff();
+    // else Lamp.turnOff();
   }
 
   @override
@@ -425,6 +425,26 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     }
   }
 
+  int _hexToInt(String hex) {
+    int val = 0;
+    int len = hex.length;
+    for (int i = 0; i < len; i++) {
+      int hexDigit = hex.codeUnitAt(i);
+      if (hexDigit >= 48 && hexDigit <= 57) {
+        val += (hexDigit - 48) * (1 << (4 * (len - 1 - i)));
+      } else if (hexDigit >= 65 && hexDigit <= 70) {
+        // A..F
+        val += (hexDigit - 55) * (1 << (4 * (len - 1 - i)));
+      } else if (hexDigit >= 97 && hexDigit <= 102) {
+        // a..f
+        val += (hexDigit - 87) * (1 << (4 * (len - 1 - i)));
+      } else {
+        throw new FormatException("Invalid hexadecimal value");
+      }
+    }
+    return val;
+  }
+
   // void showInSnackBar(String message) {
   //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
   // }
@@ -439,8 +459,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           final int width = image.width;
           final int height = image.height;
           final int uvRowStride = image.planes[1].bytesPerRow;
-          final int uvPixelStride = image.planes[1].bytesPerPixel;
-
+          final int uvPixelStride = image.planes[1].bytesPerPixel;         
           for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
               final int uvIndex = uvPixelStride * (x / 2).floor() +
@@ -514,7 +533,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     controller.startImageStream((image) => {getRGB(image)});
 
     await controller.setFlashMode(FlashMode.torch);
-    if(Platform.isIOS) Lamp.turnOn();
+    // if(Platform.isIOS) Lamp.turnOn();
   }
 
   void _showCameraException(CameraException e) {

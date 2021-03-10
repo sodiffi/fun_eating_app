@@ -2,11 +2,10 @@ import 'dart:ui';
 import 'package:fun_Heart_eat/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'customeItem.dart';
 
 class SettingPage extends StatelessWidget {
-
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -61,25 +60,54 @@ class SettingState extends State<Setting> {
         child: Column(
           children: [
             Row(
-              children: [Padding(
-              padding: EdgeInsets.all(5),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomeMenuPage()));
-                },
-                child: Image.asset(
-                  'images/home.png',
-                  height: iconSize,
-                  width: iconSize,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )],
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(5),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomeMenuPage()));
+                    },
+                    child: Image.asset(
+                      'images/home.png',
+                      height: iconSize,
+                      width: iconSize,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                )
+              ],
             ),
             Row(
               children: [
-                Text("有無鈴聲"),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: AutoSizeText(
+                      "設定",
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 50),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: AutoSizeText(
+                      "有無鈴聲",
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 30),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
                 Checkbox(
                     value: isRing,
                     onChanged: (value) {
@@ -92,7 +120,17 @@ class SettingState extends State<Setting> {
             ),
             Row(
               children: [
-                Text("有無震動"),
+               Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: AutoSizeText(
+                      "有無震動",
+                      maxLines: 1,
+                      style: TextStyle(fontSize: 30),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ),
                 Checkbox(
                     value: isShock,
                     onChanged: (value) {
