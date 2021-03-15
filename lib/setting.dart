@@ -55,14 +55,14 @@ class SettingState extends State<Setting> {
     return Scaffold(
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(isStraight?5:iconSize, 5, isStraight?5:iconSize, 5),
         color: Color.fromRGBO(255, 245, 227, 1),
         child: Column(
           children: [
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(

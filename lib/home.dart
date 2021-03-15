@@ -83,7 +83,7 @@ class HomeMenuState extends State<HomeMenu> {
     AutoSizeGroup linkGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -98,7 +98,7 @@ class HomeMenuState extends State<HomeMenu> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
         child: GestureDetector(
           onTap: _launchURLCustomerService,
           child: Image.asset(
@@ -287,7 +287,7 @@ class HomeMenuState extends State<HomeMenu> {
         color: Theme.of(context).backgroundColor,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
             color: Theme.of(context).backgroundColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

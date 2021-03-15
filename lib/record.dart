@@ -59,7 +59,7 @@ class RecordState extends State<RecordWidget> {
 
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(isStraight?5:iconSize, 5,isStraight?5:iconSize, 5),
         color: Color.fromRGBO(255, 245, 227, 1),
         height: sizeHeight,
         width: sizeWidth,
@@ -69,7 +69,7 @@ class RecordState extends State<RecordWidget> {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(

@@ -43,9 +43,9 @@ class ResultPage extends StatelessWidget {
     if (dataBean.result <= 35)
       content = "合格";
     else if (dataBean.result <= 45)
-      content = "通知供應單位延期採收\n追蹤農民用藥";
+      content = "通知供應單位延期採收追蹤農民用藥";
     else
-      content = "銷毀或\n將樣品送衛生局複檢";
+      content = "銷毀或將樣品送衛生局複檢";
   }
 
   getCsv() async {
@@ -96,8 +96,8 @@ class ResultPage extends StatelessWidget {
         // convert rows to String and write as csv file
 
         String csv = const ListToCsvConverter().convert(rows);
-        
-        await f.writeAsString(csv,encoding: utf8);
+
+        await f.writeAsString(csv, encoding: utf8);
         FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
         ftpClient.connect();
         ftpClient.changeDirectory(changeDir);
@@ -121,7 +121,7 @@ class ResultPage extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ItemTheme.themeData,
         home: Scaffold(
-          resizeToAvoidBottomPadding: false,
+          // resizeToAvoidBottomPadding: false,
           body: Result(),
         ));
   }
@@ -169,7 +169,8 @@ class ResultState extends State<Result> {
 
     List<Widget> homeButton = [
       Padding(
-        padding: EdgeInsets.all(5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -184,7 +185,8 @@ class ResultState extends State<Result> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.all(5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: _launchURLCustomerService,
           child: Image.asset(
@@ -212,7 +214,7 @@ class ResultState extends State<Result> {
           width: reportBoxW,
           height: reportBoxH,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -244,27 +246,34 @@ class ResultState extends State<Result> {
                 ],
               ),
               SizedBox(
-                width: reportBoxW * 0.8 - iconSize,
-                height: iconSize,
+                width: reportBoxW * 0.8,
+                // height: iconSize,
                 child: AutoSizeText(
                   "農試所判定標準",
                   maxLines: 1,
                   style: TextStyle(
-                    fontSize: 100,
+                    fontSize: 120,
                     color: Color.fromRGBO(177, 48, 5, 1),
                   ),
                 ),
               ),
-              Text(
-                content,
-                style: TextStyle(
-                  fontSize: 30,
-                  color: result < 35
-                      ? Colors.green
-                      : (result < 45 ? Colors.amber : Colors.red),
-                  decoration: TextDecoration.none,
-                ),
-              )
+             Expanded(
+                    child: Center(
+                        child: SizedBox(
+                  width: reportBoxW * 0.8,
+                  // height: reportBoxW*0.8-iconSize,
+                  child: AutoSizeText(
+                    content,
+                    maxLines: result < 35 ? 1 : 2,
+                    style: TextStyle(
+                      fontSize: 120,
+                      color: result < 35
+                          ? Colors.green
+                          : (result < 45 ? Colors.amber : Colors.red),
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                )))
             ],
           ),
         )
@@ -325,7 +334,7 @@ class ResultState extends State<Result> {
         color: Theme.of(context).backgroundColor,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
             color: Color.fromRGBO(255, 245, 227, 1),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -337,7 +346,7 @@ class ResultState extends State<Result> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: reportBoxW * 0.8,
+                      width: reportBoxW * 0.95,
                       height: iconSize,
                       child: AutoSizeText(
                         "蔬果汁抑制率",
@@ -348,6 +357,7 @@ class ResultState extends State<Result> {
                         ),
                       ),
                     ),
+                    Container(),
                     Stack(
                       alignment: const Alignment(0.0, -0.2),
                       children: [
@@ -361,7 +371,8 @@ class ResultState extends State<Result> {
                           ),
                         )
                       ],
-                    )
+                    ),
+                    Container()
                   ],
                 ),
                 report

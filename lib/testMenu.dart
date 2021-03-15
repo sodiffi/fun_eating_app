@@ -115,7 +115,7 @@ class _TestMenuPageState extends State<TestMenu> {
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.fromLTRB(isStraight?5:iconSize, 5, isStraight?5:iconSize, 5),
           color: Theme.of(context).backgroundColor,
           child: SizedBox(
             child: Column(
@@ -124,7 +124,7 @@ class _TestMenuPageState extends State<TestMenu> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:5, 5),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(

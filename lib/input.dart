@@ -93,7 +93,7 @@ class InputPageState extends State<InputWidget> {
     });
 
     Widget homeButton = Padding(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -311,7 +311,7 @@ class InputPageState extends State<InputWidget> {
       return SafeArea(
         child: Container(
           color: Color.fromRGBO(255, 245, 227, 1),
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
