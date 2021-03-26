@@ -59,7 +59,8 @@ class RecordState extends State<RecordWidget> {
 
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(isStraight?5:iconSize, 5,isStraight?5:iconSize, 5),
+        padding: EdgeInsets.fromLTRB(
+            isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
         color: Color.fromRGBO(255, 245, 227, 1),
         height: sizeHeight,
         width: sizeWidth,
@@ -69,7 +70,8 @@ class RecordState extends State<RecordWidget> {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
+                  padding: EdgeInsets.fromLTRB(
+                      isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
@@ -93,6 +95,7 @@ class RecordState extends State<RecordWidget> {
                   )
                 : Flexible(
                     child: ListView.builder(
+                        // reverse: true,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         itemCount: data.length,
@@ -211,7 +214,7 @@ class RecordState extends State<RecordWidget> {
     await funHeartProvider.getFunHeartList().then((value) {
       print("value.length" + value.length.toString());
       setState(() {
-        data = value;
+        data = value.reversed.toList();
       });
     });
     // funHeartProvider.getFunHeart().then((value) {

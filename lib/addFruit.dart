@@ -16,6 +16,7 @@ class AddFruit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     main();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ItemTheme.themeData,
@@ -25,26 +26,64 @@ class AddFruit extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Colors.white, //Color.fromRGBO(254, 246, 227, 1),
             body: Center(
-              child: Stack(
-                alignment: const Alignment(0, 0.7),
-                children: [
-                  Image.asset("images/prompt.png"),
-                  CustomButton("繼續檢測", () {
-                    dataBean.step = 2;
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CameraApp(dataBean),
-                      ),
-                    );
-                  }),
-                ],
-              ),
+              child: AddFruitWidget(dataBean),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+// ignore: must_be_immutable
+class AddFruitWidget extends StatefulWidget {
+  DataBean dataBean;
+  AddFruitWidget(DataBean d) {
+    dataBean = d;
+  }
+
+  @override
+  AddFruitPageState createState() => AddFruitPageState(dataBean);
+}
+
+class AddFruitPageState extends State<AddFruitWidget> {
+  bool isStraight = false;
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize;
+  DataBean dataBean;
+  AddFruitPageState(DataBean d) {
+    dataBean = d;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    this.setState(() {
+      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+      sizeHeight = MediaQuery.of(context).size.height;
+      sizeWidth = MediaQuery.of(context).size.width;
+      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+    });
+    List<Widget> items = [
+      Image.asset("images/prompt.jpg"),
+      CustomButton("繼續檢測", () {
+        dataBean.step = 2;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CameraApp(dataBean),
+          ),
+        );
+      })
+    ];
+    if (isStraight) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: items,
+      );
+    } else {
+      return Stack(alignment: const Alignment(0, 0.9), children: items);
+    }
   }
 }
 

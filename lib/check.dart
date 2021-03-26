@@ -185,12 +185,12 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomButton("開始檢測", () {
+                      CustomButton("確定", () {
                         off();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TestInputPage(),
+                            builder: (context) => TestMenu(),
                           ),
                         );
                       })
