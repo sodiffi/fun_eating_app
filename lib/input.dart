@@ -199,10 +199,7 @@ class InputPageState extends State<InputWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "images/note.png",
-                      height: 50,
-                    ),
+                   
                     Expanded(
                       child: (Padding(
                         padding: EdgeInsets.all(10),
