@@ -42,7 +42,7 @@ class FunHeart {
   }
 
   String output() {
-    return "-------\ntime\t${time}\nclass\t${fruitClass}\nname\t${name}\narea\t${area}\nrate\t${rate}\n-------";
+    return "-------\ntime\t$time \nclass\t$fruitClass\nname\t$name\narea\t$area\nrate\t$rate\n-------";
   }
 }
 
@@ -70,7 +70,7 @@ class FunHeartProvider {
   }
 
   Future<List<FunHeart>> getFunHeartList() async {
-    List<FunHeart> result = new List();
+    List<FunHeart> result =  List.empty(growable: true);
     if (db != null) {
       List<Map> maps = await db.query(table,
           columns: [columnId, columnClass, columnName, columnArea, columnRate]);

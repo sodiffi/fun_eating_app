@@ -83,7 +83,8 @@ class HomeMenuState extends State<HomeMenu> {
     AutoSizeGroup linkGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
-        padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -98,7 +99,8 @@ class HomeMenuState extends State<HomeMenu> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: _launchURLCustomerService,
           child: Image.asset(
@@ -217,7 +219,7 @@ class HomeMenuState extends State<HomeMenu> {
     List<Widget> txtAndTestBtn = [
       // Padding(padding: EdgeInsets.all(2)),
       AutoSizeText(
-        "FUN心吃專家等級\n檢測${testTime}次",
+        "FUN心吃專家等級\n檢測 $testTime 次",
         style: ItemTheme.textStyle,
         maxLines: 2,
         textAlign: TextAlign.center,
@@ -328,9 +330,6 @@ class HomeMenuState extends State<HomeMenu> {
 List<CameraDescription> cameras = [];
 
 Future<void> getCameras() async {
-
-
-
   if (await Permission.camera.request().isGranted) {
     try {
       WidgetsFlutterBinding.ensureInitialized();

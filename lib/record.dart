@@ -32,7 +32,7 @@ class RecordWidget extends StatefulWidget {
 }
 
 class RecordState extends State<RecordWidget> {
-  List<FunHeart> data = new List();
+  List<FunHeart> data = new List.empty(growable: true);
 
   bool isStraight = false;
   DataBean dataBean = new DataBean();
