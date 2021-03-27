@@ -33,6 +33,7 @@ dev_dependencies:
   flutter_share: ^1.0.5
   lamp:
   wakelock: ^0.2.1+1
+  image: ^3.0.1
 
 flutter:
   uses-material-design: true

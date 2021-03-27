@@ -5,48 +5,15 @@ import 'test.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
-class AddFruit extends StatelessWidget {
-  DataBean dataBean = new DataBean();
-
-  AddFruit(DataBean d) {
-    dataBean = d;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    main();
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ItemTheme.themeData,
-      home: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.white, //Color.fromRGBO(254, 246, 227, 1),
-            body: Center(
-              child: AddFruitWidget(dataBean),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class AddFruitWidget extends StatefulWidget {
-  DataBean dataBean;
-  AddFruitWidget(DataBean d) {
-    dataBean = d;
-  }
+class AddFruit extends StatefulWidget {
+  final DataBean dataBean;
+  AddFruit({Key key, @required this.dataBean}) : super(key: key);
 
   @override
   AddFruitPageState createState() => AddFruitPageState(dataBean);
 }
 
-class AddFruitPageState extends State<AddFruitWidget> {
+class AddFruitPageState extends State<AddFruit> {
   bool isStraight = false;
   double sizeHeight;
   double sizeWidth;
@@ -77,12 +44,18 @@ class AddFruitPageState extends State<AddFruitWidget> {
       })
     ];
     if (isStraight) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: items,
+      return Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: items,
+        ),
+        color: Colors.white,
       );
     } else {
-      return Stack(alignment: const Alignment(0, 0.9), children: items);
+      return Container(
+        child: Stack(alignment: const Alignment(0, 0.9), children: items),
+        color: Colors.white,
+      );
     }
   }
 }

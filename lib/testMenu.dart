@@ -17,25 +17,12 @@ class TestMenu extends StatefulWidget {
   _TestMenuPageState createState() => _TestMenuPageState();
 }
 
-class TestMenuPage extends StatelessWidget {
+class TestMenuPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    getCameras();
-    return MaterialApp(
-      home: TestMenu(),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-          fontFamily: "openhuninn",
-          textTheme: TextTheme(
-              button: TextStyle(
-            fontSize: 35,
-          ))),
-    );
-  }
+  _TestMenuPageState createState() => _TestMenuPageState();
 }
 
-class _TestMenuPageState extends State<TestMenu> {
+class _TestMenuPageState extends State<TestMenuPage> {
   bool isStraight = false;
   double sizeHeight;
   double sizeWidth;
@@ -44,6 +31,9 @@ class _TestMenuPageState extends State<TestMenu> {
 
   @override
   Widget build(BuildContext context) {
+    if (cameras.isEmpty) {
+      getCameras();
+    }
     this.setState(() {
       sizeHeight = MediaQuery.of(context).size.height;
       sizeWidth = MediaQuery.of(context).size.width;
@@ -115,7 +105,8 @@ class _TestMenuPageState extends State<TestMenu> {
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
         child: Container(
-          padding: EdgeInsets.fromLTRB(isStraight?5:iconSize, 5, isStraight?5:iconSize, 5),
+          padding: EdgeInsets.fromLTRB(
+              isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
           color: Theme.of(context).backgroundColor,
           child: SizedBox(
             child: Column(
@@ -124,7 +115,8 @@ class _TestMenuPageState extends State<TestMenu> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:5, 5),
+                          padding: EdgeInsets.fromLTRB(
+                              isStraight ? 5 : 0, 5, isStraight ? 5 : 5, 5),
                           child: GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -146,7 +138,9 @@ class _TestMenuPageState extends State<TestMenu> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CheckPage(d)));
+                                  builder: (context) => CheckPage(
+                                        dataBean: d,
+                                      )));
                         }),
                       ],
                     )

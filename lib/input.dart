@@ -14,14 +14,10 @@ class TestInputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getCamera();
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ItemTheme.themeData,
-      home: Scaffold(
-          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
-          // resizeToAvoidBottomPadding: false,
-          body: InputWidget()),
-    );
+    return Scaffold(
+        backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+        // resizeToAvoidBottomPadding: false,
+        body: InputWidget());
   }
 }
 
@@ -93,7 +89,8 @@ class InputPageState extends State<InputWidget> {
     });
 
     Widget homeButton = Padding(
-      padding: EdgeInsets.fromLTRB(isStraight?5:0, 5, isStraight?5:0, 5),
+      padding:
+          EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
       child: GestureDetector(
         onTap: () {
           Navigator.push(
@@ -199,7 +196,6 @@ class InputPageState extends State<InputWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                   
                     Expanded(
                       child: (Padding(
                         padding: EdgeInsets.all(10),

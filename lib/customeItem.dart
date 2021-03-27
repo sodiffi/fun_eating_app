@@ -30,7 +30,6 @@ class ItemTheme {
     decoration: TextDecoration.none,
     fontWeight: FontWeight.normal,
     fontFamily: "openhuninn",
-
   );
 }
 
@@ -52,7 +51,7 @@ class AutoTextChange extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  AutoTextChangeState createState() {
     return AutoTextChangeState();
   }
 }
@@ -66,7 +65,7 @@ class AutoTextChangeState extends State<AutoTextChange> {
         this.widget.s,
         maxLines: 1,
         style: ItemTheme.textStyle,
-        textAlign:TextAlign.center,
+        textAlign: TextAlign.center,
         group: this.widget.autoSizeGroup,
       ),
       padding: EdgeInsets.fromLTRB(this.widget.paddingW, this.widget.paddingH,
@@ -76,25 +75,23 @@ class AutoTextChangeState extends State<AutoTextChange> {
 }
 
 class CustomButton extends StatelessWidget {
-
-  CustomButton(this.text,this.onPressed);
-   var onPressed;
-   String text;
+  CustomButton(this.text, this.onPressed);
+  var onPressed;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return (OutlineButton(
-      onPressed:onPressed,
+      onPressed: onPressed,
       child: Text(text),
       textColor: Color.fromRGBO(105, 57, 8, 1),
       color: Color.fromRGBO(255, 242, 204, 1),
-        highlightedBorderColor:Color.fromRGBO(105, 57, 8, 1),
+      highlightedBorderColor: Color.fromRGBO(105, 57, 8, 1),
       borderSide: BorderSide(
         color: Color.fromRGBO(248, 203, 173, 1),
         width: 3,
       ),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     ));
   }
 }
