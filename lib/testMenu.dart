@@ -3,8 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fun_Heart_eat/check.dart';
-import 'package:fun_Heart_eat/dataBean.dart';
+import 'package:fun_heart_eat/check.dart';
+import 'package:fun_heart_eat/dataBean.dart';
 import 'input.dart';
 import 'train.dart';
 import 'home.dart';

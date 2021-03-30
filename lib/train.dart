@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:fun_Heart_eat/customeItem.dart';
+import 'package:fun_heart_eat/customeItem.dart';
 import 'testMenu.dart';
 
 class TrainPage extends StatelessWidget {

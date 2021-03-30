@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:fun_Heart_eat/home.dart';
+import 'package:fun_heart_eat/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:fun_Heart_eat/customeItem.dart';
+import 'package:fun_heart_eat/customeItem.dart';
 import 'addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_better_camera/camera.dart';
