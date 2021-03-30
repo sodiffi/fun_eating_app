@@ -2,7 +2,6 @@
 import 'package:flutter/rendering.dart';
 import 'dataBean.dart';
 import 'customeItem.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'package:csv/csv.dart';
@@ -185,7 +184,9 @@ class ResultState extends State<Result> {
         padding:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
-          onTap: _launchURLCustomerService,
+          onTap: () {
+            LaunchUrl.connection();
+          },
           child: Image.asset(
             'images/customerService.png',
             height: iconSize,

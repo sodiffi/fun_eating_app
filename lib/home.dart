@@ -102,7 +102,9 @@ class HomeMenuState extends State<HomeMenu> {
         padding:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
-          onTap: _launchURLCustomerService,
+          onTap: () {
+            LaunchUrl.connection();
+          },
           child: Image.asset(
             'images/customerService.png',
             height: iconSize,
@@ -120,7 +122,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLKnowledge,
+                onTap: () {
+                  LaunchUrl.knowledge();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -172,7 +176,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLMap,
+                onTap: () {
+                  LaunchUrl.map();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -194,7 +200,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLStore,
+                onTap: () {
+                  LaunchUrl.stop();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -341,40 +349,4 @@ Future<void> getCameras() async {
   }
 
   // Fetch the available cameras before initializing the app.
-}
-
-_launchURLKnowledge() async {
-  const url = 'http://www.labinhand.com.tw/new.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLStore() async {
-  const url = 'http://www.labinhand.com.tw/FUNshop.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLCustomerService() async {
-  const url = 'http://www.labinhand.com.tw/connection.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLMap() async {
-  const url = 'http://www.labinhand.com.tw/FUNmaps.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ItemTheme {
   static ThemeData themeData = ThemeData(
@@ -76,7 +77,7 @@ class AutoTextChangeState extends State<AutoTextChange> {
 
 class CustomButton extends StatelessWidget {
   CustomButton(this.text, this.onPressed);
-  var onPressed;
+  final Function onPressed;
   final String text;
 
   @override
@@ -94,4 +95,20 @@ class CustomButton extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     ));
   }
+}
+
+class LaunchUrl {
+  static launchU(u) async {
+    if (await canLaunch(u)) {
+      await launch(u);
+    } else {
+      throw 'Could not launch $u';
+    }
+  }
+
+  static Future<dynamic> knowledge() => launchU("http://www.labinhand.com.tw/new.html");
+  static Future<dynamic> stop() => launchU("http://www.labinhand.com.tw/FUNshop.html");
+  static Future<dynamic> connection() =>
+      launchU("http://www.labinhand.com.tw/connection.html");
+  static Future<dynamic> map() => launchU("http://www.labinhand.com.tw/FUNmaps.html");
 }
