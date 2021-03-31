@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fun_Heart_eat/setting.dart';
+import 'package:fun_heart_eat/setting.dart';
 import 'dataBean.dart';
 import 'record.dart';
 import 'sqlLite.dart';
@@ -83,7 +83,8 @@ class HomeMenuState extends State<HomeMenu> {
     AutoSizeGroup linkGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
-        padding: EdgeInsets.all(5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -98,9 +99,12 @@ class HomeMenuState extends State<HomeMenu> {
         ),
       ),
       Padding(
-        padding: EdgeInsets.all(5),
+        padding:
+            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
-          onTap: _launchURLCustomerService,
+          onTap: () {
+            LaunchUrl.connection();
+          },
           child: Image.asset(
             'images/customerService.png',
             height: iconSize,
@@ -118,7 +122,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLKnowledge,
+                onTap: () {
+                  LaunchUrl.knowledge();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -170,7 +176,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLMap,
+                onTap: () {
+                  LaunchUrl.map();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -192,7 +200,9 @@ class HomeMenuState extends State<HomeMenu> {
           Padding(
               padding: EdgeInsets.all(5),
               child: GestureDetector(
-                onTap: _launchURLStore,
+                onTap: () {
+                  LaunchUrl.stop();
+                },
                 child: Stack(
                   alignment: const Alignment(0, 0),
                   children: [
@@ -217,7 +227,7 @@ class HomeMenuState extends State<HomeMenu> {
     List<Widget> txtAndTestBtn = [
       // Padding(padding: EdgeInsets.all(2)),
       AutoSizeText(
-        "FUN心吃專家等級\n檢測${testTime}次",
+        "FUN心吃專家等級\n檢測 $testTime 次",
         style: ItemTheme.textStyle,
         maxLines: 2,
         textAlign: TextAlign.center,
@@ -287,7 +297,7 @@ class HomeMenuState extends State<HomeMenu> {
         color: Theme.of(context).backgroundColor,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
             color: Theme.of(context).backgroundColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -328,9 +338,6 @@ class HomeMenuState extends State<HomeMenu> {
 List<CameraDescription> cameras = [];
 
 Future<void> getCameras() async {
-
-
-
   if (await Permission.camera.request().isGranted) {
     try {
       WidgetsFlutterBinding.ensureInitialized();
@@ -342,40 +349,4 @@ Future<void> getCameras() async {
   }
 
   // Fetch the available cameras before initializing the app.
-}
-
-_launchURLKnowledge() async {
-  const url = 'http://www.labinhand.com.tw/new.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLStore() async {
-  const url = 'http://www.labinhand.com.tw/FUNshop.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLCustomerService() async {
-  const url = 'http://www.labinhand.com.tw/connection.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-_launchURLMap() async {
-  const url = 'http://www.labinhand.com.tw/FUNmaps.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
-  }
 }

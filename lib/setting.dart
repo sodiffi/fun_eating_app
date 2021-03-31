@@ -1,29 +1,17 @@
 import 'dart:ui';
-import 'package:fun_Heart_eat/home.dart';
+import 'package:fun_heart_eat/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'customeItem.dart';
 
-class SettingPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ItemTheme.themeData,
-      home: Setting(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class Setting extends StatefulWidget {
+class SettingPage extends StatefulWidget {
   @override
   SettingState createState() {
     return SettingState();
   }
 }
 
-class SettingState extends State<Setting> {
+class SettingState extends State<SettingPage> {
   bool isRing = true;
   bool isShock = true;
   bool isStraight = false;
@@ -55,14 +43,16 @@ class SettingState extends State<Setting> {
     return Scaffold(
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.fromLTRB(
+            isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
         color: Color.fromRGBO(255, 245, 227, 1),
         child: Column(
           children: [
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.fromLTRB(
+                      isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.pushReplacement(
@@ -120,7 +110,7 @@ class SettingState extends State<Setting> {
             ),
             Row(
               children: [
-               Expanded(
+                Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(5),
                     child: AutoSizeText(

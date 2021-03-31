@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ItemTheme {
   static ThemeData themeData = ThemeData(
@@ -30,7 +31,6 @@ class ItemTheme {
     decoration: TextDecoration.none,
     fontWeight: FontWeight.normal,
     fontFamily: "openhuninn",
-
   );
 }
 
@@ -52,7 +52,7 @@ class AutoTextChange extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
+  AutoTextChangeState createState() {
     return AutoTextChangeState();
   }
 }
@@ -66,7 +66,7 @@ class AutoTextChangeState extends State<AutoTextChange> {
         this.widget.s,
         maxLines: 1,
         style: ItemTheme.textStyle,
-        textAlign:TextAlign.center,
+        textAlign: TextAlign.center,
         group: this.widget.autoSizeGroup,
       ),
       padding: EdgeInsets.fromLTRB(this.widget.paddingW, this.widget.paddingH,
@@ -76,25 +76,39 @@ class AutoTextChangeState extends State<AutoTextChange> {
 }
 
 class CustomButton extends StatelessWidget {
-
-  CustomButton(this.text,this.onPressed);
-   var onPressed;
-   String text;
+  CustomButton(this.text, this.onPressed);
+  final Function onPressed;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     return (OutlineButton(
-      onPressed:onPressed,
+      onPressed: onPressed,
       child: Text(text),
       textColor: Color.fromRGBO(105, 57, 8, 1),
       color: Color.fromRGBO(255, 242, 204, 1),
-        highlightedBorderColor:Color.fromRGBO(105, 57, 8, 1),
+      highlightedBorderColor: Color.fromRGBO(105, 57, 8, 1),
       borderSide: BorderSide(
         color: Color.fromRGBO(248, 203, 173, 1),
         width: 3,
       ),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     ));
   }
+}
+
+class LaunchUrl {
+  static launchU(u) async {
+    if (await canLaunch(u)) {
+      await launch(u);
+    } else {
+      throw 'Could not launch $u';
+    }
+  }
+
+  static Future<dynamic> knowledge() => launchU("http://www.labinhand.com.tw/new.html");
+  static Future<dynamic> stop() => launchU("http://www.labinhand.com.tw/FUNshop.html");
+  static Future<dynamic> connection() =>
+      launchU("http://www.labinhand.com.tw/connection.html");
+  static Future<dynamic> map() => launchU("http://www.labinhand.com.tw/FUNmaps.html");
 }

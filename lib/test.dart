@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:fun_Heart_eat/customeItem.dart';
+import 'package:fun_heart_eat/customeItem.dart';
 import 'addFruit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_better_camera/camera.dart';
@@ -16,7 +16,7 @@ import 'package:wakelock/wakelock.dart';
 
 import 'package:vibration/vibration.dart';
 
-// import 'package:lamp/lamp.dart';
+import 'package:lamp/lamp.dart';
 
 class CameraApp extends StatelessWidget {
   DataBean dataBean = new DataBean();
@@ -55,7 +55,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   final String isShockProp = "isShock";
   bool isRing;
   bool isShock;
-  List checkList = new List();
+  List checkList = List.empty(growable: true);
   //測驗時間210
   int testTime = 210;
   //裝置穩定性檢查時間15
@@ -97,9 +97,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           fontSize: 20.0);
     } else {
       if (dataBean.step == 1)
-        dataBean.beforeL = new List();
+        dataBean.beforeL = List.empty(growable: true);
       else
-        dataBean.afterL = new List();
+        dataBean.afterL = List.empty(growable: true);
       startTest();
     }
   }
@@ -120,8 +120,8 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       } catch (e) {
         print(e);
       }
-    }
-    // else Lamp.turnOff();
+    } else
+      Lamp.turnOff();
   }
 
   @override
@@ -140,6 +140,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state.toString());
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
@@ -147,12 +148,14 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     if (state == AppLifecycleState.inactive) {
       // controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (step == 0) {
+      if (dataBean.step == 0) {
         checkTimer.cancel();
         startCheck();
-      } else {
+      } else if (dataBean.step > 0) {
         testTimer.cancel();
         startTest();
+      } else {
+        testTimer.cancel();
       }
     } else if (state == AppLifecycleState.paused) {}
   }
@@ -225,7 +228,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
 
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
-      print("\t${step} ${timer.tick} ");
+      print("\t$step $timer.tick ");
       if (step == 1) {
         if (dataBean.beforeL.length <= testTime - notGetImgTime &&
             passTime > notGetImgTime) {
@@ -274,7 +277,11 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           }
 
           Navigator.pushReplacement(
-              cc, MaterialPageRoute(builder: (context) => AddFruit(dataBean)));
+              cc,
+              MaterialPageRoute(
+                  builder: (context) => AddFruit(
+                        dataBean: dataBean,
+                      )));
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
           print("\t" + dataBean.beforeAvg.toString());
@@ -292,6 +299,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           } else {
             dataBean.result = double.parse(dataBean.result.floor().toString());
           }
+          dataBean.step = -1;
 
           Navigator.pushReplacement(cc,
               MaterialPageRoute(builder: (context) => ResultPage(dataBean)));
@@ -301,9 +309,9 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   }
 
   List getData(List data) {
-    List<double> rList = new List();
-    List<double> gList = new List();
-    List<double> bList = new List();
+    List<double> rList = List.empty(growable: true);
+    List<double> gList = List.empty(growable: true);
+    List<double> bList = List.empty(growable: true);
     List<double> result = [0, 0, 0];
     int countTimeB = 0;
     int countTimeRG = 0;
@@ -393,7 +401,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
                               borderRadius: new BorderRadius.circular(15),
                             ),
                             child: Text(
-                              "${min}:${second}",
+                              "$min:$second",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Color.fromRGBO(105, 57, 8, 1)),
@@ -416,7 +424,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
     if (controller == null || !controller.value.isInitialized) {
-      return Text("fail");
+      return Container();
     } else {
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
@@ -457,9 +465,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       if (Platform.isAndroid) {
         try {
           final int width = image.width;
+
           final int height = image.height;
           final int uvRowStride = image.planes[1].bytesPerRow;
-          final int uvPixelStride = image.planes[1].bytesPerPixel;         
+          final int uvPixelStride = image.planes[1].bytesPerPixel;
           for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
               final int uvIndex = uvPixelStride * (x / 2).floor() +
@@ -502,7 +511,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
       } else {
         dataBean.afterL.add([r, g, b]);
       }
-      print("\there is rgb 原版: \t${r}\t${g}\t${b}");
+      print("\there is rgb 原版: \t$r \t $g\t $b");
 
       getImg = false;
     }

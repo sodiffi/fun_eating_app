@@ -2,59 +2,32 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:fun_Heart_eat/customeItem.dart';
-
+import 'package:fun_heart_eat/customeItem.dart';
 import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:fun_Heart_eat/home.dart';
-import 'package:fun_Heart_eat/input.dart';
-import 'package:fun_Heart_eat/main.dart';
+import 'package:fun_heart_eat/home.dart';
 import 'testMenu.dart';
 import 'dataBean.dart';
 import 'package:wakelock/wakelock.dart';
 
 // import 'package:lamp/lamp.dart';
 
-class CheckPage extends StatelessWidget {
-  DataBean dataBean = new DataBean();
+class CheckPage extends StatefulWidget  {
+  final DataBean dataBean ;
 
-  CheckPage(DataBean d) {
-    dataBean = d;
-  }
+  CheckPage({Key key,@required this.dataBean}):super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ItemTheme.themeData,
-      home: Check(dataBean),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class Check extends StatefulWidget {
-  DataBean dataBean = new DataBean();
-  Check(DataBean d) {
-    dataBean = d;
-  }
-
-  @override
-  CheckState createState() {
+  State<StatefulWidget> createState() {
     return CheckState(dataBean);
   }
 }
 
-class CheckState extends State<Check> with WidgetsBindingObserver {
+
+
+class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
-
-  /*
-  0-裝置位置及穩定性檢測
-  1-第一階段檢測
-  2-第二階段檢測
-  */
-
   BuildContext cc;
-
   DataBean dataBean = new DataBean();
   Widget previewCamera = Container();
   double sizeHeight;
@@ -120,9 +93,7 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
-  }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  }  
 
   @override
   Widget build(BuildContext context) {
@@ -185,12 +156,12 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomButton("開始檢測", () {
+                      CustomButton("確定", () {
                         off();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TestInputPage(),
+                            builder: (context) => TestMenuPage(),
                           ),
                         );
                       })
@@ -208,58 +179,23 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
         color: Theme.of(context).backgroundColor,
         child: SafeArea(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // Padding(
-                  //   padding: EdgeInsets.all(5),
-                  //   child: GestureDetector(
-                  //     onTap: () {
-                  //       off();
-                  //       Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //               builder: (context) => HomeMenuPage()));
-                  //     },
-                  //     child: Image.asset(
-                  //       'images/home.png',
-                  //       height: iconSize,
-                  //       width: iconSize,
-                  //       fit: BoxFit.cover,
-                  //     ),
-                  //   ),
-                  // )
+                  
                 ],
               ),
               Column(
                 children: [
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(iconSize*2, 0, iconSize*2, 0),
-                  //   child: Row(
-                  //     children: [
-                  //       Expanded(
-                  //         child: Image.asset("images/signal.png"),
-                  //         flex: 1,
-                  //       ),
-                  //       Expanded(
-                  //         child: Center(child: previewCamera),
-                  //         flex: 1,
-                  //       ),
-                  //       Expanded(
-                  //         child: Image.asset("images/signal.png"),
-                  //         flex: 1,
-                  //       )
-                  //     ],
-                  //   ),
-                  // ),
+                  
 
                   Row(
                     children: [
                       Expanded(
                         child: Stack(
-                          // alignment: const Alignment(0, 0),
+                        
                           children: [
                             Image.asset("images/signal.png"),
                             Padding(
@@ -287,14 +223,16 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
                       ),
                       Expanded(
                         child: Column(
+                          
                           children: [
-                            Center(child: previewCamera),
-                            CustomButton("開始檢測", () {
+                            SizedBox(height: sizeHeight*0.8,child: previewCamera,),
+                           
+                            CustomButton("確定", () {
                               off();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => TestInputPage(),
+                                  builder: (context) => TestMenuPage(),
                                 ),
                               );
                             })
@@ -308,20 +246,7 @@ class CheckState extends State<Check> with WidgetsBindingObserver {
                       )
                     ],
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     CustomButton("開始檢測", () {
-                  //       off();
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //           builder: (context) => TestInputPage(),
-                  //         ),
-                  //       );
-                  //     })
-                  //   ],
-                  // )
+                
                 ],
               ),
             ],
