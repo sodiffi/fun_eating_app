@@ -22,7 +22,7 @@ class TrainPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TestMenu(),
+                  builder: (context) => TestMenuPage(),
                 ),
               );
             }),

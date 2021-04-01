@@ -38,7 +38,7 @@ class AddFruitPageState extends State<AddFruit> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => CameraApp(dataBean),
+            builder: (context) => CameraApp(dataBean: dataBean),
           ),
         );
       })

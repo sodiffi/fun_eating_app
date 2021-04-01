@@ -8,29 +8,28 @@ import 'sqlLite.dart';
 import 'test.dart';
 import 'customeItem.dart';
 import 'package:flutter_better_camera/camera.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class HomeMenuPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ItemTheme.themeData,
-      home: HomeMenu(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
+// class HomeMenuPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: ItemTheme.themeData,
+//       home: HomeMenu(),
+//       debugShowCheckedModeBanner: false,
+//     );
+//   }
+// }
 
-class HomeMenu extends StatefulWidget {
+class HomeMenuPage extends StatefulWidget {
   @override
   HomeMenuState createState() {
     return HomeMenuState();
   }
 }
 
-class HomeMenuState extends State<HomeMenu> {
+class HomeMenuState extends State<HomeMenuPage> {
   int testTime = 0;
   bool isStraight = false;
   DataBean dataBean = new DataBean();
@@ -43,8 +42,8 @@ class HomeMenuState extends State<HomeMenu> {
   void toTest() {
     dataBean.step = 0;
     dataBean.cameras = cameras;
-    Navigator.push(
-        context, MaterialPageRoute(builder: (content) => CameraApp(dataBean)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (content) => CameraApp(dataBean: dataBean)));
   }
 
   Future<int> getTestTime() async {

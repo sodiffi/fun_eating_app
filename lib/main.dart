@@ -47,10 +47,12 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
-        print("timer");       
+        print("timer");
         timer.cancel();
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => Todo()));
+        // Navigator.of(context).pushReplacement()
+        //     .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
       },
     );
 

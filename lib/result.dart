@@ -30,13 +30,11 @@ class ResultPage extends StatelessWidget {
   final String ftpPsw = "xkpt3v";
   final String changeDir = "htdocs/fun_heart_eating/";
 
-  DataBean dataBean = new DataBean();
+  final DataBean dataBean;
 
-  ResultPage(DataBean d) {
-    dataBean = d;
+  ResultPage({Key key, this.dataBean}) {
     rate = dataBean.result.floor().toString() + "%";
     result = dataBean.result;
-
     getCsv();
     if (dataBean.result <= 35)
       content = "合格";
@@ -380,14 +378,5 @@ class ResultState extends State<Result> {
         ),
       );
     }
-  }
-}
-
-_launchURLCustomerService() async {
-  const url = 'http://www.labinhand.com.tw/connection.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }

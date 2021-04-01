@@ -119,7 +119,7 @@ class InputPageState extends State<InputWidget> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => CameraApp(dataBean),
+                builder: (context) => CameraApp(dataBean: dataBean),
               ),
             );
           } else {

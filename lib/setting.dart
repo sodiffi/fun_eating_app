@@ -19,7 +19,7 @@ class SettingState extends State<SettingPage> {
   static const String isShockProp = "isShock";
   double sizeHeight;
   double sizeWidth;
-  double iconSize;
+  double iconSize = 30;
   Future<void> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -55,10 +55,11 @@ class SettingState extends State<SettingPage> {
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeMenuPage()));
+                      Navigator.pop(context);
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => HomeMenuPage()));
                     },
                     child: Image.asset(
                       'images/home.png',
