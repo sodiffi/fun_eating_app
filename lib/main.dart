@@ -50,7 +50,7 @@ class Home extends StatelessWidget {
         print("timer");
         timer.cancel();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Todo()));
+            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
         // Navigator.of(context).pushReplacement()
         //     .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
       },
