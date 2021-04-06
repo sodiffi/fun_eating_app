@@ -25,6 +25,8 @@ class ItemTheme {
     ),
   );
 
+  static Color bgColor=Color.fromRGBO(254, 246, 227, 1);
+
   static TextStyle textStyle = TextStyle(
     color: Colors.black,
     backgroundColor: Colors.transparent,

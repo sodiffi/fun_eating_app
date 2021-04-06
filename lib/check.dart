@@ -12,18 +12,16 @@ import 'package:wakelock/wakelock.dart';
 
 // import 'package:lamp/lamp.dart';
 
-class CheckPage extends StatefulWidget  {
-  final DataBean dataBean ;
+class CheckPage extends StatefulWidget {
+  final DataBean dataBean;
 
-  CheckPage({Key key,@required this.dataBean}):super(key: key);
+  CheckPage({Key key, @required this.dataBean}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return CheckState(dataBean);
   }
 }
-
-
 
 class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
@@ -74,11 +72,13 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     controller.dispose();
     super.dispose();
     print("\tenter second dispose");
-    // controller.setFlashMode(FlashMode.off);
+    off();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+  
+    print("check");
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
@@ -89,11 +89,11 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      open();
+      if(dataBean.step>0) open();
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +107,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
     if (isStraight) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -176,26 +176,21 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       );
     } else {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  
-                ],
+                children: [],
               ),
               Column(
                 children: [
-                  
-
                   Row(
                     children: [
                       Expanded(
                         child: Stack(
-                        
                           children: [
                             Image.asset("images/signal.png"),
                             Padding(
@@ -223,10 +218,11 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                       ),
                       Expanded(
                         child: Column(
-                          
                           children: [
-                            SizedBox(height: sizeHeight*0.8,child: previewCamera,),
-                           
+                            SizedBox(
+                              height: sizeHeight * 0.8,
+                              child: previewCamera,
+                            ),
                             CustomButton("確定", () {
                               off();
                               Navigator.push(
@@ -246,7 +242,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                       )
                     ],
                   ),
-                
                 ],
               ),
             ],

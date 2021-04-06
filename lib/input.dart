@@ -15,7 +15,7 @@ class TestInputPage extends StatelessWidget {
   Widget build(BuildContext context) {
     getCamera();
     return Scaffold(
-        backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+        backgroundColor: ItemTheme.bgColor,
         // resizeToAvoidBottomPadding: false,
         body: InputWidget());
   }

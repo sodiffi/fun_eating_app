@@ -97,12 +97,12 @@ class _TestMenuPageState extends State<TestMenuPage> {
     );
 
     return Container(
-      color: Theme.of(context).backgroundColor,
+      color: ItemTheme.bgColor,
       child: SafeArea(
         child: Container(
           padding: EdgeInsets.fromLTRB(
               isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
-          color: Theme.of(context).backgroundColor,
+          color: ItemTheme.bgColor,
           child: SizedBox(
             child: Column(
               children: <Widget>[

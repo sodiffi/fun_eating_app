@@ -263,10 +263,10 @@ class HomeMenuState extends State<HomeMenuPage> {
     //直立畫面
     if (isStraight) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
-            color: Theme.of(context).backgroundColor,
+            color: ItemTheme.bgColor,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -293,11 +293,11 @@ class HomeMenuState extends State<HomeMenuPage> {
     } else {
       //橫立畫面
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
-            color: Theme.of(context).backgroundColor,
+            color: ItemTheme.bgColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

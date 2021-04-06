@@ -278,7 +278,7 @@ class ResultState extends State<Result> {
 
     if (isStraight) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
             color: Color.fromRGBO(255, 245, 227, 1),
@@ -343,7 +343,7 @@ class ResultState extends State<Result> {
       );
     } else {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),

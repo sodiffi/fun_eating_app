@@ -337,7 +337,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     cc = context;
     if (step == 0) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Flex(
             direction: Axis.horizontal,
