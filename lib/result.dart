@@ -30,13 +30,11 @@ class ResultPage extends StatelessWidget {
   final String ftpPsw = "xkpt3v";
   final String changeDir = "htdocs/fun_heart_eating/";
 
-  DataBean dataBean = new DataBean();
+  final DataBean dataBean;
 
-  ResultPage(DataBean d) {
-    dataBean = d;
+  ResultPage({Key key, this.dataBean}) {
     rate = dataBean.result.floor().toString() + "%";
     result = dataBean.result;
-
     getCsv();
     if (dataBean.result <= 35)
       content = "合格";
@@ -160,7 +158,7 @@ class ResultState extends State<Result> {
       sizeWidth = MediaQuery.of(context).size.width;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
       reportBoxW = isStraight ? sizeWidth * 0.8 : sizeWidth * 0.3;
-      reportBoxH = isStraight ? sizeHeight * 0.4 : sizeHeight * 0.7;
+      reportBoxH = isStraight ? (sizeHeight -20-(iconSize*2) ): sizeHeight * 0.7;
     });
 
     List<Widget> homeButton = [
@@ -203,14 +201,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH,
+          height: reportBoxH*0.45,
           fit: BoxFit.fill,
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(reportBoxW * 0.1, reportBoxH * 0.1,
-              reportBoxW * 0.1, reportBoxH * 0.1),
+          padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
+              reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH,
+          height: reportBoxH*0.45,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -218,7 +216,7 @@ class ResultState extends State<Result> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: reportBoxW * 0.8 - iconSize,
+                    width: reportBoxW * 0.9 - iconSize,
                     height: iconSize,
                     child: Center(
                       child: AutoSizeText(
@@ -280,7 +278,7 @@ class ResultState extends State<Result> {
 
     if (isStraight) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
             color: Color.fromRGBO(255, 245, 227, 1),
@@ -306,16 +304,32 @@ class ResultState extends State<Result> {
                     ),
                   ),
                   Stack(
-                    alignment: const Alignment(0.0, -0.1),
+                    alignment: const Alignment(-1, -1),
                     children: [
-                      Image.asset("images/rateBox.png"),
-                      Text(
-                        rate,
-                        style: new TextStyle(
-                          fontSize: 50,
-                          decoration: TextDecoration.none,
-                          color: Color.fromRGBO(153, 87, 37, 1),
-                        ),
+                      Image.asset(
+                        "images/rateBox.png",
+                        height: reportBoxH * 0.43,
+                      ),
+                      SizedBox(
+                        height: reportBoxH * 0.43 * 145 / 216,
+                        width: reportBoxH * 0.43 / 213 * 145,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                reportBoxH * 0.43 * 38 / 216,
+                                reportBoxH * 0.43 * 40 / 216,
+                                0,
+                                0),
+                            child: Center(
+                              child: AutoSizeText(
+                                rate,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 50,
+                                  decoration: TextDecoration.none,
+                                  color: Color.fromRGBO(153, 87, 37, 1),
+                                ),
+                              ),
+                            )),
                       )
                     ],
                   ),
@@ -329,7 +343,7 @@ class ResultState extends State<Result> {
       );
     } else {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
             padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
@@ -355,7 +369,6 @@ class ResultState extends State<Result> {
                         ),
                       ),
                     ),
-                    Container(),
                     Stack(
                       alignment: const Alignment(0.0, -0.2),
                       children: [
@@ -370,7 +383,6 @@ class ResultState extends State<Result> {
                         )
                       ],
                     ),
-                    Container()
                   ],
                 ),
                 report
@@ -380,14 +392,5 @@ class ResultState extends State<Result> {
         ),
       );
     }
-  }
-}
-
-_launchURLCustomerService() async {
-  const url = 'http://www.labinhand.com.tw/connection.html';
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
   }
 }

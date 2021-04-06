@@ -1,5 +1,3 @@
-// import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,10 +10,7 @@ import 'customeItem.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_better_camera/camera.dart';
 
-class TestMenu extends StatefulWidget {
-  @override
-  _TestMenuPageState createState() => _TestMenuPageState();
-}
+
 
 class TestMenuPage extends StatefulWidget {
   @override
@@ -102,12 +97,12 @@ class _TestMenuPageState extends State<TestMenuPage> {
     );
 
     return Container(
-      color: Theme.of(context).backgroundColor,
+      color: ItemTheme.bgColor,
       child: SafeArea(
         child: Container(
           padding: EdgeInsets.fromLTRB(
               isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
-          color: Theme.of(context).backgroundColor,
+          color: ItemTheme.bgColor,
           child: SizedBox(
             child: Column(
               children: <Widget>[

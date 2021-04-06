@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'dataBean.dart';
 import 'sqlLite.dart';
+import 'customeItem.dart';
 
 class RecordPage extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class RecordPage extends StatelessWidget {
               subtitle1: TextStyle(fontSize: 20),
               headline1: TextStyle(fontSize: 30, color: Colors.black))),
       home: Scaffold(
-          backgroundColor: Color.fromRGBO(255, 245, 227, 1),
+          backgroundColor: ItemTheme.bgColor,
           body: Container(
             child: RecordWidget(),
           )),

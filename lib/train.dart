@@ -7,7 +7,7 @@ class TrainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+      backgroundColor: ItemTheme.bgColor,
       body: new ListView(
         children: <Widget>[
           new Image.asset("images/train/step1_pic.png"),
@@ -22,7 +22,7 @@ class TrainPage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => TestMenu(),
+                  builder: (context) => TestMenuPage(),
                 ),
               );
             }),

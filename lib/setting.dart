@@ -3,6 +3,7 @@ import 'package:fun_heart_eat/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'customeItem.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class SettingState extends State<SettingPage> {
   static const String isShockProp = "isShock";
   double sizeHeight;
   double sizeWidth;
-  double iconSize;
+  double iconSize = 30;
   Future<void> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -45,7 +46,7 @@ class SettingState extends State<SettingPage> {
           child: Container(
         padding: EdgeInsets.fromLTRB(
             isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
-        color: Color.fromRGBO(255, 245, 227, 1),
+        color: ItemTheme.bgColor,
         child: Column(
           children: [
             Row(
@@ -55,10 +56,11 @@ class SettingState extends State<SettingPage> {
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeMenuPage()));
+                      Navigator.pop(context);
+                      // Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => HomeMenuPage()));
                     },
                     child: Image.asset(
                       'images/home.png',

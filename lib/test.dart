@@ -18,28 +18,11 @@ import 'package:vibration/vibration.dart';
 
 import 'package:lamp/lamp.dart';
 
-class CameraApp extends StatelessWidget {
-  DataBean dataBean = new DataBean();
 
-  CameraApp(DataBean d) {
-    dataBean = d;
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ItemTheme.themeData,
-      home: CameraHome(dataBean),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class CameraHome extends StatefulWidget {
-  DataBean dataBean = new DataBean();
-  CameraHome(DataBean d) {
-    dataBean = d;
-  }
+class CameraApp extends StatefulWidget {
+  final DataBean dataBean;
+  CameraApp({Key key, this.dataBean}) : super(key: key);
 
   @override
   TestState createState() {
@@ -47,7 +30,7 @@ class CameraHome extends StatefulWidget {
   }
 }
 
-class TestState extends State<CameraHome> with WidgetsBindingObserver {
+class TestState extends State<CameraApp> with WidgetsBindingObserver {
   CameraController controller;
 
   //啟用音效
@@ -301,8 +284,10 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
           }
           dataBean.step = -1;
 
-          Navigator.pushReplacement(cc,
-              MaterialPageRoute(builder: (context) => ResultPage(dataBean)));
+          Navigator.pushReplacement(
+              cc,
+              MaterialPageRoute(
+                  builder: (context) => ResultPage(dataBean: dataBean)));
         }
       }
     });
@@ -352,7 +337,7 @@ class TestState extends State<CameraHome> with WidgetsBindingObserver {
     cc = context;
     if (step == 0) {
       return Container(
-        color: Theme.of(context).backgroundColor,
+        color: ItemTheme.bgColor,
         child: SafeArea(
           child: Flex(
             direction: Axis.horizontal,
