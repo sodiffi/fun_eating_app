@@ -1,14 +1,20 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'test.dart';
-import 'package:flutter_better_camera/camera.dart';
-import 'package:date_format/date_format.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter_better_camera/camera.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'test.dart';
 
 class TestInputPage extends StatelessWidget {
   @override

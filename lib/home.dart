@@ -1,26 +1,21 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:fun_heart_eat/setting.dart';
-import 'dataBean.dart';
-import 'record.dart';
-import 'sqlLite.dart';
-import 'test.dart';
-import 'customeItem.dart';
-import 'package:flutter_better_camera/camera.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_better_camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-// class HomeMenuPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ItemTheme.themeData,
-//       home: HomeMenu(),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'record.dart';
+import 'setting.dart';
+import 'sqlLite.dart';
+import 'test.dart';
 
 class HomeMenuPage extends StatefulWidget {
   @override

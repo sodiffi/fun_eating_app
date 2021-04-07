@@ -1,14 +1,21 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:fun_heart_eat/customeItem.dart';
-import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:fun_heart_eat/home.dart';
-import 'testMenu.dart';
-import 'dataBean.dart';
+
+// Package imports:
+import 'package:flutter_better_camera/camera.dart';
 import 'package:wakelock/wakelock.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'testMenu.dart';
 
 // import 'package:lamp/lamp.dart';
 
@@ -77,7 +84,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-  
     print("check");
     // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {

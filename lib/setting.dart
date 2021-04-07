@@ -1,9 +1,16 @@
+// Dart imports:
 import 'dart:ui';
-import 'package:fun_heart_eat/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
 import 'customeItem.dart';
+import 'home.dart';
 
 class SettingPage extends StatefulWidget {
   @override

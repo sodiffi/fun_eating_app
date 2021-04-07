@@ -1,24 +1,28 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:fun_heart_eat/customeItem.dart';
-import 'addFruit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'result.dart';
-import 'testMenu.dart';
-import 'dataBean.dart';
+
+// Package imports:
+import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image/image.dart' as imglib;
+import 'package:lamp/lamp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
 import 'package:wakelock/wakelock.dart';
 
-import 'package:vibration/vibration.dart';
-
-import 'package:lamp/lamp.dart';
-
-
+// Project imports:
+import 'addFruit.dart';
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'result.dart';
+import 'testMenu.dart';
 
 class CameraApp extends StatefulWidget {
   final DataBean dataBean;

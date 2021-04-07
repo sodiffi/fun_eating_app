@@ -1,16 +1,19 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fun_heart_eat/check.dart';
-import 'package:fun_heart_eat/dataBean.dart';
+
+// Package imports:
+import 'package:flutter_better_camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+// Project imports:
+import 'check.dart';
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
 import 'input.dart';
 import 'train.dart';
-import 'home.dart';
-import 'customeItem.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_better_camera/camera.dart';
-
-
 
 class TestMenuPage extends StatefulWidget {
   @override

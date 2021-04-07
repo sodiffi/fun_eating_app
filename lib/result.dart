@@ -1,34 +1,41 @@
 // import 'dart:html';
-import 'package:flutter/rendering.dart';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'package:flutter/material.dart';
-import 'home.dart';
-import 'package:csv/csv.dart';
-import 'dart:io';
+
+// Dart imports:
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+// Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:csv/csv.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
-import 'sqlLite.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_share/flutter_share.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'sqlLite.dart';
 
 String rate = "0%";
 String content = "合格";
 double result;
 
 class ResultPage extends StatelessWidget {
-  // final String ftpHost = "120.106.210.250";
-  // final String ftpName = "admin";
-  // final String ftpPsw = "wj/61j4zj6gk4";
-  // final String changeDir = "Public/PesticsdeTest_upload/";
-  final String ftpHost = "ftp.byethost12.com";
-  final String ftpName = "b12_27143036";
-  final String ftpPsw = "xkpt3v";
-  final String changeDir = "htdocs/fun_heart_eating/";
+  final String ftpHost = "120.106.210.250";
+  final String ftpName = "admin";
+  final String ftpPsw = "wj/61j4zj6gk4";
+  final String changeDir = "Public/PesticsdeTest_upload/";
+  // final String ftpHost = "ftp.byethost12.com";
+  // final String ftpName = "b12_27143036";
+  // final String ftpPsw = "xkpt3v";
+  // final String changeDir = "htdocs/fun_heart_eating/";
 
   final DataBean dataBean;
 

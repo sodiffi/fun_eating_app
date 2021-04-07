@@ -1,5 +1,6 @@
-import 'package:sqflite/sqflite.dart';
+// Package imports:
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 final String table = 'fun_heart_eating';
 final String columnId = 'time';

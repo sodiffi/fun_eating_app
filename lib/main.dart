@@ -1,10 +1,17 @@
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Project imports:
+import 'customeItem.dart';
 import 'dataBean.dart';
 import 'home.dart';
-import 'package:flutter/services.dart';
-import 'customeItem.dart';
-
+import 'result.dart';
+import 'setting.dart';
+import 'toSetting.dart';
 
 void main() {
   DataBean dataBean = new DataBean();

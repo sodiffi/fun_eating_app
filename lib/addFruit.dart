@@ -1,9 +1,16 @@
+// Dart imports:
 import 'dart:ui';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'test.dart';
-import 'package:flutter_better_camera/camera.dart';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_better_camera/camera.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'test.dart';
 
 class AddFruit extends StatefulWidget {
   final DataBean dataBean;
