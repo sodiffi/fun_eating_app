@@ -510,10 +510,8 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     if (controller != null) {
       await controller.dispose();
     }
-    controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
-    );
+    controller = CameraController(cameraDescription, ResolutionPreset.medium,
+        enableAudio: false, autoFocusEnabled: false, enableAutoExposure: false);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {

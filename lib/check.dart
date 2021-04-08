@@ -95,7 +95,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if(dataBean.step>0) open();
+      if (dataBean.step > 0) open();
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
@@ -261,8 +261,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   Widget _cameraPreviewWidget() {
     print("-----------");
     print("camera preview widget");
-    print(controller == null);
-    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
       print("enter if");
       return Text("fail");
@@ -283,10 +281,8 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     if (controller != null) {
       await controller.dispose();
     }
-    controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
-    );
+    controller = CameraController(cameraDescription, ResolutionPreset.medium,
+        enableAudio: false, autoFocusEnabled: false, enableAutoExposure: false);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
