@@ -59,6 +59,7 @@ class ResultPage extends StatelessWidget {
 
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);
+    rows.add(["\uFEFF"]);
     for (int i = 0; i < dataBean.beforeL.length; i++) {
       List<dynamic> row = List.empty(growable: true);
       if (i < 180) {
@@ -80,7 +81,9 @@ class ResultPage extends StatelessWidget {
     rows.add(["rate", result]);
     rows.add(["蔬菜種類", dataBean.fruitClass]);
     rows.add(["購買地點", dataBean.area]);
-    rows.add(["蔬菜名稱", dataBean.fruitName]);
+    if (dataBean.fruitName != "") {
+      rows.add(["蔬菜名稱", dataBean.fruitName]);
+    }
 
     //------------------------
     if (await Permission.storage.request().isGranted) {
@@ -99,7 +102,6 @@ class ResultPage extends StatelessWidget {
         // convert rows to String and write as csv file
 
         String csv = const ListToCsvConverter().convert(rows);
-
         await f.writeAsString(csv, encoding: utf8);
         FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
         ftpClient.connect();
@@ -165,7 +167,8 @@ class ResultState extends State<Result> {
       sizeWidth = MediaQuery.of(context).size.width;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
       reportBoxW = isStraight ? sizeWidth * 0.8 : sizeWidth * 0.3;
-      reportBoxH = isStraight ? (sizeHeight -20-(iconSize*2) ): sizeHeight * 0.7;
+      reportBoxH =
+          isStraight ? (sizeHeight - 20 - (iconSize * 2)) : sizeHeight * 0.7;
     });
 
     List<Widget> homeButton = [
@@ -208,14 +211,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH*0.45,
+          height: reportBoxH * 0.45,
           fit: BoxFit.fill,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
               reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH*0.45,
+          height: reportBoxH * 0.45,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
