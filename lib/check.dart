@@ -282,7 +282,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       await controller.dispose();
     }
     controller = CameraController(cameraDescription, ResolutionPreset.medium,
-        enableAudio: false, autoFocusEnabled: false, enableAutoExposure: false);
+        enableAudio: false);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
