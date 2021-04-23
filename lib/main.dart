@@ -32,11 +32,7 @@ class HomePage extends StatelessWidget {
           switch (settings.name) {
             case '/':
               builder = (_) => Home();
-              break;
-            case '/begin':
-              builder = (_) => HomeMenuPage();
-              break;
-
+              break;          
             default:
               throw new Exception('路由名稱有誤: ${settings.name}');
           }
@@ -54,12 +50,9 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
-        print("timer");
         timer.cancel();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
-        // Navigator.of(context).pushReplacement()
-        //     .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
+            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));        
       },
     );
 

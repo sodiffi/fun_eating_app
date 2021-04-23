@@ -90,8 +90,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => TestMenuPage()));
       off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
@@ -259,13 +257,10 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    print("-----------");
-    print("camera preview widget");
+    print("-----------");    
     if (controller == null || !controller.value.isInitialized) {
-      print("enter if");
       return Text("fail");
     } else {
-      print("enter else");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
@@ -305,11 +300,10 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   void _showCameraException(CameraException e) {
     print("--------");
     print("camera exception");
-    logError(e.code, e.description);
+    logError(e.code + "\nError Message" + e.description);
     print("--------");
     // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
 
-void logError(String code, String message) =>
-    print('Error: $code\nError Message: $message');
+void logError(String mes) => print('Error: $mes');

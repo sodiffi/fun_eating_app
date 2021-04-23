@@ -62,7 +62,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   String min = "";
   String second = "";
   int passTime = 0;
-  DataBean dataBean = new DataBean();
+  DataBean dataBean;
   Widget previewCamera = Container();
   Timer testTimer;
   Timer checkTimer;
@@ -105,7 +105,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       } on FlutterError {
         print("enter flutter error");
       } catch (e) {
-        print(e);
+        _showCameraException(e);
       }
     } else
       Lamp.turnOff();
@@ -208,11 +208,10 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   }
 
   /* 第二、三步驟 測驗*/
-  void startTest() {
+  Future<void> startTest() async {
     //開相機
-    onNewCameraSelected(dataBean.cameras[0]);
+    await onNewCameraSelected(dataBean.cameras[0]);
     int count;
-
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
       print("\t$step $timer.tick ");
@@ -249,7 +248,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         testTimer.cancel();
         off();
         if (step == 1) {
-          print("\tbefore List" + dataBean.beforeL.toString());
           dataBean.beforeAvg = getData(dataBean.beforeL);
           //酵素棒似乎有問題，請更換酵素棒，再試一次
           if (dataBean.beforeAvg[2] > 0.008) {
@@ -264,15 +262,15 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           }
 
           Navigator.pushReplacement(
-              cc,
-              MaterialPageRoute(
-                  builder: (context) => AddFruit(
-                        dataBean: dataBean,
-                      )));
+            cc,
+            MaterialPageRoute(
+              builder: (context) => AddFruit(
+                dataBean: dataBean,
+              ),
+            ),
+          );
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
-          print("\t" + dataBean.beforeAvg.toString());
-          print("\t" + dataBean.afterAvg.toString());
           dataBean.result = (1 -
                   ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
                       (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
@@ -454,7 +452,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       if (Platform.isAndroid) {
         try {
           final int width = image.width;
-
           final int height = image.height;
           final int uvRowStride = image.planes[1].bytesPerRow;
           final int uvPixelStride = image.planes[1].bytesPerPixel;
@@ -480,7 +477,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           b /= len;
           print("------");
         } catch (e) {
-          print(">>>>>>>>>>>> ANDROID ERROR:" + e.toString());
+          _showCameraException(e);
         }
       } else if (Platform.isIOS) {
         try {
@@ -490,7 +487,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
             r += image.planes[0].bytes[i + 2].toDouble();
           }
         } catch (e) {
-          print(">>>>>>>>>>>> IOS ERROR:" + e.toString());
+        _showCameraException(e);
         }
       }
       if (step == 0) {
@@ -527,19 +524,20 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       _showCameraException(e);
     }
     controller.startImageStream((image) => {getRGB(image)});
-
     await controller.setFlashMode(FlashMode.torch);
     // if(Platform.isIOS) Lamp.turnOn();
   }
 
-  void _showCameraException(CameraException e) {
+  void _showCameraException(Exception e) {
     print("--------");
     print("camera exception");
-    logError(e.code, e.description);
+    if (e is CameraException)
+      logError(e.code + "\nError Message" + e.description);
+    else
+      logError(e.toString());
     print("--------");
     // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
 
-void logError(String code, String message) =>
-    print('Error: $code\nError Message: $message');
+void logError(String msg) => print('Error: $msg');

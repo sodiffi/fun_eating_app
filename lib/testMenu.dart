@@ -196,9 +196,7 @@ Future<void> getCameras() async {
 
       cameras = await availableCameras();
     } on CameraException catch (e) {
-      logError(e.code, e.description);
+      logError(e.code + "\nError Message" + e.description);
     }
   }
-
-  // Fetch the available cameras before initializing the app.
 }

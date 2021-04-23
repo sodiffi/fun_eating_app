@@ -54,9 +54,6 @@ class ResultPage extends StatelessWidget {
   getCsv() async {
     print("enter get csv");
 
-    //create an element rows of type list of list. All the above data set are stored in associate list
-//Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
-
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);
     rows.add(["\uFEFF"]);
@@ -89,13 +86,7 @@ class ResultPage extends StatelessWidget {
     if (await Permission.storage.request().isGranted) {
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      // Directory tempDir = await getApplicationDocumentsDirectory();
-      // String dir = tempDir.path + "/";
       String dir = (await getExternalStorageDirectory()).absolute.path + "/";
-      print(dir);
-      print("platformIemi\t" + platformImei);
-
-      // file = "$dir";
       new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
@@ -114,7 +105,6 @@ class ResultPage extends StatelessWidget {
 
       FunHeartProvider fProvider = new FunHeartProvider();
       await fProvider.open();
-      print(dataBean.area);
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
           dataBean.fruitName, dataBean.area, dataBean.result.floor()));
     }
