@@ -8,8 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_better_camera/camera.dart';
+// import 'package:flutter_better_camera/camera.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';
@@ -33,15 +34,15 @@ class CheckPage extends StatefulWidget {
 class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
   BuildContext cc;
-  DataBean dataBean = new DataBean();
+  DataBean dataBean;
   Widget previewCamera = Container();
   double sizeHeight;
   double sizeWidth;
   double iconSize;
   bool isStraight = false;
 
-  CheckState(DataBean d) {
-    dataBean = d;
+  CheckState(DataBean b) {
+    dataBean = b;
     Wakelock.enable();
     open();
   }
@@ -49,8 +50,12 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
+      controller.flash(false).catchError((onError) {
+        print(onError);
+      });
       // try {
-      await controller.setFlashMode(FlashMode.off);
+      // await controller.setFlashMode(FlashMode.off);
+      // await controller.flash(false);
       // } on FlutterError {
       //   print("enter flutter error");
       // } catch (e) {
@@ -61,10 +66,14 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   }
 
   Future<void> open() async {
-    await onNewCameraSelected(dataBean.cameras[0]);
-    setState(() {
-      previewCamera = _cameraPreviewWidget();
-    });
+    print("test open ");
+    print(dataBean.cameras[0]);
+    if (dataBean.cameras[0] == null) {
+    } else {
+      await onNewCameraSelected(dataBean.cameras[0]).catchError((onError) {
+        print(onError);
+      });
+    }
   }
 
   @override
@@ -93,7 +102,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if (dataBean.step > 0) open();
+      if (dataBean.step == 0) open();
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
@@ -124,10 +133,13 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                     child: GestureDetector(
                       onTap: () {
                         off();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeMenuPage()));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => HomeMenuPage()));
                       },
                       child: Image.asset(
                         'images/home.png',
@@ -162,12 +174,13 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                     children: [
                       CustomButton("確定", () {
                         off();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TestMenuPage(),
-                          ),
-                        );
+                        Navigator.pop(context);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => TestMenuPage(),
+                        //   ),
+                        // );
                       })
                     ],
                   )
@@ -257,10 +270,13 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    print("-----------");    
+    print("enter camerapreviewwidget");
+    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
       return Text("fail");
     } else {
+      print(controller);
+      // return Text("good");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
@@ -273,11 +289,33 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   // }
 
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
+    print("enter on new cameraseleced");
     if (controller != null) {
       await controller.dispose();
     }
-    controller = CameraController(cameraDescription, ResolutionPreset.medium,
-        enableAudio: false);
+    controller = CameraController(
+      cameraDescription,
+      ResolutionPreset.medium,
+      enableAudio: false,
+      iso: 0,
+      shutterSpeed: 0,
+      whiteBalance: WhiteBalancePreset.cloudy,
+      focusDistance: 0,
+    );
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        previewCamera = _cameraPreviewWidget();
+      });
+      Future.delayed(
+        Duration(
+          milliseconds: 1000,
+        ),
+      );
+      controller.flash(true);
+    });
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
@@ -287,13 +325,13 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       }
     });
 
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-    }
-
-    await controller.setFlashMode(FlashMode.torch);
+    // try {
+    //   await controller.initialize();
+    // } on CameraException catch (e) {
+    //   _showCameraException(e);
+    // }
+    // await controller.flash(false);
+    // await controller.setFlashMode(FlashMode.torch);
     // if(Platform.isIOS) Lamp.turnOn();
   }
 

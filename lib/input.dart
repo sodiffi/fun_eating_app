@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:date_format/date_format.dart';
-import 'package:flutter_better_camera/camera.dart';
+// import 'package:flutter_better_camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';

@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.0
-  flutter_better_camera:
+  # flutter_better_camera:
   path_provider: ^1.6.27
   fluttertoast: 7.1.1
   date_format: ^1.0.9
@@ -29,7 +29,8 @@ dependencies:
   flutter_share: ^1.0.5
   lamp:
   wakelock: ^0.2.1+1
-
+  manual_camera: ^0.0.3 
+  camera: 0.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

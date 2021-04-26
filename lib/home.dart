@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_better_camera/camera.dart';
+// import 'package:flutter_better_camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';

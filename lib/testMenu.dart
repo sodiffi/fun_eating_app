@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Package imports:
-import 'package:flutter_better_camera/camera.dart';
+// import 'package:flutter_better_camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'check.dart';
@@ -16,6 +17,9 @@ import 'input.dart';
 import 'train.dart';
 
 class TestMenuPage extends StatefulWidget {
+  final DataBean dataBean;
+
+  const TestMenuPage({Key key, this.dataBean}) : super(key: key);
   @override
   _TestMenuPageState createState() => _TestMenuPageState();
 }
@@ -117,6 +121,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
                               isStraight ? 5 : 0, 5, isStraight ? 5 : 5, 5),
                           child: GestureDetector(
                             onTap: () {
+                              //need
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
