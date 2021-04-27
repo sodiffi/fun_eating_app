@@ -9,9 +9,7 @@ import 'package:flutter/services.dart';
 import 'customeItem.dart';
 import 'dataBean.dart';
 import 'home.dart';
-import 'result.dart';
-import 'setting.dart';
-import 'toSetting.dart';
+
 
 void main() {
   DataBean dataBean = new DataBean();
@@ -32,7 +30,7 @@ class HomePage extends StatelessWidget {
           switch (settings.name) {
             case '/':
               builder = (_) => Home();
-              break;          
+              break;
             default:
               throw new Exception('路由名稱有誤: ${settings.name}');
           }
@@ -52,7 +50,7 @@ class Home extends StatelessWidget {
       (timer) {
         timer.cancel();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));        
+            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
       },
     );
 

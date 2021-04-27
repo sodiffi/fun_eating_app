@@ -1,4 +1,5 @@
 // Dart imports:
+import 'dart:io';
 import 'dart:math';
 
 // Flutter imports:
@@ -34,6 +35,9 @@ class HomeMenuState extends State<HomeMenuPage> {
   double iconSize;
   double linkSize;
   int temp;
+  HomeMenuState() {
+     getCameras();
+  }
   FunHeartProvider fProvider = new FunHeartProvider();
   void toTest() {
     dataBean.step = 0;
@@ -74,7 +78,6 @@ class HomeMenuState extends State<HomeMenuPage> {
           ? min(sizeHeight * 0.25, sizeWidth * 0.4)
           : sizeWidth * 0.17;
     });
-    getCameras();
     AutoSizeGroup linkGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
@@ -336,7 +339,6 @@ Future<void> getCameras() async {
   if (await Permission.camera.request().isGranted) {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-
       cameras = await availableCameras();
     } on CameraException catch (e) {
       logError(e.code + "\nError Message" + e.description);

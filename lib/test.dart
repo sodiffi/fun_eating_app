@@ -70,9 +70,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   Timer checkTimer;
 
   TestState(DataBean b) {
-    // print(widget.dataBean.step);
-    print(b.step);
-    dataBean =b;
+    dataBean = b;
     step = dataBean.step;
     Wakelock.enable();
     if (dataBean.step == 0) {
@@ -103,15 +101,8 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   Future<void> off() async {
     Wakelock.disable();
-    if (Platform.isAndroid) {
-      try {
-        // await controller.setFlashMode(FlashMode.off);
-        await controller.flash(false).catchError((onError){print(onError);});
-      } on FlutterError {
-        print("enter flutter error");
-      } catch (e) {
-        _showCameraException(e);
-      }
+    if (Platform.isAndroid) {     
+        await controller.flash(false).catchError(logError);      
     } else
       Lamp.turnOff();
   }
@@ -125,15 +116,15 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+
     controller.dispose();
     super.dispose();
     // controller.setFlashMode(FlashMode.off);
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state.toString());
-    // App state changed before we got the chance to initialize.
+  void didChangeAppLifecycleState(AppLifecycleState state) {   
+    
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
@@ -161,7 +152,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       setState(() {
         previewCamera = _cameraPreviewWidget();
       });
-      checkTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      checkTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
         print("\t " + step.toString() + "\t" + checkList.length.toString());
         if (checkList.length == checkTime) {
           String msg = "";
@@ -205,8 +196,9 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           timer.cancel();
 
           off();
-          controller.stopImageStream();
-          controller.dispose();
+          previewCamera = Container();
+          await controller.stopImageStream();
+          await controller.dispose();
           Navigator.pushReplacement(
               cc,
               MaterialPageRoute(
@@ -246,9 +238,9 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         if (second.length == 1) second = "0" + second;
       });
       if (count == testTime - notGetImgTime) {
-        if (isRing ?? true) {
+        if (isRing ?? true) {      
           FlutterRingtonePlayer.play(
-            android: AndroidSounds.notification,
+            android: AndroidSounds.notification ?? AndroidSounds.alarm,
             ios: const IosSound(1023),
             looping: false,
             volume: 0.1,
@@ -516,11 +508,10 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   }
 
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
-    print("enter here");
     if (controller != null) {
+      previewCamera = Container();
       await controller.dispose();
     }
-    print(cameraDescription);
     try {
       controller = CameraController(
         cameraDescription,
@@ -531,8 +522,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         focusDistance: 0,
         enableAudio: false,
       );
-      print("after controller");
-
       await controller.initialize().then((_) {
         if (!mounted) {
           return;
@@ -544,31 +533,20 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           ),
         );
       });
-
-      print("before ");
       await controller.startImageStream((image) => getRGB(image));
     } catch (e) {
       print(e);
     }
-    controller.flash(true);
+    Future.delayed(Duration(milliseconds: 500));
+   
 
-    // If the controller is updated then update the UI.
-    controller.addListener(() {
-      // if (mounted) setState(() {});
-      if (controller.value.hasError) {
-        // showInSnackBar('Camera error ${controller.value.errorDescription}');
+    
+    controller.addListener(() {     
+      if (controller.value.hasError) {        
+        logError('Camera error ${controller.value.errorDescription}');
       }
     });
-
-    // try {
-    //   await controller.initialize();
-    //   await controller.startImageStream((image) => {getRGB(image)});
-    // } on CameraException catch (e) {
-    //   _showCameraException(e);
-    // }
-
-    // await controller.flash(false);
-    // await controller.setFlashMode(FlashMode.torch);
+    
     // if(Platform.isIOS) Lamp.turnOn();
   }
 

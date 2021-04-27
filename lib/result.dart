@@ -101,7 +101,7 @@ class ResultPage extends StatelessWidget {
         ftpClient.changeDirectory(platformImei);
         await ftpClient.uploadFile(f);
         ftpClient.disconnect();
-      }).catchError((onError) => {print(onError)});
+      }).catchError(logError);
 
       FunHeartProvider fProvider = new FunHeartProvider();
       await fProvider.open();
@@ -394,3 +394,4 @@ class ResultState extends State<Result> {
     }
   }
 }
+void logError(var mes) => print('Error: ${mes.toString()}');

@@ -50,29 +50,15 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
-      controller.flash(false).catchError((onError) {
-        print(onError);
-      });
-      // try {
-      // await controller.setFlashMode(FlashMode.off);
-      // await controller.flash(false);
-      // } on FlutterError {
-      //   print("enter flutter error");
-      // } catch (e) {
-      //   print(e);
-      // }
+      controller.flash(false).catchError(logError);
     }
     // else Lamp.turnOff();
   }
 
   Future<void> open() async {
-    print("test open ");
-    print(dataBean.cameras[0]);
     if (dataBean.cameras[0] == null) {
     } else {
-      await onNewCameraSelected(dataBean.cameras[0]).catchError((onError) {
-        print(onError);
-      });
+      await onNewCameraSelected(dataBean.cameras[0]).catchError(logError);
     }
   }
 
@@ -87,14 +73,12 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
-    print("\tenter second dispose");
     off();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print("check");
-    // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
@@ -135,11 +119,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                         off();
                         Navigator.pop(context);
                         Navigator.pop(context);
-
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => HomeMenuPage()));
                       },
                       child: Image.asset(
                         'images/home.png',
@@ -175,12 +154,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                       CustomButton("確定", () {
                         off();
                         Navigator.pop(context);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => TestMenuPage(),
-                        //   ),
-                        // );
                       })
                     ],
                   )
@@ -270,13 +243,9 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    print("enter camerapreviewwidget");
-    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
       return Text("fail");
     } else {
-      print(controller);
-      // return Text("good");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
@@ -284,12 +253,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     }
   }
 
-  // void showInSnackBar(String message) {
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  // }
-
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
-    print("enter on new cameraseleced");
     if (controller != null) {
       await controller.dispose();
     }
@@ -317,21 +281,12 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       controller.flash(true);
     });
 
-    // If the controller is updated then update the UI.
     controller.addListener(() {
-      // if (mounted) setState(() {});
       if (controller.value.hasError) {
-        // showInSnackBar('Camera error ${controller.value.errorDescription}');
+        logError('Camera error ${controller.value.errorDescription}');
       }
     });
 
-    // try {
-    //   await controller.initialize();
-    // } on CameraException catch (e) {
-    //   _showCameraException(e);
-    // }
-    // await controller.flash(false);
-    // await controller.setFlashMode(FlashMode.torch);
     // if(Platform.isIOS) Lamp.turnOn();
   }
 
@@ -344,4 +299,4 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   }
 }
 
-void logError(String mes) => print('Error: $mes');
+void logError(var mes) => print('Error: ${mes.toString()}');

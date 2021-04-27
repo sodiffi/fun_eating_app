@@ -52,8 +52,7 @@ class RecordState extends State<RecordWidget> {
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       getData();
-    }
-    print("build before" + data.length.toString());
+    }   
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
       sizeHeight = MediaQuery.of(context).size.height;
@@ -210,13 +209,11 @@ class RecordState extends State<RecordWidget> {
   }
 
   Future<void> getData() async {
-    print("getData");
     // Fetch the available cameras before initializing the app.
 
     await funHeartProvider.open();
     data.clear();
     await funHeartProvider.getFunHeartList().then((value) {
-      print("value.length" + value.length.toString());
       setState(() {
         data = value.reversed.toList();
       });
