@@ -36,7 +36,7 @@ class HomeMenuState extends State<HomeMenuPage> {
   double linkSize;
   int temp;
   HomeMenuState() {
-     getCameras();
+    getCameras();
   }
   FunHeartProvider fProvider = new FunHeartProvider();
   void toTest() {
@@ -261,31 +261,55 @@ class HomeMenuState extends State<HomeMenuPage> {
 
     //直立畫面
     if (isStraight) {
-      return Container(
-        color: ItemTheme.bgColor,
-        child: SafeArea(
-          child: Container(
-            color: ItemTheme.bgColor,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: homeButton,
-                  ),
-                  Image.asset(
-                    "images/logo_h.png",
-                    height: sizeHeight * 0.1,
-                  ),
-                  Column(
-                    children: txtAndTestBtn,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                    child: Column(
-                      children: linkButtons,
+      return WillPopScope(
+        onWillPop: () {
+          print("enter on will pop");
+          return showDialog(
+                context: context,
+                builder: (context) => new AlertDialog(
+                  title: new Text('Are you sure?'),
+                  content: new Text('Do you want to exit an App'),
+                  actions: <Widget>[
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(false),
+                      child: Text("NO"),
                     ),
-                  )
-                ]),
+                    SizedBox(height: 16),
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(true),
+                      child: Text("YES"),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
+        },
+        child: Container(
+          color: ItemTheme.bgColor,
+          child: SafeArea(
+            child: Container(
+              color: ItemTheme.bgColor,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: homeButton,
+                    ),
+                    Image.asset(
+                      "images/logo_h.png",
+                      height: sizeHeight * 0.1,
+                    ),
+                    Column(
+                      children: txtAndTestBtn,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      child: Column(
+                        children: linkButtons,
+                      ),
+                    )
+                  ]),
+            ),
           ),
         ),
       );

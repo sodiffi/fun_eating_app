@@ -44,10 +44,8 @@ class _TestMenuPageState extends State<TestMenuPage> {
       imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3;
     });
 
-    Widget buttonTrainBox = Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.zero,
+    Widget buttonTrainBox = Container(
+        padding: EdgeInsets.all(10),
         child: GestureDetector(
           child: Stack(
             alignment: const Alignment(0, 0),
@@ -71,12 +69,9 @@ class _TestMenuPageState extends State<TestMenuPage> {
                 context, MaterialPageRoute(builder: (context) => TrainPage()));
           },
         ),
-      ),
-    );
-    Widget buttonTestBox = Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.zero,
+      );
+    Widget buttonTestBox = Container(
+        padding: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -100,8 +95,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
             ],
           ),
         ),
-      ),
-    );
+      );
 
     return Container(
       color: ItemTheme.bgColor,

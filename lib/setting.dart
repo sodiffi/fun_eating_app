@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'customeItem.dart';
-import 'home.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -63,11 +62,7 @@ class SettingState extends State<SettingPage> {
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => HomeMenuPage()));
+                      Navigator.pop(context);                     
                     },
                     child: Image.asset(
                       'images/home.png',

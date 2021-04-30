@@ -58,7 +58,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   Future<void> open() async {
     if (dataBean.cameras[0] == null) {
     } else {
-      await onNewCameraSelected(dataBean.cameras[0]).catchError(logError);
+      await openCamera(dataBean.cameras[0]).catchError(logError);
     }
   }
 
@@ -101,6 +101,22 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
     cc = context;
+    Widget homeButton = Padding(
+      padding: EdgeInsets.all(5),
+      child: GestureDetector(
+        onTap: () {
+          off();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+        child: Image.asset(
+          'images/home.png',
+          height: iconSize,
+          width: iconSize,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
     if (isStraight) {
       return Container(
@@ -111,24 +127,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () {
-                        off();
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: Image.asset(
-                        'images/home.png',
-                        height: iconSize,
-                        width: iconSize,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                ],
+                children: [homeButton],
               ),
               Column(
                 children: [
@@ -168,72 +167,38 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       return Container(
         color: ItemTheme.bgColor,
         child: SafeArea(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [],
+              Expanded(
+                child: Stack(
+                  children: [Image.asset("images/signal.png"), homeButton],
+                ),
+                flex: 1,
               ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            Image.asset("images/signal.png"),
-                            Padding(
-                              padding: EdgeInsets.all(5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  off();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeMenuPage()));
-                                },
-                                child: Image.asset(
-                                  'images/home.png',
-                                  height: iconSize,
-                                  width: iconSize,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
-                          ],
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: sizeHeight * 0.8,
+                      child: previewCamera,
+                    ),
+                    CustomButton("確定", () {
+                      off();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestMenuPage(),
                         ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: sizeHeight * 0.8,
-                              child: previewCamera,
-                            ),
-                            CustomButton("確定", () {
-                              off();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TestMenuPage(),
-                                ),
-                              );
-                            })
-                          ],
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Image.asset("images/signal.png"),
-                        flex: 1,
-                      )
-                    ],
-                  ),
-                ],
+                      );
+                    })
+                  ],
+                ),
+                flex: 1,
               ),
+              Expanded(
+                child: Image.asset("images/signal.png"),
+                flex: 1,
+              )
             ],
           ),
         ),
@@ -253,7 +218,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> openCamera(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
@@ -275,7 +240,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       });
       Future.delayed(
         Duration(
-          milliseconds: 1000,
+          milliseconds: 250,
         ),
       );
       controller.flash(true);

@@ -4,12 +4,13 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:ringtone_player/ringtone_player.dart';
 
 // Project imports:
 import 'customeItem.dart';
 import 'dataBean.dart';
 import 'home.dart';
-
 
 void main() {
   DataBean dataBean = new DataBean();
@@ -48,9 +49,17 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
+        RingtonePlayer.ringtone();
         timer.cancel();
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: HomeMenuPage(),
+            ),
+          ),
+        );
       },
     );
 

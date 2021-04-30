@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 // import 'package:flutter_better_camera/camera.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:lamp/lamp.dart';
@@ -101,8 +101,13 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   Future<void> off() async {
     Wakelock.disable();
-    if (Platform.isAndroid) {     
-        await controller.flash(false).catchError(logError);      
+    if (Platform.isAndroid) {
+      print("loook here");
+      await controller.flash(false).catchError((e) {
+        print(e);
+        print("this error");
+      });
+      print("loook here2");
     } else
       Lamp.turnOff();
   }
@@ -123,8 +128,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {   
-    
+  void didChangeAppLifecycleState(AppLifecycleState state) {
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
@@ -148,7 +152,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   /* 第一步驟 檢測光源*/
   Future<void> startCheck() async {
     if (await Permission.camera.request().isGranted) {
-      await onNewCameraSelected(dataBean.cameras[0]);
+      await openCamera(dataBean.cameras[0]);
       setState(() {
         previewCamera = _cameraPreviewWidget();
       });
@@ -214,7 +218,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   /* 第二、三步驟 測驗*/
   Future<void> startTest() async {
     //開相機
-    await onNewCameraSelected(dataBean.cameras[0]);
+    await openCamera(dataBean.cameras[0]);
     int count;
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
@@ -238,13 +242,13 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         if (second.length == 1) second = "0" + second;
       });
       if (count == testTime - notGetImgTime) {
-        if (isRing ?? true) {      
-          FlutterRingtonePlayer.play(
-            android: AndroidSounds.notification ?? AndroidSounds.alarm,
-            ios: const IosSound(1023),
-            looping: false,
-            volume: 0.1,
-          );
+        if (isRing ?? true) {
+          // FlutterRingtonePlayer.play(
+          //   android: AndroidSounds.notification ?? AndroidSounds.alarm,
+          //   ios: const IosSound(1023),
+          //   looping: false,
+          //   volume: 0.1,
+          // );
         }
         if (isShock ?? true) {
           Vibration.vibrate();
@@ -507,7 +511,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> openCamera(CameraDescription cameraDescription) async {
     if (controller != null) {
       previewCamera = Container();
       await controller.dispose();
@@ -522,31 +526,45 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         focusDistance: 0,
         enableAudio: false,
       );
-      await controller.initialize().then((_) {
+
+      await controller.initialize().then((_) async {
         if (!mounted) {
           return;
         }
-        setState(() {});
-        Future.delayed(
+        await Future.delayed(
           Duration(
-            milliseconds: 1000,
+            milliseconds: 250,
           ),
         );
       });
+      await Future.delayed(
+        Duration(
+          milliseconds: 250,
+        ),
+      );
+
       await controller.startImageStream((image) => getRGB(image));
     } catch (e) {
       print(e);
     }
-    Future.delayed(Duration(milliseconds: 500));
-   
+    print("before open flash");
+    await controller.flash(true).catchError((e) {
+      print(e);
+      print("true error");
+    });
+    print("after open flash");
+    await Future.delayed(
+      Duration(
+        milliseconds: 250,
+      ),
+    );
 
-    
-    controller.addListener(() {     
-      if (controller.value.hasError) {        
+    controller.addListener(() {
+      if (controller.value.hasError) {
         logError('Camera error ${controller.value.errorDescription}');
       }
     });
-    
+
     // if(Platform.isIOS) Lamp.turnOn();
   }
 
@@ -562,4 +580,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   }
 }
 
-void logError(String msg) => print('Error: $msg');
+Future<void> logError(var msg) async {
+  print('Error: ${msg.toString()}');
+}

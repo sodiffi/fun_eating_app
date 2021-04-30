@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 // import 'package:flutter_better_camera/camera.dart';
-import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';
