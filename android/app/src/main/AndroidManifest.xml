@@ -14,12 +14,14 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name= "android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:label="FUN心吃"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         >
+                <service android:name="dev.cruv.ringtone_player.PlayerService" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -4,8 +4,6 @@ import 'dart:async';
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:ringtone_player/ringtone_player.dart';
 
 // Project imports:
 import 'customeItem.dart';
@@ -49,7 +47,6 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
-        RingtonePlayer.ringtone();
         timer.cancel();
         Navigator.push(
           context,

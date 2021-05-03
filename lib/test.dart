@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 // import 'package:flutter_better_camera/camera.dart';
-// import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:lamp/lamp.dart';
@@ -204,11 +204,13 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           await controller.stopImageStream();
           await controller.dispose();
           Navigator.pushReplacement(
-              cc,
-              MaterialPageRoute(
-                  builder: (context) => TestMenuPage(
-                        dataBean: dataBean,
-                      )));
+            cc,
+            MaterialPageRoute(
+              builder: (context) => TestMenuPage(
+                dataBean: dataBean,
+              ),
+            ),
+          );
         }
         getImg = true;
       });
@@ -243,12 +245,12 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       });
       if (count == testTime - notGetImgTime) {
         if (isRing ?? true) {
-          // FlutterRingtonePlayer.play(
-          //   android: AndroidSounds.notification ?? AndroidSounds.alarm,
-          //   ios: const IosSound(1023),
-          //   looping: false,
-          //   volume: 0.1,
-          // );
+          FlutterRingtonePlayer.play(
+            android: AndroidSounds.notification,
+            ios: const IosSound(1023),
+            looping: false,
+            volume: 0.1,
+          );
         }
         if (isShock ?? true) {
           Vibration.vibrate();
