@@ -1,10 +1,14 @@
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+// Project imports:
+import 'customeItem.dart';
 import 'dataBean.dart';
 import 'home.dart';
-import 'package:flutter/services.dart';
-import 'customeItem.dart';
-
 
 void main() {
   DataBean dataBean = new DataBean();
@@ -26,10 +30,6 @@ class HomePage extends StatelessWidget {
             case '/':
               builder = (_) => Home();
               break;
-            case '/begin':
-              builder = (_) => HomeMenuPage();
-              break;
-
             default:
               throw new Exception('路由名稱有誤: ${settings.name}');
           }
@@ -47,12 +47,16 @@ class Home extends StatelessWidget {
     Timer.periodic(
       Duration(seconds: 3),
       (timer) {
-        print("timer");
         timer.cancel();
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
-        // Navigator.of(context).pushReplacement()
-        //     .pushNamedAndRemoveUntil('/begin', (Route<dynamic> route) => false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: HomeMenuPage(),
+            ),
+          ),
+        );
       },
     );
 

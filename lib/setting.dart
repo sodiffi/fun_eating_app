@@ -1,8 +1,14 @@
+// Dart imports:
 import 'dart:ui';
-import 'package:fun_heart_eat/home.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Project imports:
 import 'customeItem.dart';
 
 class SettingPage extends StatefulWidget {
@@ -56,11 +62,7 @@ class SettingState extends State<SettingPage> {
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
-                      // Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => HomeMenuPage()));
+                      Navigator.pop(context);                     
                     },
                     child: Image.asset(
                       'images/home.png',

@@ -1,5 +1,6 @@
-import 'package:sqflite/sqflite.dart';
+// Package imports:
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 final String table = 'fun_heart_eating';
 final String columnId = 'time';
@@ -63,8 +64,7 @@ class FunHeartProvider {
     });
   }
 
-  Future<FunHeart> insert(FunHeart funHeart) async {
-    print(funHeart.output());
+  Future<FunHeart> insert(FunHeart funHeart) async {   
     await db.insert(table, funHeart.toMap());
     return funHeart;
   }

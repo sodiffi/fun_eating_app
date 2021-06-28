@@ -1,14 +1,22 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:fun_heart_eat/customeItem.dart';
-import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:fun_heart_eat/home.dart';
-import 'testMenu.dart';
-import 'dataBean.dart';
+
+// Package imports:
+// import 'package:flutter_better_camera/camera.dart';
 import 'package:wakelock/wakelock.dart';
+import 'package:manual_camera/camera.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'testMenu.dart';
 
 // import 'package:lamp/lamp.dart';
 
@@ -26,15 +34,15 @@ class CheckPage extends StatefulWidget {
 class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
   BuildContext cc;
-  DataBean dataBean = new DataBean();
+  DataBean dataBean;
   Widget previewCamera = Container();
   double sizeHeight;
   double sizeWidth;
   double iconSize;
   bool isStraight = false;
 
-  CheckState(DataBean d) {
-    dataBean = d;
+  CheckState(DataBean b) {
+    dataBean = b;
     Wakelock.enable();
     open();
   }
@@ -42,22 +50,16 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
-      // try {
-      await controller.setFlashMode(FlashMode.off);
-      // } on FlutterError {
-      //   print("enter flutter error");
-      // } catch (e) {
-      //   print(e);
-      // }
+      controller.flash(false).catchError(logError);
     }
     // else Lamp.turnOff();
   }
 
   Future<void> open() async {
-    await onNewCameraSelected(dataBean.cameras[0]);
-    setState(() {
-      previewCamera = _cameraPreviewWidget();
-    });
+    if (dataBean.cameras[0] == null) {
+    } else {
+      await openCamera(dataBean.cameras[0]).catchError(logError);
+    }
   }
 
   @override
@@ -71,25 +73,20 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     controller.dispose();
     super.dispose();
-    print("\tenter second dispose");
     off();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-  
     print("check");
-    // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      // Navigator.pushReplacement(
-      //     context, MaterialPageRoute(builder: (context) => TestMenuPage()));
       off();
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      if(dataBean.step>0) open();
+      if (dataBean.step == 0) open();
     } else if (state == AppLifecycleState.paused) {
       // startCheck();
     }
@@ -104,6 +101,22 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
     cc = context;
+    Widget homeButton = Padding(
+      padding: EdgeInsets.all(5),
+      child: GestureDetector(
+        onTap: () {
+          off();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+        child: Image.asset(
+          'images/home.png',
+          height: iconSize,
+          width: iconSize,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
     if (isStraight) {
       return Container(
@@ -114,26 +127,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                    child: GestureDetector(
-                      onTap: () {
-                        off();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomeMenuPage()));
-                      },
-                      child: Image.asset(
-                        'images/home.png',
-                        height: iconSize,
-                        width: iconSize,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
-                ],
+                children: [homeButton],
               ),
               Column(
                 children: [
@@ -158,12 +152,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                     children: [
                       CustomButton("確定", () {
                         off();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TestMenuPage(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       })
                     ],
                   )
@@ -178,72 +167,38 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       return Container(
         color: ItemTheme.bgColor,
         child: SafeArea(
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [],
+              Expanded(
+                child: Stack(
+                  children: [Image.asset("images/signal.png"), homeButton],
+                ),
+                flex: 1,
               ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            Image.asset("images/signal.png"),
-                            Padding(
-                              padding: EdgeInsets.all(5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  off();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeMenuPage()));
-                                },
-                                child: Image.asset(
-                                  'images/home.png',
-                                  height: iconSize,
-                                  width: iconSize,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )
-                          ],
+              Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: sizeHeight * 0.8,
+                      child: previewCamera,
+                    ),
+                    CustomButton("確定", () {
+                      off();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TestMenuPage(),
                         ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: sizeHeight * 0.8,
-                              child: previewCamera,
-                            ),
-                            CustomButton("確定", () {
-                              off();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TestMenuPage(),
-                                ),
-                              );
-                            })
-                          ],
-                        ),
-                        flex: 1,
-                      ),
-                      Expanded(
-                        child: Image.asset("images/signal.png"),
-                        flex: 1,
-                      )
-                    ],
-                  ),
-                ],
+                      );
+                    })
+                  ],
+                ),
+                flex: 1,
               ),
+              Expanded(
+                child: Image.asset("images/signal.png"),
+                flex: 1,
+              )
             ],
           ),
         ),
@@ -253,15 +208,9 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    print("-----------");
-    print("camera preview widget");
-    print(controller == null);
-    print("-----------");
     if (controller == null || !controller.value.isInitialized) {
-      print("enter if");
       return Text("fail");
     } else {
-      print("enter else");
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
@@ -269,45 +218,50 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     }
   }
 
-  // void showInSnackBar(String message) {
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  // }
-
-  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> openCamera(CameraDescription cameraDescription) async {
     if (controller != null) {
       await controller.dispose();
     }
     controller = CameraController(
       cameraDescription,
       ResolutionPreset.medium,
+      enableAudio: false,
+      iso: 0,
+      shutterSpeed: 0,
+      whiteBalance: WhiteBalancePreset.cloudy,
+      focusDistance: 0,
     );
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        previewCamera = _cameraPreviewWidget();
+      });
+      Future.delayed(
+        Duration(
+          milliseconds: 250,
+        ),
+      );
+      controller.flash(true);
+    });
 
-    // If the controller is updated then update the UI.
     controller.addListener(() {
-      // if (mounted) setState(() {});
       if (controller.value.hasError) {
-        // showInSnackBar('Camera error ${controller.value.errorDescription}');
+        logError('Camera error ${controller.value.errorDescription}');
       }
     });
 
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-    }
-
-    await controller.setFlashMode(FlashMode.torch);
     // if(Platform.isIOS) Lamp.turnOn();
   }
 
   void _showCameraException(CameraException e) {
     print("--------");
     print("camera exception");
-    logError(e.code, e.description);
+    logError(e.code + "\nError Message" + e.description);
     print("--------");
     // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
 
-void logError(String code, String message) =>
-    print('Error: $code\nError Message: $message');
+void logError(var mes) => print('Error: ${mes.toString()}');

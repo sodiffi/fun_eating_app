@@ -1,9 +1,16 @@
+// Dart imports:
 import 'dart:ui';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'test.dart';
-import 'package:flutter_better_camera/camera.dart';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+// import 'package:flutter_better_camera/camera.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'test.dart';
 
 class AddFruit extends StatefulWidget {
   final DataBean dataBean;
@@ -60,14 +67,4 @@ class AddFruitPageState extends State<AddFruit> {
   }
 }
 
-List<CameraDescription> cameras = [];
 
-Future<void> main() async {
-  // Fetch the available cameras before initializing the app.
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    logError(e.code, e.description);
-  }
-}

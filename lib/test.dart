@@ -1,24 +1,30 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:fun_heart_eat/customeItem.dart';
-import 'addFruit.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter/material.dart';
+
+// Package imports:
+// import 'package:flutter_better_camera/camera.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image/image.dart' as imglib;
+import 'package:lamp/lamp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
+import 'package:wakelock/wakelock.dart';
+import 'package:manual_camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+// Project imports:
+import 'addFruit.dart';
+import 'customeItem.dart';
+import 'dataBean.dart';
 import 'result.dart';
 import 'testMenu.dart';
-import 'dataBean.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wakelock/wakelock.dart';
-
-import 'package:vibration/vibration.dart';
-
-import 'package:lamp/lamp.dart';
-
-
 
 class CameraApp extends StatefulWidget {
   final DataBean dataBean;
@@ -58,13 +64,13 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   String min = "";
   String second = "";
   int passTime = 0;
-  DataBean dataBean = new DataBean();
+  DataBean dataBean;
   Widget previewCamera = Container();
   Timer testTimer;
   Timer checkTimer;
 
-  TestState(DataBean d) {
-    dataBean = d;
+  TestState(DataBean b) {
+    dataBean = b;
     step = dataBean.step;
     Wakelock.enable();
     if (dataBean.step == 0) {
@@ -96,13 +102,12 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
-      try {
-        await controller.setFlashMode(FlashMode.off);
-      } on FlutterError {
-        print("enter flutter error");
-      } catch (e) {
+      print("loook here");
+      await controller.flash(false).catchError((e) {
         print(e);
-      }
+        print("this error");
+      });
+      print("loook here2");
     } else
       Lamp.turnOff();
   }
@@ -116,6 +121,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+
     controller.dispose();
     super.dispose();
     // controller.setFlashMode(FlashMode.off);
@@ -123,8 +129,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state.toString());
-    // App state changed before we got the chance to initialize.
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
@@ -147,71 +151,80 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   /* 第一步驟 檢測光源*/
   Future<void> startCheck() async {
-    await onNewCameraSelected(dataBean.cameras[0]);
-    setState(() {
-      previewCamera = _cameraPreviewWidget();
-    });
-    checkTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      print("\t " + step.toString() + "\t" + checkList.length.toString());
-      if (checkList.length == checkTime) {
-        String msg = "";
-        double sumr = 0, sumg = 0, sumb = 0;
-        for (int i = 0; i < checkList.length; i++) {
-          sumr += checkList[i][0];
-          sumg += checkList[i][1];
-          sumb += checkList[i][2];
-        }
-        sumr /= checkList.length;
-        sumg /= checkList.length;
-        sumb /= checkList.length;
-        double cvr = 0, cvg = 0, cvb = 0, sr = 0, sg = 0, sb = 0;
-        for (int i = 0; i < checkList.length; i++) {
-          sr += checkList[i][0] - sumr;
-          sg += checkList[i][1] - sumg;
-          sb += checkList[i][2] - sumb;
-        }
-        cvr = sr / sumr;
-        cvg = sg / sumg;
-        cvb = sb / sumb;
-        // 2. If (0.7*B avg< R avg) OR (0.7*B avg <G avg) Then
+    if (await Permission.camera.request().isGranted) {
+      await openCamera(dataBean.cameras[0]);
+      setState(() {
+        previewCamera = _cameraPreviewWidget();
+      });
+      checkTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
+        print("\t " + step.toString() + "\t" + checkList.length.toString());
+        if (checkList.length == checkTime) {
+          String msg = "";
+          double sumr = 0, sumg = 0, sumb = 0;
+          for (int i = 0; i < checkList.length; i++) {
+            sumr += checkList[i][0];
+            sumg += checkList[i][1];
+            sumb += checkList[i][2];
+          }
+          sumr /= checkList.length;
+          sumg /= checkList.length;
+          sumb /= checkList.length;
+          double cvr = 0, cvg = 0, cvb = 0, sr = 0, sg = 0, sb = 0;
+          for (int i = 0; i < checkList.length; i++) {
+            sr += checkList[i][0] - sumr;
+            sg += checkList[i][1] - sumg;
+            sb += checkList[i][2] - sumb;
+          }
+          cvr = sr / sumr;
+          cvg = sg / sumg;
+          cvb = sb / sumb;
+          // 2. If (0.7*B avg< R avg) OR (0.7*B avg <G avg) Then
 
-        if (0.7 * sumb < sumr || 0.7 * sumb < sumg) {
-          msg = "主光訊號偏低，請檢查量測盒是否對準鏡頭及閃光燈";
-        }
-        //If if (R cv + G cv +B cv>chk Then
-        if (cvr + cvg + cvb > 0.6) {
-          msg = "光訊號不穩，請檢查量測盒黏貼情況";
-        }
-        if (msg != "") {
-          Fluttertoast.showToast(
-              msg: msg,
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.grey,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-        timer.cancel();
+          if (0.7 * sumb < sumr || 0.7 * sumb < sumg) {
+            msg = "主光訊號偏低，請檢查量測盒是否對準鏡頭及閃光燈";
+          }
+          //If if (R cv + G cv +B cv>chk Then
+          if (cvr + cvg + cvb > 0.6) {
+            msg = "光訊號不穩，請檢查量測盒黏貼情況";
+          }
+          if (msg != "") {
+            Fluttertoast.showToast(
+                msg: msg,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.grey,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+          timer.cancel();
 
-        off();
-        controller.dispose();
-        Navigator.pushReplacement(
-            cc, MaterialPageRoute(builder: (context) => TestMenuPage()));
-      }
-      getImg = true;
-    });
+          off();
+          previewCamera = Container();
+          await controller.stopImageStream();
+          await controller.dispose();
+          Navigator.pushReplacement(
+            cc,
+            MaterialPageRoute(
+              builder: (context) => TestMenuPage(
+                dataBean: dataBean,
+              ),
+            ),
+          );
+        }
+        getImg = true;
+      });
+    }
   }
 
   /* 第二、三步驟 測驗*/
-  void startTest() {
+  Future<void> startTest() async {
     //開相機
-    onNewCameraSelected(dataBean.cameras[0]);
+    await openCamera(dataBean.cameras[0]);
     int count;
-
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
-      print("\t$step $timer.tick ");
+      print("\t$step ${timer.tick} ");
       if (step == 1) {
         if (dataBean.beforeL.length <= testTime - notGetImgTime &&
             passTime > notGetImgTime) {
@@ -245,7 +258,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         testTimer.cancel();
         off();
         if (step == 1) {
-          print("\tbefore List" + dataBean.beforeL.toString());
           dataBean.beforeAvg = getData(dataBean.beforeL);
           //酵素棒似乎有問題，請更換酵素棒，再試一次
           if (dataBean.beforeAvg[2] > 0.008) {
@@ -260,15 +272,15 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           }
 
           Navigator.pushReplacement(
-              cc,
-              MaterialPageRoute(
-                  builder: (context) => AddFruit(
-                        dataBean: dataBean,
-                      )));
+            cc,
+            MaterialPageRoute(
+              builder: (context) => AddFruit(
+                dataBean: dataBean,
+              ),
+            ),
+          );
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
-          print("\t" + dataBean.beforeAvg.toString());
-          print("\t" + dataBean.afterAvg.toString());
           dataBean.result = (1 -
                   ((dataBean.afterAvg[2] / dataBean.beforeAvg[2]) *
                       (dataBean.beforeAvg[0] / dataBean.afterAvg[0]) *
@@ -450,7 +462,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       if (Platform.isAndroid) {
         try {
           final int width = image.width;
-
           final int height = image.height;
           final int uvRowStride = image.planes[1].bytesPerRow;
           final int uvPixelStride = image.planes[1].bytesPerPixel;
@@ -476,7 +487,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           b /= len;
           print("------");
         } catch (e) {
-          print(">>>>>>>>>>>> ANDROID ERROR:" + e.toString());
+          _showCameraException(e);
         }
       } else if (Platform.isIOS) {
         try {
@@ -486,7 +497,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
             r += image.planes[0].bytes[i + 2].toDouble();
           }
         } catch (e) {
-          print(">>>>>>>>>>>> IOS ERROR:" + e.toString());
+          _showCameraException(e);
         }
       }
       if (step == 0) {
@@ -502,42 +513,75 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
+  Future<void> openCamera(CameraDescription cameraDescription) async {
     if (controller != null) {
+      previewCamera = Container();
       await controller.dispose();
     }
-    controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
+    try {
+      controller = CameraController(
+        cameraDescription,
+        ResolutionPreset.medium,
+        iso: 0,
+        shutterSpeed: 0,
+        whiteBalance: WhiteBalancePreset.cloudy,
+        focusDistance: 0,
+        enableAudio: false,
+      );
+
+      await controller.initialize().then((_) async {
+        if (!mounted) {
+          return;
+        }
+        await Future.delayed(
+          Duration(
+            milliseconds: 250,
+          ),
+        );
+      });
+      await Future.delayed(
+        Duration(
+          milliseconds: 250,
+        ),
+      );
+
+      await controller.startImageStream((image) => getRGB(image));
+    } catch (e) {
+      print(e);
+    }
+    print("before open flash");
+    await controller.flash(true).catchError((e) {
+      print(e);
+      print("true error");
+    });
+    print("after open flash");
+    await Future.delayed(
+      Duration(
+        milliseconds: 250,
+      ),
     );
 
-    // If the controller is updated then update the UI.
     controller.addListener(() {
-      // if (mounted) setState(() {});
       if (controller.value.hasError) {
-        // showInSnackBar('Camera error ${controller.value.errorDescription}');
+        logError('Camera error ${controller.value.errorDescription}');
       }
     });
 
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-    }
-    controller.startImageStream((image) => {getRGB(image)});
-
-    await controller.setFlashMode(FlashMode.torch);
     // if(Platform.isIOS) Lamp.turnOn();
   }
 
-  void _showCameraException(CameraException e) {
+  void _showCameraException(Exception e) {
     print("--------");
     print("camera exception");
-    logError(e.code, e.description);
+    if (e is CameraException)
+      logError(e.code + "\nError Message" + e.description);
+    else
+      logError(e.toString());
     print("--------");
     // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
 
-void logError(String code, String message) =>
-    print('Error: $code\nError Message: $message');
+Future<void> logError(var msg) async {
+  print('Error: ${msg.toString()}');
+}

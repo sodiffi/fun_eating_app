@@ -1,4 +1,6 @@
-import 'package:flutter_better_camera/camera.dart';
+// Package imports:
+// import 'package:flutter_better_camera/camera.dart';
+import 'package:manual_camera/camera.dart';
 
 class DataBean {
   List<CameraDescription> cameras = [];

@@ -1,18 +1,25 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fun_heart_eat/check.dart';
-import 'package:fun_heart_eat/dataBean.dart';
+
+// Package imports:
+// import 'package:flutter_better_camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:manual_camera/camera.dart';
+
+// Project imports:
+import 'check.dart';
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
 import 'input.dart';
 import 'train.dart';
-import 'home.dart';
-import 'customeItem.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_better_camera/camera.dart';
-
-
 
 class TestMenuPage extends StatefulWidget {
+  final DataBean dataBean;
+
+  const TestMenuPage({Key key, this.dataBean}) : super(key: key);
   @override
   _TestMenuPageState createState() => _TestMenuPageState();
 }
@@ -37,10 +44,8 @@ class _TestMenuPageState extends State<TestMenuPage> {
       imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3;
     });
 
-    Widget buttonTrainBox = Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.zero,
+    Widget buttonTrainBox = Container(
+        padding: EdgeInsets.all(10),
         child: GestureDetector(
           child: Stack(
             alignment: const Alignment(0, 0),
@@ -64,12 +69,9 @@ class _TestMenuPageState extends State<TestMenuPage> {
                 context, MaterialPageRoute(builder: (context) => TrainPage()));
           },
         ),
-      ),
-    );
-    Widget buttonTestBox = Padding(
-      padding: EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.zero,
+      );
+    Widget buttonTestBox = Container(
+        padding: EdgeInsets.all(10),
         child: GestureDetector(
           onTap: () {
             Navigator.push(context,
@@ -93,8 +95,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
             ],
           ),
         ),
-      ),
-    );
+      );
 
     return Container(
       color: ItemTheme.bgColor,
@@ -114,6 +115,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
                               isStraight ? 5 : 0, 5, isStraight ? 5 : 5, 5),
                           child: GestureDetector(
                             onTap: () {
+                              //need
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -193,9 +195,7 @@ Future<void> getCameras() async {
 
       cameras = await availableCameras();
     } on CameraException catch (e) {
-      logError(e.code, e.description);
+      logError(e.code + "\nError Message" + e.description);
     }
   }
-
-  // Fetch the available cameras before initializing the app.
 }

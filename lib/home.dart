@@ -1,26 +1,23 @@
+// Dart imports:
+import 'dart:io';
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:fun_heart_eat/setting.dart';
+
+// Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
+// import 'package:flutter_better_camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:manual_camera/camera.dart';
+
+// Project imports:
+import 'customeItem.dart';
 import 'dataBean.dart';
 import 'record.dart';
+import 'setting.dart';
 import 'sqlLite.dart';
 import 'test.dart';
-import 'customeItem.dart';
-import 'package:flutter_better_camera/camera.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-// class HomeMenuPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ItemTheme.themeData,
-//       home: HomeMenu(),
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
 
 class HomeMenuPage extends StatefulWidget {
   @override
@@ -38,6 +35,9 @@ class HomeMenuState extends State<HomeMenuPage> {
   double iconSize;
   double linkSize;
   int temp;
+  HomeMenuState() {
+    getCameras();
+  }
   FunHeartProvider fProvider = new FunHeartProvider();
   void toTest() {
     dataBean.step = 0;
@@ -78,7 +78,6 @@ class HomeMenuState extends State<HomeMenuPage> {
           ? min(sizeHeight * 0.25, sizeWidth * 0.4)
           : sizeWidth * 0.17;
     });
-    getCameras();
     AutoSizeGroup linkGroup = AutoSizeGroup();
     List<Widget> homeButton = [
       Padding(
@@ -262,31 +261,55 @@ class HomeMenuState extends State<HomeMenuPage> {
 
     //直立畫面
     if (isStraight) {
-      return Container(
-        color: ItemTheme.bgColor,
-        child: SafeArea(
-          child: Container(
-            color: ItemTheme.bgColor,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: homeButton,
-                  ),
-                  Image.asset(
-                    "images/logo_h.png",
-                    height: sizeHeight * 0.1,
-                  ),
-                  Column(
-                    children: txtAndTestBtn,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                    child: Column(
-                      children: linkButtons,
+      return WillPopScope(
+        onWillPop: () {
+          print("enter on will pop");
+          return showDialog(
+                context: context,
+                builder: (context) => new AlertDialog(
+                  title: new Text('Are you sure?'),
+                  content: new Text('Do you want to exit an App'),
+                  actions: <Widget>[
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(false),
+                      child: Text("NO"),
                     ),
-                  )
-                ]),
+                    SizedBox(height: 16),
+                    new GestureDetector(
+                      onTap: () => Navigator.of(context).pop(true),
+                      child: Text("YES"),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
+        },
+        child: Container(
+          color: ItemTheme.bgColor,
+          child: SafeArea(
+            child: Container(
+              color: ItemTheme.bgColor,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: homeButton,
+                    ),
+                    Image.asset(
+                      "images/logo_h.png",
+                      height: sizeHeight * 0.1,
+                    ),
+                    Column(
+                      children: txtAndTestBtn,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      child: Column(
+                        children: linkButtons,
+                      ),
+                    )
+                  ]),
+            ),
           ),
         ),
       );
@@ -340,10 +363,9 @@ Future<void> getCameras() async {
   if (await Permission.camera.request().isGranted) {
     try {
       WidgetsFlutterBinding.ensureInitialized();
-
       cameras = await availableCameras();
     } on CameraException catch (e) {
-      logError(e.code, e.description);
+      logError(e.code + "\nError Message" + e.description);
     }
   }
 

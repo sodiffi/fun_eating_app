@@ -1,34 +1,41 @@
 // import 'dart:html';
-import 'package:flutter/rendering.dart';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'package:flutter/material.dart';
-import 'home.dart';
-import 'package:csv/csv.dart';
-import 'dart:io';
+
+// Dart imports:
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+// Package imports:
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:csv/csv.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:ftpclient/ftpclient.dart';
 import 'package:imei_plugin/imei_plugin.dart';
-import 'sqlLite.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_share/flutter_share.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'sqlLite.dart';
 
 String rate = "0%";
 String content = "合格";
 double result;
 
 class ResultPage extends StatelessWidget {
-  // final String ftpHost = "120.106.210.250";
-  // final String ftpName = "admin";
-  // final String ftpPsw = "wj/61j4zj6gk4";
-  // final String changeDir = "Public/PesticsdeTest_upload/";
-  final String ftpHost = "ftp.byethost12.com";
-  final String ftpName = "b12_27143036";
-  final String ftpPsw = "xkpt3v";
-  final String changeDir = "htdocs/fun_heart_eating/";
+  final String ftpHost = "120.106.210.250";
+  final String ftpName = "admin";
+  final String ftpPsw = "wj/61j4zj6gk4";
+  final String changeDir = "Public/PesticsdeTest_upload/";
+  // final String ftpHost = "ftp.byethost12.com";
+  // final String ftpName = "b12_27143036";
+  // final String ftpPsw = "xkpt3v";
+  // final String changeDir = "htdocs/fun_heart_eating/";
 
   final DataBean dataBean;
 
@@ -47,11 +54,9 @@ class ResultPage extends StatelessWidget {
   getCsv() async {
     print("enter get csv");
 
-    //create an element rows of type list of list. All the above data set are stored in associate list
-//Let associate be a model class with attributes name,gender and age and associateList be a list of associate model class.
-
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);
+    rows.add(["\uFEFF"]);
     for (int i = 0; i < dataBean.beforeL.length; i++) {
       List<dynamic> row = List.empty(growable: true);
       if (i < 180) {
@@ -73,26 +78,21 @@ class ResultPage extends StatelessWidget {
     rows.add(["rate", result]);
     rows.add(["蔬菜種類", dataBean.fruitClass]);
     rows.add(["購買地點", dataBean.area]);
-    rows.add(["蔬菜名稱", dataBean.fruitName]);
+    if (dataBean.fruitName != "") {
+      rows.add(["蔬菜名稱", dataBean.fruitName]);
+    }
 
     //------------------------
     if (await Permission.storage.request().isGranted) {
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      // Directory tempDir = await getApplicationDocumentsDirectory();
-      // String dir = tempDir.path + "/";
       String dir = (await getExternalStorageDirectory()).absolute.path + "/";
-      print(dir);
-      print("platformIemi\t" + platformImei);
-
-      // file = "$dir";
       new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
         // convert rows to String and write as csv file
 
         String csv = const ListToCsvConverter().convert(rows);
-
         await f.writeAsString(csv, encoding: utf8);
         FTPClient ftpClient = FTPClient(ftpHost, user: ftpName, pass: ftpPsw);
         ftpClient.connect();
@@ -101,11 +101,10 @@ class ResultPage extends StatelessWidget {
         ftpClient.changeDirectory(platformImei);
         await ftpClient.uploadFile(f);
         ftpClient.disconnect();
-      }).catchError((onError) => {print(onError)});
+      }).catchError(logError);
 
       FunHeartProvider fProvider = new FunHeartProvider();
       await fProvider.open();
-      print(dataBean.area);
       await fProvider.insert(new FunHeart(dataBean.time, dataBean.fruitClass,
           dataBean.fruitName, dataBean.area, dataBean.result.floor()));
     }
@@ -158,7 +157,8 @@ class ResultState extends State<Result> {
       sizeWidth = MediaQuery.of(context).size.width;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
       reportBoxW = isStraight ? sizeWidth * 0.8 : sizeWidth * 0.3;
-      reportBoxH = isStraight ? (sizeHeight -20-(iconSize*2) ): sizeHeight * 0.7;
+      reportBoxH =
+          isStraight ? (sizeHeight - 20 - (iconSize * 2)) : sizeHeight * 0.7;
     });
 
     List<Widget> homeButton = [
@@ -201,14 +201,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH*0.45,
+          height: reportBoxH * 0.45,
           fit: BoxFit.fill,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
               reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH*0.45,
+          height: reportBoxH * 0.45,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -394,3 +394,4 @@ class ResultState extends State<Result> {
     }
   }
 }
+void logError(var mes) => print('Error: ${mes.toString()}');

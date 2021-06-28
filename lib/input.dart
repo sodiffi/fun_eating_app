@@ -1,14 +1,21 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'dataBean.dart';
-import 'customeItem.dart';
-import 'test.dart';
-import 'package:flutter_better_camera/camera.dart';
-import 'package:date_format/date_format.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+// Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:date_format/date_format.dart';
+// import 'package:flutter_better_camera/camera.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:manual_camera/camera.dart';
+
+// Project imports:
+import 'customeItem.dart';
+import 'dataBean.dart';
+import 'home.dart';
+import 'test.dart';
 
 class TestInputPage extends StatelessWidget {
   @override
@@ -477,6 +484,6 @@ Future<void> getCamera() async {
     WidgetsFlutterBinding.ensureInitialized();
     cameras = await availableCameras();
   } on CameraException catch (e) {
-    logError(e.code, e.description);
+    logError(e.code + "\nError Message" + e.description);
   }
 }
