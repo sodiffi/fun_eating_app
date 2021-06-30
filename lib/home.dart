@@ -117,108 +117,120 @@ class HomeMenuState extends State<HomeMenuPage> {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-              padding: EdgeInsets.all(5),
-              child: GestureDetector(
-                onTap: () {
-                  LaunchUrl.knowledge();
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: linkSize,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoTextChange.group(
-                      w: linkSize,
-                      s: "農食小知識",
-                      paddingW: linkSize * 0.14,
-                      paddingH: 0,
-                      autoSizeGroup: linkGroup,
-                    ),
-                  ],
-                ),
-              )),
-          Padding(
-              padding: EdgeInsets.all(5),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (content) => RecordPage()));
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: linkSize,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoTextChange.group(
-                      w: linkSize,
-                      s: "檢測紀錄",
-                      paddingW: linkSize * 0.14,
-                      paddingH: 0,
-                      autoSizeGroup: linkGroup,
-                    )
-                  ],
-                ),
-              )),
+          Expanded(
+            flex: 1,
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  onTap: () {
+                    LaunchUrl.knowledge();
+                  },
+                  child: Stack(
+                    alignment: const Alignment(0, 0),
+                    children: [
+                      Image.asset(
+                        "images/txtBox.png",
+                        width: linkSize,
+                        fit: BoxFit.cover,
+                      ),
+                      AutoTextChange.group(
+                        w: linkSize,
+                        s: "農食小知識",
+                        paddingW: linkSize * 0.14,
+                        paddingH: 0,
+                        autoSizeGroup: linkGroup,
+                      ),
+                    ],
+                  ),
+                )),
+          ),
+          Expanded(
+            flex: 1,
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (content) => RecordPage()));
+                  },
+                  child: Stack(
+                    alignment: const Alignment(0, 0),
+                    children: [
+                      Image.asset(
+                        "images/txtBox.png",
+                        width: linkSize,
+                        fit: BoxFit.cover,
+                      ),
+                      AutoTextChange.group(
+                        w: linkSize,
+                        s: "檢測紀錄",
+                        paddingW: linkSize * 0.14,
+                        paddingH: 0,
+                        autoSizeGroup: linkGroup,
+                      )
+                    ],
+                  ),
+                )),
+          ),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-              padding: EdgeInsets.all(5),
-              child: GestureDetector(
-                onTap: () {
-                  LaunchUrl.map();
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: linkSize,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoTextChange.group(
-                      w: linkSize,
-                      s: "農食地圖",
-                      paddingW: linkSize * 0.14,
-                      paddingH: 0,
-                      autoSizeGroup: linkGroup,
-                    )
-                  ],
-                ),
-              )),
-          Padding(
-              padding: EdgeInsets.all(5),
-              child: GestureDetector(
-                onTap: () {
-                  LaunchUrl.stop();
-                },
-                child: Stack(
-                  alignment: const Alignment(0, 0),
-                  children: [
-                    Image.asset(
-                      "images/txtBox.png",
-                      width: linkSize,
-                      fit: BoxFit.cover,
-                    ),
-                    AutoTextChange.group(
-                      w: linkSize,
-                      s: "放心店家",
-                      paddingW: linkSize * 0.14,
-                      paddingH: 0,
-                      autoSizeGroup: linkGroup,
-                    )
-                  ],
-                ),
-              ))
+          Expanded(
+            flex: 1,
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  onTap: () {
+                    LaunchUrl.map();
+                  },
+                  child: Stack(
+                    alignment: const Alignment(0, 0),
+                    children: [
+                      Image.asset(
+                        "images/txtBox.png",
+                        width: linkSize,
+                        fit: BoxFit.cover,
+                      ),
+                      AutoTextChange.group(
+                        w: linkSize,
+                        s: "農食地圖",
+                        paddingW: linkSize * 0.14,
+                        paddingH: 0,
+                        autoSizeGroup: linkGroup,
+                      )
+                    ],
+                  ),
+                )),
+          ),
+          Expanded(
+            flex: 1,
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: GestureDetector(
+                  onTap: () {
+                    LaunchUrl.stop();
+                  },
+                  child: Stack(
+                    alignment: const Alignment(0, 0),
+                    children: [
+                      Image.asset(
+                        "images/txtBox.png",
+                        width: linkSize,
+                        fit: BoxFit.cover,
+                      ),
+                      AutoTextChange.group(
+                        w: linkSize,
+                        s: "放心店家",
+                        paddingW: linkSize * 0.14,
+                        paddingH: 0,
+                        autoSizeGroup: linkGroup,
+                      )
+                    ],
+                  ),
+                )),
+          )
         ],
       )
     ];
@@ -328,24 +340,26 @@ class HomeMenuState extends State<HomeMenuPage> {
                   children: homeButton,
                 ),
                 Expanded(
+                    flex: 1,
                     child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                        Image.asset(
-                          "images/logo.png",
-                          width: sizeHeight * 0.4,
-                        )
-                      ] +
-                      linkButtons,
-                )),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                            Image.asset(
+                              "images/logo.png",
+                              width: sizeHeight * 0.4,
+                            )
+                          ] +
+                          linkButtons,
+                    )),
                 Expanded(
+                    flex: 1,
                     child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: txtAndTestBtn,
-                  ),
-                )),
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: txtAndTestBtn,
+                      ),
+                    )),
                 Container(),
                 Container(),
               ],

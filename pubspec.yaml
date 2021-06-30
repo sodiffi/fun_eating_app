@@ -31,7 +31,6 @@ dependencies:
   lamp:
   wakelock: ^0.2.1+1
   manual_camera: ^0.0.3 
-  camera: 0.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

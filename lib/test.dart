@@ -46,7 +46,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   bool isShock;
   List checkList = List.empty(growable: true);
   //測驗時間210
-  int testTime = 210;
+  int testTime = 40;
   //裝置穩定性檢查時間15
   int checkTime = 15;
   //在測驗時間中，不要讀取圖片的時間30
@@ -153,6 +153,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   Future<void> startCheck() async {
     if (await Permission.camera.request().isGranted) {
       await openCamera(dataBean.cameras[0]);
+      if(Platform.isIOS)Lamp.turnOn();
       setState(() {
         previewCamera = _cameraPreviewWidget();
       });
@@ -221,6 +222,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   Future<void> startTest() async {
     //開相機
     await openCamera(dataBean.cameras[0]);
+    if(Platform.isIOS)Lamp.turnOn();
     int count;
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
