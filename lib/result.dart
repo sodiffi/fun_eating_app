@@ -42,6 +42,7 @@ class ResultPage extends StatelessWidget {
   ResultPage({Key key, this.dataBean}) {
     rate = dataBean.result.floor().toString() + "%";
     result = dataBean.result;
+    print('getCsv');
     getCsv();
     if (dataBean.result <= 35)
       content = "合格";
@@ -84,9 +85,11 @@ class ResultPage extends StatelessWidget {
 
     //------------------------
     if (await Permission.storage.request().isGranted) {
+      String dir;
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      String dir = (await getExternalStorageDirectory()).absolute.path + "/";
+      if(Platform.isAndroid) dir = (await getExternalStorageDirectory()).absolute.path + "/";
+      if(Platform.isIOS) dir = (await getApplicationDocumentsDirectory()).absolute.path+"/";
       new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
