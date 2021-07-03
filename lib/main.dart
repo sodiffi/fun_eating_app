@@ -48,14 +48,10 @@ class Home extends StatelessWidget {
       Duration(seconds: 3),
       (timer) {
         timer.cancel();
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(
-            builder: (context) => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: HomeMenuPage(),
-            ),
-          ),
+          new MaterialPageRoute(builder: (context) => new HomeMenuPage()),
+          (Route<dynamic> route) => false,
         );
       },
     );

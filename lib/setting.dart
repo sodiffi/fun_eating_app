@@ -3,6 +3,7 @@ import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
@@ -10,6 +11,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
 import 'customeItem.dart';
+
+class CupertinoSetting extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return CupertinoPageScaffold(
+      child: SettingPage(),
+    );
+  }
+}
 
 class SettingPage extends StatefulWidget {
   @override
@@ -48,6 +58,7 @@ class SettingState extends State<SettingPage> {
   Widget build(BuildContext context) {
     getData();
     return Scaffold(
+      backgroundColor: ItemTheme.bgColor,
       body: SafeArea(
           child: Container(
         padding: EdgeInsets.fromLTRB(
