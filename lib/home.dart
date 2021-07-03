@@ -4,6 +4,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,6 +19,7 @@ import 'record.dart';
 import 'setting.dart';
 import 'sqlLite.dart';
 import 'test.dart';
+
 
 class HomeMenuPage extends StatefulWidget {
   @override
@@ -85,8 +87,8 @@ class HomeMenuState extends State<HomeMenuPage> {
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         child: GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SettingPage()));
+            Navigator.of(context).push(
+                CupertinoPageRoute(builder: (BuildContext context) => CupertinoSetting()));
           },
           child: Image.asset(
             'images/setting.png',
