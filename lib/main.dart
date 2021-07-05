@@ -8,38 +8,31 @@ import 'package:flutter/material.dart';
 import 'customeItem.dart';
 import 'home.dart';
 
-void main() {
-  DataBean dataBean = new DataBean();
-  dataBean.result = 0.3;
-
-  runApp(HomePage());
+void main() { 
+  runApp(WelcomePage());
 }
 
-class HomePage extends StatelessWidget {
+class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ItemTheme.themeData,
-      ),
+      home: Welcome(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class Home extends StatelessWidget {
+class Welcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Timer.periodic(
-      Duration(seconds: 3),
-      (timer) {
-        timer.cancel();
-        Navigator.pushAndRemoveUntil(
-          context,
-          new MaterialPageRoute(builder: (context) => new HomeMenuPage()),
-          (Route<dynamic> route) => false,
-        );
-      },
-    );
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.pushAndRemoveUntil(
+        context,
+        new MaterialPageRoute(builder: (context) => new HomePage()),
+        (Route<dynamic> route) => false,
+      );
+    });
 
     return Container(
       color: Color.fromRGBO(255, 245, 227, 1),
