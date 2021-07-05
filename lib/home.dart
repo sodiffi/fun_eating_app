@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:io';
 import 'dart:math';
 
 // Flutter imports:
@@ -8,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:manual_camera/camera.dart';
 

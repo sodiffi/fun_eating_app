@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:date_format/date_format.dart';
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:manual_camera/camera.dart';
 
@@ -21,10 +20,7 @@ class TestInputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getCamera();
-    return Scaffold(
-        backgroundColor: ItemTheme.bgColor,
-        // resizeToAvoidBottomPadding: false,
-        body: InputWidget());
+    return Scaffold(backgroundColor: ItemTheme.bgColor, body: InputWidget());
   }
 }
 

@@ -8,10 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image/image.dart' as imglib;
 import 'package:lamp/lamp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -60,7 +58,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   2-第二階段檢測
   */
   int step = 0;
-  BuildContext cc;
   String min = "";
   String second = "";
   int passTime = 0;
@@ -121,7 +118,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-
     controller.dispose();
     super.dispose();
     // controller.setFlashMode(FlashMode.off);
@@ -133,7 +129,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      // controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (dataBean.step == 0) {
         checkTimer.cancel();
@@ -147,7 +142,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.paused) {}
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /* 第一步驟 檢測光源*/
   Future<void> startCheck() async {
@@ -199,13 +193,12 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
                 fontSize: 16.0);
           }
           timer.cancel();
-
           off();
           previewCamera = Container();
           await controller.stopImageStream();
           await controller.dispose();
           Navigator.pushReplacement(
-            cc,
+            this.context,
             MaterialPageRoute(
               builder: (context) => TestMenuPage(
                 dataBean: dataBean,
@@ -299,9 +292,11 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           dataBean.step = -1;
 
           Navigator.pushReplacement(
-              cc,
-              MaterialPageRoute(
-                  builder: (context) => ResultPage(dataBean: dataBean)));
+            this.context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(dataBean: dataBean),
+            ),
+          );
         }
       }
     });
@@ -348,7 +343,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    cc = context;
     if (step == 0) {
       return Container(
         color: ItemTheme.bgColor,
@@ -431,30 +425,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       );
     }
   }
-
-  int _hexToInt(String hex) {
-    int val = 0;
-    int len = hex.length;
-    for (int i = 0; i < len; i++) {
-      int hexDigit = hex.codeUnitAt(i);
-      if (hexDigit >= 48 && hexDigit <= 57) {
-        val += (hexDigit - 48) * (1 << (4 * (len - 1 - i)));
-      } else if (hexDigit >= 65 && hexDigit <= 70) {
-        // A..F
-        val += (hexDigit - 55) * (1 << (4 * (len - 1 - i)));
-      } else if (hexDigit >= 97 && hexDigit <= 102) {
-        // a..f
-        val += (hexDigit - 87) * (1 << (4 * (len - 1 - i)));
-      } else {
-        throw new FormatException("Invalid hexadecimal value");
-      }
-    }
-    return val;
-  }
-
-  // void showInSnackBar(String message) {
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  // }
 
   void getRGB(CameraImage image) async {
     if (getImg) {
@@ -551,10 +521,8 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     } catch (e) {
       print(e);
     }
-    print("before open flash");
     await controller.flash(true).catchError((e) {
       print(e);
-      print("true error");
     });
     print("after open flash");
     await Future.delayed(

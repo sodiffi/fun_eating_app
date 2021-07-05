@@ -20,7 +20,6 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import 'customeItem.dart';
 import 'dataBean.dart';
-import 'home.dart';
 import 'sqlLite.dart';
 
 String rate = "0%";
@@ -42,7 +41,6 @@ class ResultPage extends StatelessWidget {
   ResultPage({Key key, this.dataBean}) {
     rate = dataBean.result.floor().toString() + "%";
     result = dataBean.result;
-    print('getCsv');
     getCsv();
     if (dataBean.result <= 35)
       content = "合格";
@@ -53,7 +51,6 @@ class ResultPage extends StatelessWidget {
   }
 
   getCsv() async {
-    print("enter get csv");
 
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);

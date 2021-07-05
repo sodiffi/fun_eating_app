@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 // Package imports:
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:manual_camera/camera.dart';
 
@@ -12,7 +11,6 @@ import 'package:manual_camera/camera.dart';
 import 'check.dart';
 import 'customeItem.dart';
 import 'dataBean.dart';
-import 'home.dart';
 import 'input.dart';
 import 'train.dart';
 

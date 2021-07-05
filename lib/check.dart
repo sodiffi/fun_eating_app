@@ -8,15 +8,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:manual_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';
 import 'dataBean.dart';
-import 'home.dart';
-import 'testMenu.dart';
 
 // import 'package:lamp/lamp.dart';
 
@@ -33,7 +30,6 @@ class CheckPage extends StatefulWidget {
 
 class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
-  BuildContext cc;
   DataBean dataBean;
   Widget previewCamera = Container();
   double sizeHeight;
@@ -78,7 +74,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    print("check");
     if (controller == null || !controller.value.isInitialized) {
       return;
     }
@@ -87,9 +82,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (dataBean.step == 0) open();
-    } else if (state == AppLifecycleState.paused) {
-      // startCheck();
-    }
+    } else if (state == AppLifecycleState.paused) {    }
   }
 
   @override
@@ -100,7 +93,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
-    cc = context;
     Widget homeButton = Padding(
       padding: EdgeInsets.all(5),
       child: GestureDetector(
@@ -253,14 +245,6 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     });
 
     // if(Platform.isIOS) Lamp.turnOn();
-  }
-
-  void _showCameraException(CameraException e) {
-    print("--------");
-    print("camera exception");
-    logError(e.code + "\nError Message" + e.description);
-    print("--------");
-    // showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
 
