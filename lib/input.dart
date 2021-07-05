@@ -97,7 +97,7 @@ class InputPageState extends State<InputWidget> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomeMenuPage()));
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         },
         child: Image.asset(
           'images/home.png',
@@ -119,12 +119,8 @@ class InputPageState extends State<InputWidget> {
             dataBean.fruitClass = item;
             dataBean.area = area;
             dataBean.fruitName = fruitNameController.text;
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CameraApp(dataBean: dataBean),
-              ),
-            );
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => CameraApp(dataBean: dataBean)));
           } else {
             Fluttertoast.showToast(
                 msg: "請選擇蔬果類型與購買地點",
@@ -148,10 +144,11 @@ class InputPageState extends State<InputWidget> {
       ),
       items: items.map((String value) {
         return new DropdownMenuItem<String>(
-            value: value,
-            child: Center(
-              child: Text(value),
-            ));
+          value: value,
+          child: Center(
+            child: Text(value),
+          ),
+        );
       }).toList(),
       onChanged: (value) {
         setState(() {

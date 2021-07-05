@@ -84,8 +84,10 @@ class ResultPage extends StatelessWidget {
       String dir;
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      if(Platform.isAndroid) dir = (await getExternalStorageDirectory()).absolute.path + "/";
-      if(Platform.isIOS) dir = (await getApplicationDocumentsDirectory()).absolute.path+"/";
+      if (Platform.isAndroid)
+        dir = (await getExternalStorageDirectory()).absolute.path + "/";
+      if (Platform.isIOS)
+        dir = (await getApplicationDocumentsDirectory()).absolute.path + "/";
       new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
@@ -112,12 +114,10 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ItemTheme.themeData,
-        home: Scaffold(
-          // resizeToAvoidBottomPadding: false,
-          body: Result(),
-        ));
+      debugShowCheckedModeBanner: false,
+      theme: ItemTheme.themeData,
+      home: Scaffold(body: Result()),
+    );
   }
 }
 

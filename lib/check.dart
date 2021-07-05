@@ -52,8 +52,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   }
 
   Future<void> open() async {
-    if (dataBean.cameras[0] == null) {
-    } else {
+    if (dataBean.cameras[0] != null) {
       await openCamera(dataBean.cameras[0]).catchError(logError);
     }
   }

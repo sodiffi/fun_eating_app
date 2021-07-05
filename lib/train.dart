@@ -19,14 +19,7 @@ class TrainPage extends StatelessWidget {
           new Image.asset("images/train/step6_pic.png"),
           new Image.asset("images/train/step7_pic.png"),
           Center(
-            child: CustomButton("確定", () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TestMenuPage(),
-                ),
-              );
-            }),
+            child: CustomButton("確定", () => Navigator.pop(context)),
           ),
         ],
       ),
