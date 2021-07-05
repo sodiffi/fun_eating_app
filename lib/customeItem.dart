@@ -28,7 +28,7 @@ class ItemTheme {
     ),
   );
 
-  static Color bgColor=Color.fromRGBO(254, 246, 227, 1);
+  static Color bgColor = Color.fromRGBO(254, 246, 227, 1);
 
   static TextStyle textStyle = TextStyle(
     color: Colors.black,
@@ -44,22 +44,24 @@ class AutoTextChange extends StatefulWidget {
   final String s;
   final double paddingW;
   final double paddingH;
-  AutoSizeGroup autoSizeGroup;
   AutoTextChange({Key key, this.w, this.s, this.paddingW, this.paddingH})
-      : super(key: key);
-  AutoTextChange.group(
-      {Key key,
-      this.w,
-      this.s,
-      this.paddingW,
-      this.paddingH,
-      this.autoSizeGroup})
       : super(key: key);
 
   @override
   AutoTextChangeState createState() {
     return AutoTextChangeState();
   }
+}
+
+class AutoTextChangeGroup extends AutoTextChange {
+  final AutoSizeGroup autoSizeGroup;
+  AutoTextChangeGroup(
+      {final double w,
+      final String s,
+      final double paddingW,
+      final double paddingH,
+      final this.autoSizeGroup})
+      : super(w: w, s: s, paddingH: paddingH, paddingW: paddingW);
 }
 
 class AutoTextChangeState extends State<AutoTextChange> {
@@ -72,8 +74,23 @@ class AutoTextChangeState extends State<AutoTextChange> {
         maxLines: 1,
         style: ItemTheme.textStyle,
         textAlign: TextAlign.center,
-        group: this.widget.autoSizeGroup,
       ),
+      padding: EdgeInsets.fromLTRB(this.widget.paddingW, this.widget.paddingH,
+          this.widget.paddingW, this.widget.paddingH),
+    );
+  }
+}
+
+class AutoTextChangesGroup extends State<AutoTextChangeGroup> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: this.widget.w,
+      child: AutoSizeText(this.widget.s,
+          maxLines: 1,
+          style: ItemTheme.textStyle,
+          textAlign: TextAlign.center,
+          group: this.widget.autoSizeGroup),
       padding: EdgeInsets.fromLTRB(this.widget.paddingW, this.widget.paddingH,
           this.widget.paddingW, this.widget.paddingH),
     );
@@ -111,9 +128,89 @@ class LaunchUrl {
     }
   }
 
-  static Future<dynamic> knowledge() => launchU("http://www.labinhand.com.tw/new.html");
-  static Future<dynamic> stop() => launchU("http://www.labinhand.com.tw/FUNshop.html");
+  static Future<dynamic> knowledge() =>
+      launchU("http://www.labinhand.com.tw/new.html");
+  static Future<dynamic> shop() =>
+      launchU("http://www.labinhand.com.tw/FUNshop.html");
   static Future<dynamic> connection() =>
       launchU("http://www.labinhand.com.tw/connection.html");
-  static Future<dynamic> map() => launchU("http://www.labinhand.com.tw/FUNmaps.html");
+  static Future<dynamic> map() =>
+      launchU("http://www.labinhand.com.tw/FUNmaps.html");
+}
+
+class IconBtn extends StatefulWidget {
+  final EdgeInsets edgeInsets;
+  final double iconSize;
+  final String imgStr;
+  final Function onTap;
+
+  const IconBtn(
+      {Key key, this.edgeInsets, this.onTap, this.iconSize, this.imgStr})
+      : super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return IconBtnState();
+  }
+}
+
+class IconBtnState extends State<IconBtn> {
+  @override
+  Widget build(BuildContext context) {
+    return (Padding(
+      padding: this.widget.edgeInsets,
+      child: GestureDetector(
+          onTap: this.widget.onTap,
+          child: Image.asset(
+            this.widget.imgStr,
+            height: this.widget.iconSize,
+            width: this.widget.iconSize,
+            fit: BoxFit.cover,
+          )),
+    ));
+  }
+}
+
+class LinkBtn extends StatefulWidget {
+  final double linkSize;
+  final AutoSizeGroup autoSizeGroup;
+  final String text;
+  final Function onTap;
+  const LinkBtn({Key key, this.linkSize, this.autoSizeGroup, this.text, this.onTap}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return LinkBtnState();
+  }
+}
+
+class LinkBtnState extends State<LinkBtn> {
+  @override
+  Widget build(BuildContext context) {
+    return (Expanded(
+      flex: 1,
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: GestureDetector(
+          onTap: this.widget.onTap,
+          child: Stack(
+            alignment: const Alignment(0, 0),
+            children: [
+              Image.asset(
+                "images/txtBox.png",
+                width: this.widget.linkSize,
+                fit: BoxFit.cover,
+              ),
+              AutoTextChangeGroup(
+                w:this.widget.linkSize,
+                s: this.widget.text,
+                paddingW: this.widget.linkSize * 0.14,
+                paddingH: 0,
+                autoSizeGroup: this.widget.autoSizeGroup
+              ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
 }

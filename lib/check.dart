@@ -93,22 +93,21 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
-    Widget homeButton = Padding(
-      padding: EdgeInsets.all(5),
-      child: GestureDetector(
-        onTap: () {
-          off();
-          Navigator.pop(context);
-          Navigator.pop(context);
-        },
-        child: Image.asset(
-          'images/home.png',
-          height: iconSize,
-          width: iconSize,
-          fit: BoxFit.cover,
-        ),
-      ),
+
+    Widget homeButton = IconBtn(
+      edgeInsets: EdgeInsets.all(5),
+      imgStr: 'images/home.png',
+      onTap: () {
+        off();
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      iconSize: iconSize,
     );
+    Widget sureBtn = CustomButton("確定", () {
+      off();
+      Navigator.pop(context);
+    });
 
     if (isStraight) {
       return Container(
@@ -141,12 +140,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomButton("確定", () {
-                        off();
-                        Navigator.pop(context);
-                      })
-                    ],
+                    children: [sureBtn],
                   )
                 ],
               ),
@@ -174,15 +168,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                       height: sizeHeight * 0.8,
                       child: previewCamera,
                     ),
-                    CustomButton("確定", () {
-                      off();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TestMenuPage(),
-                        ),
-                      );
-                    })
+                    sureBtn
                   ],
                 ),
                 flex: 1,

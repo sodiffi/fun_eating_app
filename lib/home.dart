@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:manual_camera/camera.dart';
 
@@ -18,54 +19,55 @@ import 'setting.dart';
 import 'sqlLite.dart';
 import 'test.dart';
 
-
-class HomeMenuPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  HomeMenuState createState() {
-    return HomeMenuState();
+  HomeState createState() {
+    return HomeState();
   }
 }
 
-class HomeMenuState extends State<HomeMenuPage> {
+class HomeState extends State<HomePage> {
+  //預設測驗次數為0
   int testTime = 0;
+  //預設手機方向直向
   bool isStraight = false;
   DataBean dataBean = new DataBean();
   double sizeHeight;
   double sizeWidth;
   double iconSize;
   double linkSize;
-  int temp;
-  HomeMenuState() {
+  //建立sql lite provider
+  FunHeartProvider fProvider = new FunHeartProvider();
+  //建構式取得相機資訊
+  HomeState() {
     getCameras();
   }
-  FunHeartProvider fProvider = new FunHeartProvider();
+
+  //去測驗畫面(階段一:裝置性穩定)
   void toTest() {
+    //設定步驟為0
     dataBean.step = 0;
+    //設定相機資訊
     dataBean.cameras = cameras;
+    //換頁
     Navigator.push(context,
         MaterialPageRoute(builder: (content) => CameraApp(dataBean: dataBean)));
   }
 
+  //取得測驗次數
   Future<int> getTestTime() async {
-    int result;
+    int result = -1;
     await fProvider.open();
-    result = await getest();
+    while (result == -1)
+      await fProvider
+          .getFunHeart()
+          .then((value) => result = (value) == null ? -1 : value.length);
     return result;
-  }
-
-  Future<int> getest() async {
-    int res;
-    await fProvider
-        .getFunHeart()
-        .then((value) => res = (value) == null ? -1 : value.length);
-    if (res == -1) {
-      res = await getest();
-    }
-    return res;
   }
 
   @override
   Widget build(BuildContext context) {
+    AutoSizeGroup linkGroup = AutoSizeGroup();
     getTestTime().then((value) => this.setState(() {
           testTime = value;
         }));
@@ -78,164 +80,67 @@ class HomeMenuState extends State<HomeMenuPage> {
           ? min(sizeHeight * 0.25, sizeWidth * 0.4)
           : sizeWidth * 0.17;
     });
-    AutoSizeGroup linkGroup = AutoSizeGroup();
+
     List<Widget> homeButton = [
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
-                CupertinoPageRoute(builder: (BuildContext context) => CupertinoSetting()));
-          },
-          child: Image.asset(
-            'images/setting.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
+        iconSize: iconSize,
+        imgStr: 'images/setting.png',
+        onTap: () {
+          Navigator.of(context).push(CupertinoPageRoute(
+              builder: (BuildContext context) => CupertinoSetting()));
+        },
       ),
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            LaunchUrl.connection();
-          },
-          child: Image.asset(
-            'images/customerService.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
-      )
+        iconSize: iconSize,
+        imgStr: 'images/customerService.png',
+        onTap: () {
+          LaunchUrl.connection();
+        },
+      ),
     ];
 
     List<Widget> linkButtons = [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 1,
-            child: Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  onTap: () {
-                    LaunchUrl.knowledge();
-                  },
-                  child: Stack(
-                    alignment: const Alignment(0, 0),
-                    children: [
-                      Image.asset(
-                        "images/txtBox.png",
-                        width: linkSize,
-                        fit: BoxFit.cover,
-                      ),
-                      AutoTextChange.group(
-                        w: linkSize,
-                        s: "農食小知識",
-                        paddingW: linkSize * 0.14,
-                        paddingH: 0,
-                        autoSizeGroup: linkGroup,
-                      ),
-                    ],
-                  ),
-                )),
+          LinkBtn(
+            linkSize: linkSize,
+            autoSizeGroup: linkGroup,
+            text: "農食小知識",
+            onTap: () => LaunchUrl.knowledge(),
           ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (content) => RecordPage()));
-                  },
-                  child: Stack(
-                    alignment: const Alignment(0, 0),
-                    children: [
-                      Image.asset(
-                        "images/txtBox.png",
-                        width: linkSize,
-                        fit: BoxFit.cover,
-                      ),
-                      AutoTextChange.group(
-                        w: linkSize,
-                        s: "檢測紀錄",
-                        paddingW: linkSize * 0.14,
-                        paddingH: 0,
-                        autoSizeGroup: linkGroup,
-                      )
-                    ],
-                  ),
-                )),
+          LinkBtn(
+            linkSize: linkSize,
+            autoSizeGroup: linkGroup,
+            text: "檢測紀錄",
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (content) => RecordPage())),
           ),
         ],
       ),
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 1,
-            child: Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  onTap: () {
-                    LaunchUrl.map();
-                  },
-                  child: Stack(
-                    alignment: const Alignment(0, 0),
-                    children: [
-                      Image.asset(
-                        "images/txtBox.png",
-                        width: linkSize,
-                        fit: BoxFit.cover,
-                      ),
-                      AutoTextChange.group(
-                        w: linkSize,
-                        s: "農食地圖",
-                        paddingW: linkSize * 0.14,
-                        paddingH: 0,
-                        autoSizeGroup: linkGroup,
-                      )
-                    ],
-                  ),
-                )),
+          LinkBtn(
+            linkSize: linkSize,
+            autoSizeGroup: linkGroup,
+            text: "農食地圖",
+            onTap: () => LaunchUrl.map(),
           ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-                padding: EdgeInsets.all(5),
-                child: GestureDetector(
-                  onTap: () {
-                    LaunchUrl.stop();
-                  },
-                  child: Stack(
-                    alignment: const Alignment(0, 0),
-                    children: [
-                      Image.asset(
-                        "images/txtBox.png",
-                        width: linkSize,
-                        fit: BoxFit.cover,
-                      ),
-                      AutoTextChange.group(
-                        w: linkSize,
-                        s: "放心店家",
-                        paddingW: linkSize * 0.14,
-                        paddingH: 0,
-                        autoSizeGroup: linkGroup,
-                      )
-                    ],
-                  ),
-                )),
-          )
+          LinkBtn(
+            linkSize: linkSize,
+            autoSizeGroup: linkGroup,
+            text: "放心店家",
+            onTap: () => LaunchUrl.shop(),
+          ),
         ],
       )
     ];
     List<Widget> txtAndTestBtn = [
-      // Padding(padding: EdgeInsets.all(2)),
       AutoSizeText(
         "FUN心吃專家等級\n檢測 $testTime 次",
         style: ItemTheme.textStyle,
@@ -275,95 +180,82 @@ class HomeMenuState extends State<HomeMenuPage> {
     if (isStraight) {
       return WillPopScope(
         onWillPop: () {
-          print("enter on will pop");
           return showDialog(
                 context: context,
                 builder: (context) => new AlertDialog(
-                  title: new Text('Are you sure?'),
-                  content: new Text('Do you want to exit an App'),
+                  title: new Text('確定離開嗎?'),
+                  content: new Text('是否離開FUN心吃'),
                   actions: <Widget>[
                     new GestureDetector(
                       onTap: () => Navigator.of(context).pop(false),
-                      child: Text("NO"),
+                      child: Text("否"),
                     ),
                     SizedBox(height: 16),
                     new GestureDetector(
-                      onTap: () => Navigator.of(context).pop(true),
-                      child: Text("YES"),
-                    ),
+                        onTap: () async => await SystemChannels.platform
+                            .invokeMethod('SystemNavigator.pop'),
+                        child: Text("是")),
                   ],
                 ),
               ) ??
               false;
         },
-        child: Container(
-          color: ItemTheme.bgColor,
-          child: SafeArea(
-            child: Container(
-              color: ItemTheme.bgColor,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: homeButton,
-                    ),
-                    Image.asset(
-                      "images/logo_h.png",
-                      height: sizeHeight * 0.1,
-                    ),
-                    Column(
-                      children: txtAndTestBtn,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                      child: Column(
-                        children: linkButtons,
-                      ),
-                    )
-                  ]),
-            ),
+        child: SafeArea(
+          child: Container(
+            color: ItemTheme.bgColor,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(children: homeButton),
+                  Image.asset(
+                    "images/logo_h.png",
+                    height: sizeHeight * 0.1,
+                  ),
+                  Column(children: txtAndTestBtn),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                    child: Column(children: linkButtons),
+                  )
+                ]),
           ),
         ),
       );
     } else {
       //橫立畫面
-      return Container(
-        color: ItemTheme.bgColor,
-        child: SafeArea(
-          child: Container(
-            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
-            color: ItemTheme.bgColor,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: homeButton,
+      return SafeArea(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
+          color: ItemTheme.bgColor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(children: homeButton),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                        Image.asset(
+                          "images/logo.png",
+                          width: sizeHeight * 0.4,
+                        )
+                      ] +
+                      linkButtons,
                 ),
-                Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                            Image.asset(
-                              "images/logo.png",
-                              width: sizeHeight * 0.4,
-                            )
-                          ] +
-                          linkButtons,
-                    )),
-                Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: txtAndTestBtn,
-                      ),
-                    )),
-                Container(),
-                Container(),
-              ],
-            ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: txtAndTestBtn,
+                  ),
+                ),
+              ),
+              Container(),
+              Container(),
+            ],
           ),
         ),
       );
@@ -382,6 +274,4 @@ Future<void> getCameras() async {
       logError(e.code + "\nError Message" + e.description);
     }
   }
-
-  // Fetch the available cameras before initializing the app.
 }

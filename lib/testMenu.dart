@@ -43,57 +43,58 @@ class _TestMenuPageState extends State<TestMenuPage> {
     });
 
     Widget buttonTrainBox = Container(
-        padding: EdgeInsets.all(10),
-        child: GestureDetector(
-          child: Stack(
-            alignment: const Alignment(0, 0),
-            children: [
-              Image.asset(
-                'images/trainBox.png',
-                width: imgW,
-                height: imgW,
-                fit: BoxFit.cover,
-              ),
-              AutoTextChange(
-                w: imgW,
-                s: "操作教學",
-                paddingW: imgW * 0.14,
-                paddingH: imgW * 0.14,
-              )
-            ],
-          ),
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => TrainPage()));
-          },
+      padding: EdgeInsets.all(10),
+      child: GestureDetector(
+        child: Stack(
+          alignment: const Alignment(0, 0),
+          children: [
+            Image.asset(
+              'images/trainBox.png',
+              width: imgW,
+              height: imgW,
+              fit: BoxFit.cover,
+            ),
+            AutoTextChange(
+              w: imgW,
+              s: "操作教學",
+              paddingW: imgW * 0.14,
+              paddingH: imgW * 0.14,
+            )
+          ],
         ),
-      );
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => TrainPage()));
+        },
+      ),
+    );
     Widget buttonTestBox = Container(
-        padding: EdgeInsets.all(10),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TestInputPage()));
-          },
-          child: Stack(
-            alignment: const Alignment(0, 0),
-            children: [
-              Image.asset(
-                'images/testBox.png',
-                width: imgW,
-                height: imgW,
-                fit: BoxFit.cover,
-              ),
-              AutoTextChange(
-                w: imgW,
-                s: "開始檢測",
-                paddingW: imgW * 0.14,
-                paddingH: imgW * 0.14,
-              )
-            ],
-          ),
+      padding: EdgeInsets.all(10),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => TestInputPage()));
+         
+        },
+        child: Stack(
+          alignment: const Alignment(0, 0),
+          children: [
+            Image.asset(
+              'images/testBox.png',
+              width: imgW,
+              height: imgW,
+              fit: BoxFit.cover,
+            ),
+            AutoTextChange(
+              w: imgW,
+              s: "開始檢測",
+              paddingW: imgW * 0.14,
+              paddingH: imgW * 0.14,
+            )
+          ],
         ),
-      );
+      ),
+    );
 
     return Container(
       color: ItemTheme.bgColor,
@@ -108,34 +109,22 @@ class _TestMenuPageState extends State<TestMenuPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(
+                        IconBtn(
+                          edgeInsets: EdgeInsets.fromLTRB(
                               isStraight ? 5 : 0, 5, isStraight ? 5 : 5, 5),
-                          child: GestureDetector(
-                            onTap: () {
-                              //need
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => HomeMenuPage()));
-                            },
-                            child: Image.asset(
-                              'images/home.png',
-                              height: iconSize,
-                              width: iconSize,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                          onTap: () => Navigator.pop(context),
+                          iconSize: iconSize,
+                          imgStr: 'images/home.png',
                         ),
                         CustomButton("檢測鏡頭", () {
                           DataBean d = new DataBean();
                           d.cameras = cameras;
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CheckPage(
-                                        dataBean: d,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CheckPage(dataBean: d),
+                            ),
+                          );
                         }),
                       ],
                     )

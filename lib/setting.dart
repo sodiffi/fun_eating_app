@@ -12,9 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'customeItem.dart';
 
-class CupertinoSetting extends StatelessWidget{
+class CupertinoSetting extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SettingPage(),
     );
@@ -68,21 +68,13 @@ class SettingState extends State<SettingPage> {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
+                IconBtn(
+                  edgeInsets: EdgeInsets.fromLTRB(
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);                     
-                    },
-                    child: Image.asset(
-                      'images/home.png',
-                      height: iconSize,
-                      width: iconSize,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
+                  imgStr: 'images/home.png',
+                  onTap: () => Navigator.pop(context),
+                  iconSize: iconSize,
+                ),
               ],
             ),
             Row(

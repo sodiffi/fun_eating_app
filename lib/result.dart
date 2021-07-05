@@ -162,37 +162,22 @@ class ResultState extends State<Result> {
     });
 
     List<Widget> homeButton = [
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeMenuPage()));
-          },
-          child: Image.asset(
-            'images/home.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
+        iconSize: iconSize,
+        imgStr: 'images/home.png',
+        onTap: () {
+          Navigator.of(context, rootNavigator: true).pop(context);
+        },
       ),
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            LaunchUrl.connection();
-          },
-          child: Image.asset(
-            'images/customerService.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
-      )
+        iconSize: iconSize,
+        imgStr: 'images/customerService.png',
+        onTap: () => LaunchUrl.connection(),
+      ),
     ];
 
     Widget report = Stack(
