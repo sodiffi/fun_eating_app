@@ -8,10 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-// import 'package:flutter_better_camera/camera.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image/image.dart' as imglib;
+import 'package:fun_heart_eat/home.dart';
 import 'package:lamp/lamp.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -39,18 +38,18 @@ class CameraApp extends StatefulWidget {
 class TestState extends State<CameraApp> with WidgetsBindingObserver {
   CameraController controller;
 
-  //啟用音效
+  //啟用音效、震動
   final String isRingProp = "isRing";
   final String isShockProp = "isShock";
   bool isRing;
   bool isShock;
   List checkList = List.empty(growable: true);
   //測驗時間210
-  int testTime = 40;
+  int testTime = 5;
   //裝置穩定性檢查時間15
-  int checkTime = 15;
+  int checkTime = 1;
   //在測驗時間中，不要讀取圖片的時間30
-  int notGetImgTime = 30;
+  int notGetImgTime = 3;
   //讀取圖片
   bool getImg = false;
 
@@ -60,7 +59,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   2-第二階段檢測
   */
   int step = 0;
-  BuildContext cc;
   String min = "";
   String second = "";
   int passTime = 0;
@@ -102,12 +100,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   Future<void> off() async {
     Wakelock.disable();
     if (Platform.isAndroid) {
-      print("loook here");
-      await controller.flash(false).catchError((e) {
-        print(e);
-        print("this error");
-      });
-      print("loook here2");
+      await controller.flash(false);
     } else
       Lamp.turnOff();
   }
@@ -121,7 +114,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-
     controller.dispose();
     super.dispose();
     // controller.setFlashMode(FlashMode.off);
@@ -133,7 +125,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       return;
     }
     if (state == AppLifecycleState.inactive) {
-      // controller.dispose();
     } else if (state == AppLifecycleState.resumed) {
       if (dataBean.step == 0) {
         checkTimer.cancel();
@@ -147,29 +138,36 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.paused) {}
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   /* 第一步驟 檢測光源*/
   Future<void> startCheck() async {
+    //確認相機權限
     if (await Permission.camera.request().isGranted) {
+      //打開相機
       await openCamera(dataBean.cameras[0]);
-      if(Platform.isIOS)Lamp.turnOn();
+      //如果是ios，打開閃光燈
+      if (Platform.isIOS) Lamp.turnOn();
       setState(() {
         previewCamera = _cameraPreviewWidget();
       });
+      //每一秒做一次
       checkTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
         print("\t " + step.toString() + "\t" + checkList.length.toString());
+        //檢測光源時間到時
         if (checkList.length == checkTime) {
           String msg = "";
           double sumr = 0, sumg = 0, sumb = 0;
+          //加總r,g,b
           for (int i = 0; i < checkList.length; i++) {
             sumr += checkList[i][0];
             sumg += checkList[i][1];
             sumb += checkList[i][2];
           }
+          //算rgb的平均值
           sumr /= checkList.length;
           sumg /= checkList.length;
           sumb /= checkList.length;
+
+          //算CV 變異係數
           double cvr = 0, cvg = 0, cvb = 0, sr = 0, sg = 0, sb = 0;
           for (int i = 0; i < checkList.length; i++) {
             sr += checkList[i][0] - sumr;
@@ -199,13 +197,12 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
                 fontSize: 16.0);
           }
           timer.cancel();
-
           off();
           previewCamera = Container();
           await controller.stopImageStream();
           await controller.dispose();
           Navigator.pushReplacement(
-            cc,
+            this.context,
             MaterialPageRoute(
               builder: (context) => TestMenuPage(
                 dataBean: dataBean,
@@ -220,10 +217,10 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   /* 第二、三步驟 測驗*/
   Future<void> startTest() async {
+    int count;
     //開相機
     await openCamera(dataBean.cameras[0]);
-    if(Platform.isIOS)Lamp.turnOn();
-    int count;
+    if (Platform.isIOS) Lamp.turnOn();
     testTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
       passTime++;
       print("\t$step ${timer.tick} ");
@@ -246,41 +243,68 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         if (second.length == 1) second = "0" + second;
       });
       if (count == testTime - notGetImgTime) {
-        if (isRing ?? true) {
+        //是否啟用鈴聲
+        if (isRing ?? true)
           FlutterRingtonePlayer.play(
             android: AndroidSounds.notification,
             ios: const IosSound(1023),
             looping: false,
             volume: 0.1,
           );
-        }
-        if (isShock ?? true) {
-          Vibration.vibrate();
-        }
+
+        //是否啟用震動
+        if (isShock ?? true) Vibration.vibrate();
+
         testTimer.cancel();
         off();
         if (step == 1) {
           dataBean.beforeAvg = getData(dataBean.beforeL);
           //酵素棒似乎有問題，請更換酵素棒，再試一次
-          if (dataBean.beforeAvg[2] > 0.008) {
-            Fluttertoast.showToast(
-                msg: "酵素棒似乎有問題，請更換酵素棒，再試一次",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.grey,
-                textColor: Colors.white,
-                fontSize: 16.0);
-          }
-
-          Navigator.pushReplacement(
-            cc,
-            MaterialPageRoute(
-              builder: (context) => AddFruit(
-                dataBean: dataBean,
+          if (dataBean.beforeAvg[2] < -0.03) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('注意'),
+                content: RichText(
+                  text: TextSpan(children: [
+                    TextSpan(
+                        text: '此酵素或環境變化過大\n請檢查裝置\n請問您要',
+                        style: TextStyle(color: Colors.black)),
+                    TextSpan(text: "放棄", style: TextStyle(color: Colors.red)),
+                    TextSpan(text: "還是", style: TextStyle(color: Colors.black)),
+                    TextSpan(text: "繼續", style: TextStyle(color: Colors.red)),
+                  ]),
+                ),
+                actions: <Widget>[
+                  new GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop(false);
+                      Navigator.pushReplacement(
+                        this.context,
+                        MaterialPageRoute(
+                          builder: (context) => AddFruit(dataBean: dataBean),
+                        ),
+                      );
+                    },
+                    child: Text("繼續"),
+                  ),
+                  SizedBox(height: 16),
+                  new GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop(false);
+                      Navigator.pushReplacement(
+                        this.context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ),
+                      );
+                    },
+                    child: Text("放棄"),
+                  ),
+                ],
               ),
-            ),
-          );
+            );
+          }
         } else {
           dataBean.afterAvg = getData(dataBean.afterL);
           dataBean.result = (1 -
@@ -299,9 +323,11 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
           dataBean.step = -1;
 
           Navigator.pushReplacement(
-              cc,
-              MaterialPageRoute(
-                  builder: (context) => ResultPage(dataBean: dataBean)));
+            this.context,
+            MaterialPageRoute(
+              builder: (context) => ResultPage(dataBean: dataBean),
+            ),
+          );
         }
       }
     });
@@ -348,7 +374,6 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    cc = context;
     if (step == 0) {
       return Container(
         color: ItemTheme.bgColor,
@@ -373,46 +398,37 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         ),
       );
     } else {
-      return Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: Scaffold(
-            key: _scaffoldKey,
-            body: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Center(
-                          child: Stack(
-                        alignment: Alignment(0.9, 0.7),
-                        children: [
-                          Image.asset("images/seal.gif"),
-                          Container(
-                            decoration: new BoxDecoration(
-                              border: new Border.all(
-                                  color: Color.fromRGBO(248, 203, 173, 1),
-                                  width: 5),
-                              color: Color.fromRGBO(255, 242, 204, 1),
-                              shape: BoxShape.rectangle,
-                              borderRadius: new BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              "$min:$second",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromRGBO(105, 57, 8, 1)),
-                            ),
-                            padding: EdgeInsets.all(5),
-                          ),
-                        ],
-                      )),
+      return SafeArea(
+        child: Expanded(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Center(
+                child: Stack(
+                  alignment: Alignment(0.9, 0.7),
+                  children: [
+                    Image.asset("images/seal.gif"),
+                    Container(
+                      decoration: new BoxDecoration(
+                        border: new Border.all(
+                            color: Color.fromRGBO(248, 203, 173, 1), width: 5),
+                        color: Color.fromRGBO(255, 242, 204, 1),
+                        shape: BoxShape.rectangle,
+                        borderRadius: new BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        "$min:$second",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(105, 57, 8, 1),
+                            decoration: TextDecoration.none),
+                      ),
+                      padding: EdgeInsets.all(5),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -422,39 +438,15 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
+    if (controller == null || !controller.value.isInitialized)
       return Container();
-    } else {
+    else {
       return AspectRatio(
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
       );
     }
   }
-
-  int _hexToInt(String hex) {
-    int val = 0;
-    int len = hex.length;
-    for (int i = 0; i < len; i++) {
-      int hexDigit = hex.codeUnitAt(i);
-      if (hexDigit >= 48 && hexDigit <= 57) {
-        val += (hexDigit - 48) * (1 << (4 * (len - 1 - i)));
-      } else if (hexDigit >= 65 && hexDigit <= 70) {
-        // A..F
-        val += (hexDigit - 55) * (1 << (4 * (len - 1 - i)));
-      } else if (hexDigit >= 97 && hexDigit <= 102) {
-        // a..f
-        val += (hexDigit - 87) * (1 << (4 * (len - 1 - i)));
-      } else {
-        throw new FormatException("Invalid hexadecimal value");
-      }
-    }
-    return val;
-  }
-
-  // void showInSnackBar(String message) {
-  //   _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  // }
 
   void getRGB(CameraImage image) async {
     if (getImg) {
@@ -515,7 +507,9 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     }
   }
 
+  //打開相機
   Future<void> openCamera(CameraDescription cameraDescription) async {
+    //如果controller不等於null(已經開過)
     if (controller != null) {
       previewCamera = Container();
       await controller.dispose();
@@ -530,43 +524,27 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         focusDistance: 0,
         enableAudio: false,
       );
-
+      //初始化controller
       await controller.initialize().then((_) async {
-        if (!mounted) {
-          return;
-        }
-        await Future.delayed(
-          Duration(
-            milliseconds: 250,
-          ),
-        );
+        if (!mounted) return;
+        await Future.delayed(Duration(milliseconds: 250));
       });
-      await Future.delayed(
-        Duration(
-          milliseconds: 250,
-        ),
-      );
-
+      await Future.delayed(Duration(milliseconds: 250));
+      //開始圖片流並指定function 處理
       await controller.startImageStream((image) => getRGB(image));
     } catch (e) {
       print(e);
     }
-    print("before open flash");
+    //開啟相機閃光燈
     await controller.flash(true).catchError((e) {
       print(e);
-      print("true error");
     });
-    print("after open flash");
-    await Future.delayed(
-      Duration(
-        milliseconds: 250,
-      ),
-    );
+    await Future.delayed(Duration(milliseconds: 250));
 
+    //加入監聽器當有error會印出東西(開發用)
     controller.addListener(() {
-      if (controller.value.hasError) {
+      if (controller.value.hasError)
         logError('Camera error ${controller.value.errorDescription}');
-      }
     });
 
     // if(Platform.isIOS) Lamp.turnOn();

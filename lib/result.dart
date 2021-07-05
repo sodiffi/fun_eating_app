@@ -20,7 +20,6 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import 'customeItem.dart';
 import 'dataBean.dart';
-import 'home.dart';
 import 'sqlLite.dart';
 
 String rate = "0%";
@@ -42,19 +41,16 @@ class ResultPage extends StatelessWidget {
   ResultPage({Key key, this.dataBean}) {
     rate = dataBean.result.floor().toString() + "%";
     result = dataBean.result;
-    print('getCsv');
     getCsv();
     if (dataBean.result <= 35)
-      content = "合格";
+      content = "請安心享用~";
     else if (dataBean.result <= 45)
-      content = "通知供應單位延期採收追蹤農民用藥";
+      content = "請再清洗一遍您的蔬果呦!";
     else
-      content = "銷毀或將樣品送衛生局複檢";
+      content = "農藥殘留高風險!";
   }
 
   getCsv() async {
-    print("enter get csv");
-
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);
     rows.add(["\uFEFF"]);
@@ -88,8 +84,10 @@ class ResultPage extends StatelessWidget {
       String dir;
       String platformImei =
           await ImeiPlugin.getImei(shouldShowRequestPermissionRationale: false);
-      if(Platform.isAndroid) dir = (await getExternalStorageDirectory()).absolute.path + "/";
-      if(Platform.isIOS) dir = (await getApplicationDocumentsDirectory()).absolute.path+"/";
+      if (Platform.isAndroid)
+        dir = (await getExternalStorageDirectory()).absolute.path + "/";
+      if (Platform.isIOS)
+        dir = (await getApplicationDocumentsDirectory()).absolute.path + "/";
       new File(dir + dataBean.time + "__" + platformImei + ".csv")
           .create(recursive: true)
           .then((f) async {
@@ -116,12 +114,10 @@ class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ItemTheme.themeData,
-        home: Scaffold(
-          // resizeToAvoidBottomPadding: false,
-          body: Result(),
-        ));
+      debugShowCheckedModeBanner: false,
+      theme: ItemTheme.themeData,
+      home: Scaffold(body: Result()),
+    );
   }
 }
 
@@ -165,37 +161,22 @@ class ResultState extends State<Result> {
     });
 
     List<Widget> homeButton = [
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => HomeMenuPage()));
-          },
-          child: Image.asset(
-            'images/home.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
+        iconSize: iconSize,
+        imgStr: 'images/home.png',
+        onTap: () {
+          Navigator.of(context, rootNavigator: true).pop(context);
+        },
       ),
-      Padding(
-        padding:
+      IconBtn(
+        edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        child: GestureDetector(
-          onTap: () {
-            LaunchUrl.connection();
-          },
-          child: Image.asset(
-            'images/customerService.png',
-            height: iconSize,
-            width: iconSize,
-            fit: BoxFit.cover,
-          ),
-        ),
-      )
+        iconSize: iconSize,
+        imgStr: 'images/customerService.png',
+        onTap: () => LaunchUrl.connection(),
+      ),
     ];
 
     Widget report = Stack(
@@ -204,14 +185,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH * 0.45,
+          height: reportBoxH * (isStraight ? 0.45 : 1),
           fit: BoxFit.fill,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
               reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH * 0.45,
+          height: reportBoxH * (isStraight ? 0.45 : 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -244,35 +225,35 @@ class ResultState extends State<Result> {
                   )
                 ],
               ),
+              Expanded(
+                child: Center(
+                  child: SizedBox(
+                    width: reportBoxW * 0.8,
+                    child: AutoSizeText(
+                      content,
+                      maxLines: result >= 35 && result < 45 ? 2 : 1,
+                      style: TextStyle(
+                        fontSize: 120,
+                        color: result < 35
+                            ? Colors.green
+                            : (result < 45 ? Colors.amber : Colors.red),
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 width: reportBoxW * 0.8,
-                // height: iconSize,
                 child: AutoSizeText(
-                  "農試所判定標準",
-                  maxLines: 1,
+                  "[測試結果可能因溫度、操作或試劑保存等而略有差異，測試結果僅供參考。]",
+                  maxLines: 3,
                   style: TextStyle(
                     fontSize: 120,
                     color: Color.fromRGBO(177, 48, 5, 1),
                   ),
                 ),
               ),
-              Expanded(
-                  child: Center(
-                      child: SizedBox(
-                width: reportBoxW * 0.8,
-                // height: reportBoxW*0.8-iconSize,
-                child: AutoSizeText(
-                  content,
-                  maxLines: result < 35 ? 1 : 2,
-                  style: TextStyle(
-                    fontSize: 120,
-                    color: result < 35
-                        ? Colors.green
-                        : (result < 45 ? Colors.amber : Colors.red),
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              )))
             ],
           ),
         )

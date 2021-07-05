@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_test/flutter_test.dart';
 
+
 // Project imports:
 import 'package:fun_heart_eat/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(HomePage());
+    await tester.pumpWidget(WelcomePage());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

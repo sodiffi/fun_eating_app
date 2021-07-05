@@ -1,11 +1,5 @@
-// Dart imports:
-import 'dart:ui';
-
 // Flutter imports:
 import 'package:flutter/material.dart';
-
-// Package imports:
-// import 'package:flutter_better_camera/camera.dart';
 
 // Project imports:
 import 'customeItem.dart';

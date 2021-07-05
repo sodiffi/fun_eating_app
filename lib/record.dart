@@ -52,7 +52,7 @@ class RecordState extends State<RecordWidget> {
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       getData();
-    }   
+    }
     this.setState(() {
       isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
       sizeHeight = MediaQuery.of(context).size.height;
@@ -72,24 +72,13 @@ class RecordState extends State<RecordWidget> {
           children: [
             Row(
               children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
+                IconBtn(
+                  edgeInsets: EdgeInsets.fromLTRB(
                       isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeMenuPage()));
-                    },
-                    child: Image.asset(
-                      'images/home.png',
-                      height: iconSize,
-                      width: iconSize,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                )
+                  iconSize: iconSize,
+                  imgStr: 'images/home.png',
+                  onTap: () => Navigator.of(context).pop(),
+                ),
               ],
             ),
             ((data.isEmpty)
