@@ -43,15 +43,14 @@ class ResultPage extends StatelessWidget {
     result = dataBean.result;
     getCsv();
     if (dataBean.result <= 35)
-      content = "合格";
+      content = "請安心享用~";
     else if (dataBean.result <= 45)
-      content = "通知供應單位延期採收追蹤農民用藥";
+      content = "請再清洗一遍您的蔬果呦!";
     else
-      content = "銷毀或將樣品送衛生局複檢";
+      content = "農藥殘留高風險!";
   }
 
   getCsv() async {
-
 //------------------------
     List<List<dynamic>> rows = List<List<dynamic>>.empty(growable: true);
     rows.add(["\uFEFF"]);
@@ -186,14 +185,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH * 0.45,
+          height: reportBoxH * (isStraight ? 0.45 : 1),
           fit: BoxFit.fill,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
               reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH * 0.45,
+          height: reportBoxH * (isStraight ? 0.45 : 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -226,35 +225,35 @@ class ResultState extends State<Result> {
                   )
                 ],
               ),
+              Expanded(
+                child: Center(
+                  child: SizedBox(
+                    width: reportBoxW * 0.8,
+                    child: AutoSizeText(
+                      content,
+                      maxLines: result >= 35 && result < 45 ? 2 : 1,
+                      style: TextStyle(
+                        fontSize: 120,
+                        color: result < 35
+                            ? Colors.green
+                            : (result < 45 ? Colors.amber : Colors.red),
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               SizedBox(
                 width: reportBoxW * 0.8,
-                // height: iconSize,
                 child: AutoSizeText(
-                  "農試所判定標準",
-                  maxLines: 1,
+                  "[測試結果可能因溫度、操作或試劑保存等而略有差異，測試結果僅供參考。]",
+                  maxLines: 3,
                   style: TextStyle(
                     fontSize: 120,
                     color: Color.fromRGBO(177, 48, 5, 1),
                   ),
                 ),
               ),
-              Expanded(
-                  child: Center(
-                      child: SizedBox(
-                width: reportBoxW * 0.8,
-                // height: reportBoxW*0.8-iconSize,
-                child: AutoSizeText(
-                  content,
-                  maxLines: result < 35 ? 1 : 2,
-                  style: TextStyle(
-                    fontSize: 120,
-                    color: result < 35
-                        ? Colors.green
-                        : (result < 45 ? Colors.amber : Colors.red),
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              )))
             ],
           ),
         )
