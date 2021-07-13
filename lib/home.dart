@@ -200,9 +200,9 @@ class HomeState extends State<HomePage> {
               ) ??
               false;
         },
-        child: SafeArea(
-          child: Container(
-            color: ItemTheme.bgColor,
+        child: Container(
+          color: ItemTheme.bgColor,
+          child: SafeArea(
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -222,40 +222,43 @@ class HomeState extends State<HomePage> {
       );
     } else {
       //橫立畫面
-      return SafeArea(
-        child: Container(
-          padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
-          color: ItemTheme.bgColor,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(children: homeButton),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                        Image.asset(
-                          "images/logo.png",
-                          width: sizeHeight * 0.4,
-                        )
-                      ] +
-                      linkButtons,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      return Container(
+        color: ItemTheme.bgColor,
+        child: SafeArea(
+          child: Container(
+            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
+            color: ItemTheme.bgColor,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(children: homeButton),
+                Expanded(
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: txtAndTestBtn,
+                    children: <Widget>[
+                          Image.asset(
+                            "images/logo.png",
+                            width: sizeHeight * 0.4,
+                          )
+                        ] +
+                        linkButtons,
                   ),
                 ),
-              ),
-              Container(),
-              Container(),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: txtAndTestBtn,
+                    ),
+                  ),
+                ),
+                Container(),
+                Container(),
+              ],
+            ),
           ),
         ),
       );

@@ -36,6 +36,7 @@ dev_dependencies:
     sdk: flutter
   import_sorter: ^4.4.1
   image: ^3.0.1
+  flutter_launcher_icons: 
 
 flutter:
   uses-material-design: true
@@ -48,3 +49,7 @@ flutter:
         - asset: fonts/jf-openhuninn-1.1.ttf
 
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
