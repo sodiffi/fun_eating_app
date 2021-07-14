@@ -94,7 +94,8 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
     });
 
     Widget homeButton = IconBtn(
-      edgeInsets: EdgeInsets.all(5),
+      edgeInsets: EdgeInsets.fromLTRB(
+              isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
       imgStr: 'images/home.png',
       onTap: () {
         off();

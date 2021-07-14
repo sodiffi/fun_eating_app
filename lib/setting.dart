@@ -12,14 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'customeItem.dart';
 
-class CupertinoSetting extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: SettingPage(),
-    );
-  }
-}
+
 
 class SettingPage extends StatefulWidget {
   @override

@@ -91,21 +91,13 @@ class InputPageState extends State<InputWidget> {
       iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
     });
 
-    Widget homeButton = Padding(
-      padding:
+    Widget homeButton = IconBtn(
+      edgeInsets:
           EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
-        },
-        child: Image.asset(
-          'images/home.png',
-          height: iconSize,
-          width: iconSize,
-          fit: BoxFit.cover,
-        ),
-      ),
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage())),
+      iconSize: iconSize,
+      imgStr: 'images/home.png',
     );
 
     Widget sureButton = Center(
@@ -176,6 +168,14 @@ class InputPageState extends State<InputWidget> {
         });
       },
     );
+    Widget createItem(Widget c) {
+      return (Expanded(
+        child: Center(
+          child: c,
+        ),
+      ));
+    }
+
     AutoSizeGroup subTitleGroup = AutoSizeGroup();
 
     AutoSizeGroup subTitleGroupH = AutoSizeGroup();
@@ -209,89 +209,86 @@ class InputPageState extends State<InputWidget> {
                     )
                   ],
                 ),
-                Expanded(
-                  child: Center(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: sizeWidth * 0.7,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'images/inputClass.png',
-                                        width: sizeWidth * 0.2,
-                                        fit: BoxFit.cover,
+                createItem(
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: sizeWidth * 0.7,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'images/inputClass.png',
+                                      width: sizeWidth * 0.2,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    // AutoTextChange(w: sizeWidth*0.5,s: "檢測蔬果",paddingW: 0,paddingH: 0,),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        "檢測蔬果",
+                                        maxLines: 1,
+                                        style: TextStyle(fontSize: 30),
+                                        group: subTitleGroup,
                                       ),
-                                      // AutoTextChange(w: sizeWidth*0.5,s: "檢測蔬果",paddingW: 0,paddingH: 0,),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          "檢測蔬果",
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 30),
-                                          group: subTitleGroup,
+                                    )
+                                  ],
+                                ),
+                                classDown,
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'images/inputArea.png',
+                                      width: sizeWidth * 0.2,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        "來自/購買地區",
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: 30,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  classDown,
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'images/inputArea.png',
-                                        width: sizeWidth * 0.2,
-                                        fit: BoxFit.cover,
+                                        group: subTitleGroup,
                                       ),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          "來自/購買地區",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: 30,
-                                          ),
-                                          group: subTitleGroup,
+                                    )
+                                  ],
+                                ),
+                                areaDown,
+                                Row(
+                                  children: [
+                                    Image.asset(
+                                      'images/inputTime.png',
+                                      width: sizeWidth * 0.2,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        "蔬菜名稱",
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: 30,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  areaDown,
-                                  Row(
-                                    children: [
-                                      Image.asset(
-                                        'images/inputTime.png',
-                                        width: sizeWidth * 0.2,
-                                        fit: BoxFit.cover,
+                                        group: subTitleGroup,
                                       ),
-                                      Expanded(
-                                        child: AutoSizeText(
-                                          "蔬菜名稱",
-                                          maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: 30,
-                                          ),
-                                          group: subTitleGroup,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  TextField(
-                                    decoration:
-                                        InputDecoration(hintText: "(選填)"),
-                                    controller: fruitNameController,
-                                    autofocus: false,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
+                                    )
+                                  ],
+                                ),
+                                TextField(
+                                  decoration: InputDecoration(hintText: "(選填)"),
+                                  controller: fruitNameController,
+                                  autofocus: false,
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ),
                 sureButton
@@ -340,49 +337,53 @@ class InputPageState extends State<InputWidget> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Expanded(
-                                    child: Center(
-                                      child: SizedBox(
-                                        // height: sizeHeight * 0.3,
-                                        width: sizeWidth * 0.3,
-                                        child: AutoSizeText(
-                                          "蔬果種類",
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 30),
-                                          group: subTitleGroupH,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                                  createItem(SizedBox(
+                                    // height: sizeHeight * 0.3,
+                                    width: sizeWidth * 0.3,
+                                    child: AutoSizeText(
+                                      "蔬果種類",
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 30),
+                                      group: subTitleGroupH,
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: SizedBox(
-                                        // height: sizeHeight * 0.3,
-                                        width: sizeWidth * 0.3,
-                                        child: AutoSizeText(
-                                          "來自/購買地點",
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 30),
-                                          textAlign: TextAlign.center,
-                                          group: subTitleGroupH,
-                                        ),
-                                      ),
+                                  )),
+                                  createItem(SizedBox(
+                                    // height: sizeHeight * 0.3,
+                                    width: sizeWidth * 0.3,
+                                    child: AutoSizeText(
+                                      "來自/購買地點",
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 30),
+                                      textAlign: TextAlign.center,
+                                      group: subTitleGroupH,
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: SizedBox(
-                                        // height: sizeHeight * 0.3,
-                                        width: sizeWidth * 0.3,
-                                        child: AutoSizeText(
-                                          "蔬果名稱",
-                                          maxLines: 1,
-                                          style: TextStyle(fontSize: 30),
-                                          group: subTitleGroupH,
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
+                                  )),
+                                  createItem(SizedBox(
+                                    // height: sizeHeight * 0.3,
+                                    width: sizeWidth * 0.3,
+                                    child: AutoSizeText(
+                                      "蔬果名稱",
+                                      maxLines: 1,
+                                      style: TextStyle(fontSize: 30),
+                                      group: subTitleGroupH,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ))
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  createItem(classDown),
+                                  createItem(areaDown),
+                                  createItem(
+                                    TextField(
+                                      decoration:
+                                          InputDecoration(hintText: "(選填)"),
+                                      controller: fruitNameController,
+                                      autofocus: false,
                                     ),
                                   ),
                                 ],
@@ -391,62 +392,24 @@ class InputPageState extends State<InputWidget> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  Expanded(
-                                    child: Center(
-                                      child: classDown,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: areaDown,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: TextField(
-                                        decoration:
-                                            InputDecoration(hintText: "(選填)"),
-                                        controller: fruitNameController,
-                                        autofocus: false,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Expanded(
-                                    child: Center(
-                                      child: Image.asset(
-                                        'images/inputClass.png',
-                                        width: min(
-                                            sizeWidth * 0.2, sizeHeight * 0.3),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Image.asset(
-                                        'images/inputArea.png',
-                                        width: min(
-                                            sizeWidth * 0.2, sizeHeight * 0.3),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Image.asset(
-                                        'images/inputTime.png',
-                                        width: min(
-                                            sizeWidth * 0.2, sizeHeight * 0.3),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
+                                  createItem(Image.asset(
+                                    'images/inputClass.png',
+                                    width:
+                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    fit: BoxFit.cover,
+                                  )),
+                                  createItem(Image.asset(
+                                    'images/inputArea.png',
+                                    width:
+                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    fit: BoxFit.cover,
+                                  )),
+                                  createItem(Image.asset(
+                                    'images/inputTime.png',
+                                    width:
+                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    fit: BoxFit.cover,
+                                  )),
                                 ],
                               ),
                             ],

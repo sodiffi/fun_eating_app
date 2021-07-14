@@ -44,14 +44,18 @@ class HomeState extends State<HomePage> {
   }
 
   //去測驗畫面(階段一:裝置性穩定)
-  void toTest() {
-    //設定步驟為0
-    dataBean.step = 0;
-    //設定相機資訊
-    dataBean.cameras = cameras;
-    //換頁
-    Navigator.push(context,
-        MaterialPageRoute(builder: (content) => CameraApp(dataBean: dataBean)));
+  Future<void> toTest() async {
+    if (await Permission.camera.request().isGranted) {
+      //設定步驟為0
+      dataBean.step = 0;
+      //設定相機資訊
+      dataBean.cameras = cameras;
+      //換頁
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (content) => CameraApp(dataBean: dataBean)));
+    }
   }
 
   //取得測驗次數
@@ -87,19 +91,15 @@ class HomeState extends State<HomePage> {
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         iconSize: iconSize,
         imgStr: 'images/setting.png',
-        onTap: () {
-          Navigator.of(context).push(CupertinoPageRoute(
-              builder: (BuildContext context) => CupertinoSetting()));
-        },
+        onTap: () => Navigator.of(context).push(CupertinoPageRoute(
+            builder: (BuildContext context) => SettingPage())),
       ),
       IconBtn(
         edgeInsets:
             EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
         iconSize: iconSize,
         imgStr: 'images/customerService.png',
-        onTap: () {
-          LaunchUrl.connection();
-        },
+        onTap: () => LaunchUrl.connection(),
       ),
     ];
 
@@ -117,8 +117,8 @@ class HomeState extends State<HomePage> {
             linkSize: linkSize,
             autoSizeGroup: linkGroup,
             text: "檢測紀錄",
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (content) => RecordPage())),
+            onTap: () => Navigator.of(context)
+                .push(CupertinoPageRoute(builder: (content) => RecordPage())),
           ),
         ],
       ),
@@ -178,46 +178,23 @@ class HomeState extends State<HomePage> {
 
     //直立畫面
     if (isStraight) {
-      return WillPopScope(
-        onWillPop: () {
-          return showDialog(
-                context: context,
-                builder: (context) => new AlertDialog(
-                  title: new Text('確定離開嗎?'),
-                  content: new Text('是否離開FUN心吃'),
-                  actions: <Widget>[
-                    new GestureDetector(
-                      onTap: () => Navigator.of(context).pop(false),
-                      child: Text("否"),
-                    ),
-                    SizedBox(height: 16),
-                    new GestureDetector(
-                        onTap: () async => await SystemChannels.platform
-                            .invokeMethod('SystemNavigator.pop'),
-                        child: Text("是")),
-                  ],
+      return Container(
+        color: ItemTheme.bgColor,
+        child: SafeArea(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(children: homeButton),
+                Image.asset(
+                  "images/logo_h.png",
+                  height: sizeHeight * 0.1,
                 ),
-              ) ??
-              false;
-        },
-        child: Container(
-          color: ItemTheme.bgColor,
-          child: SafeArea(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(children: homeButton),
-                  Image.asset(
-                    "images/logo_h.png",
-                    height: sizeHeight * 0.1,
-                  ),
-                  Column(children: txtAndTestBtn),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                    child: Column(children: linkButtons),
-                  )
-                ]),
-          ),
+                Column(children: txtAndTestBtn),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                  child: Column(children: linkButtons),
+                )
+              ]),
         ),
       );
     } else {
