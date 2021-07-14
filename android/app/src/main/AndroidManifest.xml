@@ -18,7 +18,7 @@
 
     <application
         android:label="FUN心吃"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:requestLegacyExternalStorage="true"
         >
                 <service android:name="dev.cruv.ringtone_player.PlayerService" />

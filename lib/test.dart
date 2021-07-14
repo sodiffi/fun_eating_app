@@ -45,11 +45,11 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
   bool isShock;
   List checkList = List.empty(growable: true);
   //測驗時間210
-  int testTime = 5;
+  int testTime = 210;
   //裝置穩定性檢查時間15
-  int checkTime = 1;
+  int checkTime = 15;
   //在測驗時間中，不要讀取圖片的時間30
-  int notGetImgTime = 3;
+  int notGetImgTime = 30;
   //讀取圖片
   bool getImg = false;
 
@@ -398,35 +398,38 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
         ),
       );
     } else {
-      return SafeArea(
-        child: Expanded(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Center(
-                child: Stack(
-                  alignment: Alignment(0.9, 0.7),
-                  children: [
-                    Image.asset("images/seal.gif"),
-                    Container(
-                      decoration: new BoxDecoration(
-                        border: new Border.all(
-                            color: Color.fromRGBO(248, 203, 173, 1), width: 5),
-                        color: Color.fromRGBO(255, 242, 204, 1),
-                        shape: BoxShape.rectangle,
-                        borderRadius: new BorderRadius.circular(15),
+      return Container(
+        color:Colors.white,
+        child: SafeArea(
+          child: Expanded(
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Center(
+                  child: Stack(
+                    alignment: Alignment(0.9, 0.7),
+                    children: [
+                      Image.asset("images/seal.gif"),
+                      Container(
+                        decoration: new BoxDecoration(
+                          border: new Border.all(
+                              color: Color.fromRGBO(248, 203, 173, 1), width: 5),
+                          color: Color.fromRGBO(255, 242, 204, 1),
+                          shape: BoxShape.rectangle,
+                          borderRadius: new BorderRadius.circular(15),
+                        ),
+                        child: Text(
+                          "$min:$second",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromRGBO(105, 57, 8, 1),
+                              decoration: TextDecoration.none),
+                        ),
+                        padding: EdgeInsets.all(5),
                       ),
-                      child: Text(
-                        "$min:$second",
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromRGBO(105, 57, 8, 1),
-                            decoration: TextDecoration.none),
-                      ),
-                      padding: EdgeInsets.all(5),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
