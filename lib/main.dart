@@ -35,7 +35,7 @@ class Welcome extends StatelessWidget {
     });
 
     return Container(
-      color: Color.fromRGBO(255, 245, 227, 1),
+      color: ItemTheme.bgColor,
       child: Center(
         child: Image.asset(
           "images/labinhome.png",

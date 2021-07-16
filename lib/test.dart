@@ -276,7 +276,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
                   ]),
                 ),
                 actions: <Widget>[
-                  new GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop(false);
                       Navigator.pushReplacement(
@@ -289,7 +289,7 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
                     child: Text("繼續"),
                   ),
                   SizedBox(height: 16),
-                  new GestureDetector(
+                  GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop(false);
                       Navigator.pushReplacement(
@@ -302,6 +302,13 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
                     child: Text("放棄"),
                   ),
                 ],
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              this.context,
+              MaterialPageRoute(
+                builder: (context) => AddFruit(dataBean: dataBean),
               ),
             );
           }
@@ -399,42 +406,40 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
       );
     } else {
       return Container(
-        color:Colors.white,
+        padding: EdgeInsets.all(1.0),
+        color: Colors.white,
         child: SafeArea(
-          child: Expanded(
-            child: Container(
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment(0.9, 0.7),
-                    children: [
-                      Image.asset("images/seal.gif"),
-                      Container(
-                        decoration: new BoxDecoration(
-                          border: new Border.all(
-                              color: Color.fromRGBO(248, 203, 173, 1), width: 5),
-                          color: Color.fromRGBO(255, 242, 204, 1),
-                          shape: BoxShape.rectangle,
-                          borderRadius: new BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          "$min:$second",
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Color.fromRGBO(105, 57, 8, 1),
-                              decoration: TextDecoration.none),
-                        ),
-                        padding: EdgeInsets.all(5),
+            child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Stack(
+                  alignment: Alignment(0.9, 0.7),
+                  children: [
+                    Image.asset("images/seal.gif"),
+                    Container(
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: ItemTheme.leatherColor, width: 5),
+                        color: ItemTheme.offbeatColor,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    ],
-                  ),
+                      child: Text(
+                        "$min:$second",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: ItemTheme.brownColor,
+                            decoration: TextDecoration.none),
+                      ),
+                      padding: EdgeInsets.all(5),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-        ),
+          ],
+        )),
       );
     }
   }

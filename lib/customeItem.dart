@@ -8,9 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 class ItemTheme {
   static ThemeData themeData = ThemeData(
     fontFamily: "openhuninn",
-    backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+    backgroundColor: bgColor,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+      backgroundColor: bgColor,
       shape: RoundedRectangleBorder(),
       elevation: 0,
     ),
@@ -29,6 +29,10 @@ class ItemTheme {
   );
 
   static Color bgColor = Color.fromRGBO(254, 246, 227, 1);
+  static Color offbeatColor =Color.fromRGBO(255, 242, 204, 1);
+  static Color leatherColor=Color.fromRGBO(248, 203, 173, 1);
+  static Color brownColor=Color.fromRGBO(105, 57, 8, 1);
+  static Color redBrownColor=Color.fromRGBO(177, 48, 5, 1);
 
   static TextStyle textStyle = TextStyle(
     color: Colors.black,
@@ -107,11 +111,11 @@ class CustomButton extends StatelessWidget {
     return (OutlineButton(
       onPressed: onPressed,
       child: Text(text),
-      textColor: Color.fromRGBO(105, 57, 8, 1),
-      color: Color.fromRGBO(255, 242, 204, 1),
-      highlightedBorderColor: Color.fromRGBO(105, 57, 8, 1),
+      textColor: ItemTheme.brownColor,
+      color: ItemTheme.offbeatColor,
+      highlightedBorderColor: ItemTheme.brownColor,
       borderSide: BorderSide(
-        color: Color.fromRGBO(248, 203, 173, 1),
+        color: ItemTheme.leatherColor,
         width: 3,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -175,7 +179,9 @@ class LinkBtn extends StatefulWidget {
   final AutoSizeGroup autoSizeGroup;
   final String text;
   final Function onTap;
-  const LinkBtn({Key key, this.linkSize, this.autoSizeGroup, this.text, this.onTap}) : super(key: key);
+  const LinkBtn(
+      {Key key, this.linkSize, this.autoSizeGroup, this.text, this.onTap})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -201,16 +207,37 @@ class LinkBtnState extends State<LinkBtn> {
                 fit: BoxFit.cover,
               ),
               AutoTextChangeGroup(
-                w:this.widget.linkSize,
-                s: this.widget.text,
-                paddingW: this.widget.linkSize * 0.14,
-                paddingH: 0,
-                autoSizeGroup: this.widget.autoSizeGroup
-              ),
+                  w: this.widget.linkSize,
+                  s: this.widget.text,
+                  paddingW: this.widget.linkSize * 0.14,
+                  paddingH: 0,
+                  autoSizeGroup: this.widget.autoSizeGroup),
             ],
           ),
         ),
       ),
     ));
+  }
+}
+
+class MediaData {
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize = 30;
+  bool isStraight = false;
+  void update(BuildContext context) {
+    isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+    sizeHeight = MediaQuery.of(context).size.height;
+    sizeWidth = MediaQuery.of(context).size.width;
+    iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+  }
+
+  EdgeInsets getPaddingIconSizeOrFive() {
+    return EdgeInsets.fromLTRB(
+        isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5);
+  }
+  EdgeInsets getPaddingFiveOrZero() {
+    return EdgeInsets.fromLTRB(
+        isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5);
   }
 }

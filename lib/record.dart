@@ -4,27 +4,16 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'customeItem.dart';
 import 'dataBean.dart';
-import 'home.dart';
 import 'sqlLite.dart';
 
 class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          fontFamily: "openhuninn",
-          textTheme: TextTheme(
-              bodyText1: TextStyle(fontSize: 20),
-              bodyText2: TextStyle(fontSize: 20),
-              subtitle1: TextStyle(fontSize: 20),
-              headline1: TextStyle(fontSize: 30, color: Colors.black))),
-      home: Scaffold(
-          backgroundColor: ItemTheme.bgColor,
-          body: Container(
-            child: RecordWidget(),
-          )),
-    );
+    return Scaffold(
+        backgroundColor: ItemTheme.bgColor,
+        body: Container(
+          child: RecordWidget(),
+        ));
   }
 }
 
@@ -37,45 +26,41 @@ class RecordWidget extends StatefulWidget {
 
 class RecordState extends State<RecordWidget> {
   List<FunHeart> data = new List.empty(growable: true);
-
-  bool isStraight = false;
+  MediaData mediaData = new MediaData();
   DataBean dataBean = new DataBean();
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
   BoxDecoration boxDecoration = BoxDecoration(
-      color: Color.fromRGBO(255, 242, 204, 1),
-      border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
+      color: ItemTheme.offbeatColor,
+      border: Border.all(color: ItemTheme.leatherColor, width: 2));
   FunHeartProvider funHeartProvider = new FunHeartProvider();
+
+  Widget createText(String s) {
+    return (Text(
+      s,
+      style: TextStyle(fontSize: 20),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
       getData();
     }
-    this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-    });
+    this.setState(() => mediaData.update(context));
 
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(
-            isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
-        color: Color.fromRGBO(255, 245, 227, 1),
-        height: sizeHeight,
-        width: sizeWidth,
+        padding: mediaData.getPaddingIconSizeOrFive(),
+        color: ItemTheme.bgColor,
+        height: mediaData.sizeHeight,
+        width: mediaData.sizeWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
               children: [
                 IconBtn(
-                  edgeInsets: EdgeInsets.fromLTRB(
-                      isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-                  iconSize: iconSize,
+                  edgeInsets: mediaData.getPaddingFiveOrZero(),
+                  iconSize: mediaData.iconSize,
                   imgStr: 'images/home.png',
                   onTap: () => Navigator.of(context).pop(),
                 ),
@@ -83,7 +68,7 @@ class RecordState extends State<RecordWidget> {
             ),
             ((data.isEmpty)
                 ? Container(
-                    child: Text("暫無紀錄"),
+                    child: createText("暫無紀錄"),
                   )
                 : Flexible(
                     child: ListView.builder(
@@ -100,12 +85,12 @@ class RecordState extends State<RecordWidget> {
                                   children: [
                                     Flexible(
                                       child: Row(
-                                        children: [Text("測驗時間")],
+                                        children: [createText("測驗時間")],
                                       ),
                                       flex: 2,
                                     ),
                                     Flexible(
-                                      child: Text(data[index].time),
+                                      child: createText(data[index].time),
                                       flex: 3,
                                     )
                                   ],
@@ -119,13 +104,13 @@ class RecordState extends State<RecordWidget> {
                                             "images/inputClass.png",
                                             width: 30,
                                           ),
-                                          Text("蔬果種類")
+                                          createText("蔬果種類")
                                         ],
                                       ),
                                       flex: 2,
                                     ),
                                     Flexible(
-                                      child: Text(data[index].fruitClass),
+                                      child: createText(data[index].fruitClass),
                                       flex: 3,
                                     )
                                   ],
@@ -140,11 +125,12 @@ class RecordState extends State<RecordWidget> {
                                               "images/inputArea.png",
                                               width: 30,
                                             ),
-                                            Text("購買地點"),
+                                            createText("購買地點"),
                                           ],
                                         )),
                                     Flexible(
-                                        flex: 3, child: Text(data[index].area))
+                                        flex: 3,
+                                        child: createText(data[index].area))
                                   ],
                                 ),
                                 (data[index].name.isEmpty
@@ -159,12 +145,12 @@ class RecordState extends State<RecordWidget> {
                                                     "images/inputTime.png",
                                                     width: 30,
                                                   ),
-                                                  Text("蔬果名稱")
+                                                  createText("蔬果名稱")
                                                 ],
                                               )),
                                           Flexible(
                                             flex: 3,
-                                            child: Text(data[index].name),
+                                            child: createText(data[index].name),
                                           ),
                                         ],
                                       )),
@@ -173,11 +159,11 @@ class RecordState extends State<RecordWidget> {
                                     Flexible(
                                         flex: 2,
                                         child: Row(
-                                          children: [Text("蔬果抑制率")],
+                                          children: [createText("蔬果抑制率")],
                                         )),
                                     Flexible(
                                       flex: 3,
-                                      child: Text(
+                                      child: createText(
                                           data[index].rate.toString() + "%"),
                                     ),
                                   ],
