@@ -8,9 +8,9 @@ import 'package:url_launcher/url_launcher.dart';
 class ItemTheme {
   static ThemeData themeData = ThemeData(
     fontFamily: "openhuninn",
-    backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+    backgroundColor: bgColor,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: Color.fromRGBO(254, 246, 227, 1),
+      backgroundColor: bgColor,
       shape: RoundedRectangleBorder(),
       elevation: 0,
     ),
@@ -29,6 +29,10 @@ class ItemTheme {
   );
 
   static Color bgColor = Color.fromRGBO(254, 246, 227, 1);
+  static Color offbeatColor =Color.fromRGBO(255, 242, 204, 1);
+  static Color leatherColor=Color.fromRGBO(248, 203, 173, 1);
+  static Color brownColor=Color.fromRGBO(105, 57, 8, 1);
+  static Color redBrownColor=Color.fromRGBO(177, 48, 5, 1);
 
   static TextStyle textStyle = TextStyle(
     color: Colors.black,
@@ -107,11 +111,11 @@ class CustomButton extends StatelessWidget {
     return (OutlineButton(
       onPressed: onPressed,
       child: Text(text),
-      textColor: Color.fromRGBO(105, 57, 8, 1),
-      color: Color.fromRGBO(255, 242, 204, 1),
-      highlightedBorderColor: Color.fromRGBO(105, 57, 8, 1),
+      textColor: ItemTheme.brownColor,
+      color: ItemTheme.offbeatColor,
+      highlightedBorderColor: ItemTheme.brownColor,
       borderSide: BorderSide(
-        color: Color.fromRGBO(248, 203, 173, 1),
+        color: ItemTheme.leatherColor,
         width: 3,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),

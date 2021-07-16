@@ -407,40 +407,39 @@ class TestState extends State<CameraApp> with WidgetsBindingObserver {
     } else {
       return Container(
         padding: EdgeInsets.all(1.0),
-        color:Colors.white,
+        color: Colors.white,
         child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Stack(
-                          alignment: Alignment(0.9, 0.7),
-                          children: [
-                            Image.asset("images/seal.gif"),
-                            Container(
-                              decoration: new BoxDecoration(
-                                border: new Border.all(
-                                    color: Color.fromRGBO(248, 203, 173, 1), width: 5),
-                                color: Color.fromRGBO(255, 242, 204, 1),
-                                shape: BoxShape.rectangle,
-                                borderRadius: new BorderRadius.circular(15),
-                              ),
-                              child: Text(
-                                "$min:$second",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Color.fromRGBO(105, 57, 8, 1),
-                                    decoration: TextDecoration.none),
-                              ),
-                              padding: EdgeInsets.all(5),
-                            ),
-                          ],
-                        ),
+            child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Stack(
+                  alignment: Alignment(0.9, 0.7),
+                  children: [
+                    Image.asset("images/seal.gif"),
+                    Container(
+                      decoration: BoxDecoration(
+                        border:
+                            Border.all(color: ItemTheme.leatherColor, width: 5),
+                        color: ItemTheme.offbeatColor,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(
+                        "$min:$second",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: ItemTheme.brownColor,
+                            decoration: TextDecoration.none),
+                      ),
+                      padding: EdgeInsets.all(5),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          )
-        ),
+            ),
+          ],
+        )),
       );
     }
   }

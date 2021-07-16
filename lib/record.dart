@@ -10,11 +10,10 @@ class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-          backgroundColor: ItemTheme.bgColor,
-          body: Container(
-            child: RecordWidget(),
-          ));
+        backgroundColor: ItemTheme.bgColor,
+        body: Container(
+          child: RecordWidget(),
+        ));
   }
 }
 
@@ -27,19 +26,18 @@ class RecordWidget extends StatefulWidget {
 
 class RecordState extends State<RecordWidget> {
   List<FunHeart> data = new List.empty(growable: true);
-
-  bool isStraight = false;
+  MediaData mediaData = new MediaData();
   DataBean dataBean = new DataBean();
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
   BoxDecoration boxDecoration = BoxDecoration(
-      color: Color.fromRGBO(255, 242, 204, 1),
-      border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
+      color: ItemTheme.offbeatColor,
+      border: Border.all(color: ItemTheme.leatherColor, width: 2));
   FunHeartProvider funHeartProvider = new FunHeartProvider();
 
-  Widget createText(String s){
-    return(Text(s,style: TextStyle(fontSize: 20),));
+  Widget createText(String s) {
+    return (Text(
+      s,
+      style: TextStyle(fontSize: 20),
+    ));
   }
 
   @override

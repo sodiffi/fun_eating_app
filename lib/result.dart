@@ -27,14 +27,14 @@ String content = "合格";
 double result;
 
 class ResultPage extends StatelessWidget {
-  final String ftpHost = "120.106.210.250";
-  final String ftpName = "admin";
-  final String ftpPsw = "wj/61j4zj6gk4";
-  final String changeDir = "Public/PesticsdeTest_upload/";
-  // final String ftpHost = "ftp.byethost12.com";
-  // final String ftpName = "b12_27143036";
-  // final String ftpPsw = "xkpt3v";
-  // final String changeDir = "htdocs/fun_heart_eating/";
+  // final String ftpHost = "120.106.210.250";
+  // final String ftpName = "admin";
+  // final String ftpPsw = "wj/61j4zj6gk4";
+  // final String changeDir = "Public/PesticsdeTest_upload/";
+  final String ftpHost = "ftp.epizy.com";
+  final String ftpName = "epiz_29155890";
+  final String ftpPsw = "GGdnkB1YsZC2c";
+  final String changeDir = "htdocs/yemt/";
 
   final DataBean dataBean;
 
@@ -204,7 +204,7 @@ class ResultState extends State<Result> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 100,
-                          color: Color.fromRGBO(177, 48, 5, 1),
+                          color: ItemTheme.redBrownColor,
                         ),
                       ),
                     ),
@@ -245,7 +245,7 @@ class ResultState extends State<Result> {
                   maxLines: 3,
                   style: TextStyle(
                     fontSize: 120,
-                    color: Color.fromRGBO(177, 48, 5, 1),
+                    color: ItemTheme.redBrownColor,
                   ),
                 ),
               ),
@@ -260,9 +260,7 @@ class ResultState extends State<Result> {
         color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
-            color: Color.fromRGBO(255, 245, 227, 1),
-            width: sizeWidth,
-            height: sizeHeight,
+            color: ItemTheme.bgColor,
             width: mediaData.sizeWidth,
             height: mediaData.sizeHeight,
             padding: EdgeInsets.all(5),
@@ -280,7 +278,7 @@ class ResultState extends State<Result> {
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 150,
-                        color: Color.fromRGBO(177, 48, 5, 1),
+                        color: ItemTheme.redBrownColor,
                       ),
                     ),
                   ),
@@ -347,7 +345,7 @@ class ResultState extends State<Result> {
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 150,
-                          color: Color.fromRGBO(177, 48, 5, 1),
+                          color:ItemTheme.redBrownColor,
                         ),
                       ),
                     ),

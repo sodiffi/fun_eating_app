@@ -76,8 +76,8 @@ class InputPageState extends State<InputWidget> {
       .toString();
 
   BoxDecoration boxDecoration = BoxDecoration(
-      color: Color.fromRGBO(255, 242, 204, 1),
-      border: Border.all(color: Color.fromRGBO(248, 203, 173, 1), width: 2));
+      color: ItemTheme.offbeatColor,
+      border: Border.all(color: ItemTheme.leatherColor, width: 2));
 
   @override
   Widget build(BuildContext context) {
