@@ -15,10 +15,7 @@ class AddFruit extends StatefulWidget {
 }
 
 class AddFruitPageState extends State<AddFruit> {
-  bool isStraight = false;
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
+  MediaData mediaData=new MediaData();  
   DataBean dataBean;
   AddFruitPageState(DataBean d) {
     dataBean = d;
@@ -27,10 +24,7 @@ class AddFruitPageState extends State<AddFruit> {
   @override
   Widget build(BuildContext context) {
     this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+     mediaData.update(context);
     });
     List<Widget> items = [
       Image.asset("images/prompt.jpg"),
@@ -44,7 +38,7 @@ class AddFruitPageState extends State<AddFruit> {
         );
       })
     ];
-    if (isStraight) {
+    if (mediaData.isStraight) {
       return Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

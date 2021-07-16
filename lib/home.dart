@@ -29,12 +29,8 @@ class HomePage extends StatefulWidget {
 class HomeState extends State<HomePage> {
   //預設測驗次數為0
   int testTime = 0;
-  //預設手機方向直向
-  bool isStraight = false;
+  MediaData mediaData = new MediaData();
   DataBean dataBean = new DataBean();
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
   double linkSize;
   //建立sql lite provider
   FunHeartProvider fProvider = new FunHeartProvider();
@@ -76,28 +72,23 @@ class HomeState extends State<HomePage> {
           testTime = value;
         }));
     this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-      linkSize = isStraight
-          ? min(sizeHeight * 0.25, sizeWidth * 0.4)
-          : sizeWidth * 0.17;
+      mediaData.update(context);
+      linkSize = mediaData.isStraight
+          ? min(mediaData.sizeHeight * 0.25, mediaData.sizeWidth * 0.4)
+          : mediaData.sizeWidth * 0.17;
     });
 
     List<Widget> homeButton = [
       IconBtn(
-        edgeInsets:
-            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        iconSize: iconSize,
+        edgeInsets: mediaData.getPaddingFiveOrZero(),
+        iconSize: mediaData.iconSize,
         imgStr: 'images/setting.png',
         onTap: () => Navigator.of(context).push(CupertinoPageRoute(
             builder: (BuildContext context) => SettingPage())),
       ),
       IconBtn(
-        edgeInsets:
-            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        iconSize: iconSize,
+        edgeInsets: mediaData.getPaddingFiveOrZero(),
+        iconSize: mediaData.iconSize,
         imgStr: 'images/customerService.png',
         onTap: () => LaunchUrl.connection(),
       ),
@@ -156,19 +147,26 @@ class HomeState extends State<HomePage> {
             children: [
               Image.asset(
                 "images/testBox.png",
-                width: isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3,
+                width: 0.3 *
+                    (mediaData.isStraight
+                        ? mediaData.sizeHeight
+                        : mediaData.sizeWidth),
                 fit: BoxFit.cover,
               ),
               Container(
-                width: isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3,
+                width: 0.3 *
+                    (mediaData.isStraight
+                        ? mediaData.sizeHeight
+                        : mediaData.sizeWidth),
                 child: AutoSizeText(
                   "開始檢測",
                   maxLines: 1,
                   style: ItemTheme.textStyle,
                 ),
-                padding: EdgeInsets.all(isStraight
-                    ? sizeHeight * 0.3 * 0.12
-                    : sizeWidth * 0.3 * 0.12),
+                padding: EdgeInsets.all(0.036 *
+                    (mediaData.isStraight
+                        ? mediaData.sizeHeight
+                        : mediaData.sizeWidth)),
               )
             ],
           ),
@@ -177,7 +175,7 @@ class HomeState extends State<HomePage> {
     ];
 
     //直立畫面
-    if (isStraight) {
+    if (mediaData.isStraight) {
       return Container(
         color: ItemTheme.bgColor,
         child: SafeArea(
@@ -187,7 +185,7 @@ class HomeState extends State<HomePage> {
                 Row(children: homeButton),
                 Image.asset(
                   "images/logo_h.png",
-                  height: sizeHeight * 0.1,
+                  height: mediaData.sizeHeight * 0.1,
                 ),
                 Column(children: txtAndTestBtn),
                 Padding(
@@ -203,7 +201,8 @@ class HomeState extends State<HomePage> {
         color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
+            padding: EdgeInsets.fromLTRB(
+                mediaData.iconSize, 5, mediaData.iconSize, 5),
             color: ItemTheme.bgColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,7 +215,7 @@ class HomeState extends State<HomePage> {
                     children: <Widget>[
                           Image.asset(
                             "images/logo.png",
-                            width: sizeHeight * 0.4,
+                            width: mediaData.sizeHeight * 0.4,
                           )
                         ] +
                         linkButtons,

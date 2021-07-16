@@ -12,8 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import 'customeItem.dart';
 
-
-
 class SettingPage extends StatefulWidget {
   @override
   SettingState createState() {
@@ -24,21 +22,15 @@ class SettingPage extends StatefulWidget {
 class SettingState extends State<SettingPage> {
   bool isRing = true;
   bool isShock = true;
-  bool isStraight = false;
+  MediaData mediaData = new MediaData();
   static const String isRingProp = "isRing";
   static const String isShockProp = "isShock";
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize = 30;
   Future<void> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       isRing = (prefs.getBool(isRingProp) ?? true);
       isShock = (prefs.getBool(isShockProp) ?? true);
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+      mediaData.update(context);
     });
   }
 
@@ -54,19 +46,17 @@ class SettingState extends State<SettingPage> {
       backgroundColor: ItemTheme.bgColor,
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.fromLTRB(
-            isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
+        padding: mediaData.getPaddingIconSizeOrFive(),
         color: ItemTheme.bgColor,
         child: Column(
           children: [
             Row(
               children: [
                 IconBtn(
-                  edgeInsets: EdgeInsets.fromLTRB(
-                      isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
+                  edgeInsets: mediaData.getPaddingFiveOrZero(),
                   imgStr: 'images/home.png',
                   onTap: () => Navigator.pop(context),
-                  iconSize: iconSize,
+                  iconSize: mediaData.iconSize,
                 ),
               ],
             ),

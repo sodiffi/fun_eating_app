@@ -32,10 +32,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   CameraController controller;
   DataBean dataBean;
   Widget previewCamera = Container();
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
-  bool isStraight = false;
+  MediaData mediaData=new MediaData();
 
   CheckState(DataBean b) {
     dataBean = b;
@@ -87,29 +84,25 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     setState(() {
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+     mediaData.update(context);
     });
 
     Widget homeButton = IconBtn(
-      edgeInsets: EdgeInsets.fromLTRB(
-              isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
+      edgeInsets: mediaData.getPaddingIconSizeOrFive(),
       imgStr: 'images/home.png',
       onTap: () {
         off();
         Navigator.pop(context);
         Navigator.pop(context);
       },
-      iconSize: iconSize,
+      iconSize: mediaData.iconSize,
     );
     Widget sureBtn = CustomButton("確定", () {
       off();
       Navigator.pop(context);
     });
 
-    if (isStraight) {
+    if (mediaData.isStraight) {
       return Container(
         color: ItemTheme.bgColor,
         child: SafeArea(
@@ -165,7 +158,7 @@ class CheckState extends State<CheckPage> with WidgetsBindingObserver {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: sizeHeight * 0.8,
+                      height: mediaData.sizeHeight * 0.8,
                       child: previewCamera,
                     ),
                     sureBtn

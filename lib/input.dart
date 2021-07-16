@@ -32,10 +32,7 @@ class InputWidget extends StatefulWidget {
 }
 
 class InputPageState extends State<InputWidget> {
-  bool isStraight = false;
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
+  MediaData mediaData = new MediaData();
   final TextEditingController fruitNameController = new TextEditingController();
   DataBean dataBean = new DataBean();
   List<String> items = [
@@ -84,19 +81,13 @@ class InputPageState extends State<InputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-    });
+    this.setState(() => mediaData.update(context));
 
     Widget homeButton = IconBtn(
-      edgeInsets:
-          EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
+      edgeInsets: mediaData.getPaddingFiveOrZero(),
       onTap: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePage())),
-      iconSize: iconSize,
+      iconSize: mediaData.iconSize,
       imgStr: 'images/home.png',
     );
 
@@ -179,11 +170,11 @@ class InputPageState extends State<InputWidget> {
     AutoSizeGroup subTitleGroup = AutoSizeGroup();
 
     AutoSizeGroup subTitleGroupH = AutoSizeGroup();
-    if (isStraight) {
+    if (mediaData.isStraight) {
       return SafeArea(
         child: Container(
           padding: EdgeInsets.all(5),
-          color: Color.fromRGBO(255, 245, 227, 1),
+          color: ItemTheme.bgColor,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -217,14 +208,14 @@ class InputPageState extends State<InputWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            width: sizeWidth * 0.7,
+                            width: mediaData.sizeWidth * 0.7,
                             child: Column(
                               children: [
                                 Row(
                                   children: [
                                     Image.asset(
                                       'images/inputClass.png',
-                                      width: sizeWidth * 0.2,
+                                      width: mediaData.sizeWidth * 0.2,
                                       fit: BoxFit.cover,
                                     ),
                                     // AutoTextChange(w: sizeWidth*0.5,s: "檢測蔬果",paddingW: 0,paddingH: 0,),
@@ -243,7 +234,7 @@ class InputPageState extends State<InputWidget> {
                                   children: [
                                     Image.asset(
                                       'images/inputArea.png',
-                                      width: sizeWidth * 0.2,
+                                      width: mediaData.sizeWidth * 0.2,
                                       fit: BoxFit.cover,
                                     ),
                                     Expanded(
@@ -263,7 +254,7 @@ class InputPageState extends State<InputWidget> {
                                   children: [
                                     Image.asset(
                                       'images/inputTime.png',
-                                      width: sizeWidth * 0.2,
+                                      width: mediaData.sizeWidth * 0.2,
                                       fit: BoxFit.cover,
                                     ),
                                     Expanded(
@@ -300,8 +291,9 @@ class InputPageState extends State<InputWidget> {
     } else {
       return SafeArea(
         child: Container(
-          color: Color.fromRGBO(255, 245, 227, 1),
-          padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
+          color: ItemTheme.bgColor,
+          padding:
+              EdgeInsets.fromLTRB(mediaData.iconSize, 5, mediaData.iconSize, 5),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,7 +321,7 @@ class InputPageState extends State<InputWidget> {
                       shrinkWrap: true,
                       children: [
                         SizedBox(
-                          width: sizeWidth * 0.7,
+                          width: mediaData.sizeWidth * 0.7,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -339,7 +331,7 @@ class InputPageState extends State<InputWidget> {
                                 children: [
                                   createItem(SizedBox(
                                     // height: sizeHeight * 0.3,
-                                    width: sizeWidth * 0.3,
+                                    width: mediaData.sizeWidth * 0.3,
                                     child: AutoSizeText(
                                       "蔬果種類",
                                       maxLines: 1,
@@ -350,7 +342,7 @@ class InputPageState extends State<InputWidget> {
                                   )),
                                   createItem(SizedBox(
                                     // height: sizeHeight * 0.3,
-                                    width: sizeWidth * 0.3,
+                                    width: mediaData.sizeWidth * 0.3,
                                     child: AutoSizeText(
                                       "來自/購買地點",
                                       maxLines: 1,
@@ -361,7 +353,7 @@ class InputPageState extends State<InputWidget> {
                                   )),
                                   createItem(SizedBox(
                                     // height: sizeHeight * 0.3,
-                                    width: sizeWidth * 0.3,
+                                    width: mediaData.sizeWidth * 0.3,
                                     child: AutoSizeText(
                                       "蔬果名稱",
                                       maxLines: 1,
@@ -394,20 +386,20 @@ class InputPageState extends State<InputWidget> {
                                 children: [
                                   createItem(Image.asset(
                                     'images/inputClass.png',
-                                    width:
-                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    width: min(mediaData.sizeWidth * 0.2,
+                                        mediaData.sizeHeight * 0.3),
                                     fit: BoxFit.cover,
                                   )),
                                   createItem(Image.asset(
                                     'images/inputArea.png',
-                                    width:
-                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    width: min(mediaData.sizeWidth * 0.2,
+                                        mediaData.sizeHeight * 0.3),
                                     fit: BoxFit.cover,
                                   )),
                                   createItem(Image.asset(
                                     'images/inputTime.png',
-                                    width:
-                                        min(sizeWidth * 0.2, sizeHeight * 0.3),
+                                    width: min(mediaData.sizeWidth * 0.2,
+                                        mediaData.sizeHeight * 0.3),
                                     fit: BoxFit.cover,
                                   )),
                                 ],

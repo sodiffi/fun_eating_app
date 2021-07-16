@@ -129,10 +129,7 @@ class Result extends StatefulWidget {
 }
 
 class ResultState extends State<Result> {
-  bool isStraight = false;
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
+  MediaData mediaData = new MediaData();
   double reportBoxW;
   double reportBoxH;
 
@@ -151,29 +148,27 @@ class ResultState extends State<Result> {
   @override
   Widget build(BuildContext context) {
     this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-      reportBoxW = isStraight ? sizeWidth * 0.8 : sizeWidth * 0.3;
-      reportBoxH =
-          isStraight ? (sizeHeight - 20 - (iconSize * 2)) : sizeHeight * 0.7;
+      mediaData.update(context);
+      reportBoxW = mediaData.isStraight
+          ? mediaData.sizeWidth * 0.8
+          : mediaData.sizeWidth * 0.3;
+      reportBoxH = mediaData.isStraight
+          ? (mediaData.sizeHeight - 20 - (mediaData.iconSize * 2))
+          : mediaData.sizeHeight * 0.7;
     });
 
     List<Widget> homeButton = [
       IconBtn(
-        edgeInsets:
-            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        iconSize: iconSize,
+        edgeInsets: mediaData.getPaddingFiveOrZero(),
+        iconSize: mediaData.iconSize,
         imgStr: 'images/home.png',
         onTap: () {
           Navigator.of(context, rootNavigator: true).pop(context);
         },
       ),
       IconBtn(
-        edgeInsets:
-            EdgeInsets.fromLTRB(isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-        iconSize: iconSize,
+        edgeInsets: mediaData.getPaddingFiveOrZero(),
+        iconSize: mediaData.iconSize,
         imgStr: 'images/customerService.png',
         onTap: () => LaunchUrl.connection(),
       ),
@@ -185,14 +180,14 @@ class ResultState extends State<Result> {
         Image.asset(
           "images/report.png",
           width: reportBoxW,
-          height: reportBoxH * (isStraight ? 0.45 : 1),
+          height: reportBoxH * (mediaData.isStraight ? 0.45 : 1),
           fit: BoxFit.fill,
         ),
         Container(
           padding: EdgeInsets.fromLTRB(reportBoxW * 0.05, reportBoxH * 0.05,
               reportBoxW * 0.05, reportBoxH * 0.05),
           width: reportBoxW,
-          height: reportBoxH * (isStraight ? 0.45 : 1),
+          height: reportBoxH * (mediaData.isStraight ? 0.45 : 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -200,8 +195,8 @@ class ResultState extends State<Result> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: reportBoxW * 0.9 - iconSize,
-                    height: iconSize,
+                    width: reportBoxW * 0.9 - mediaData.iconSize,
+                    height: mediaData.iconSize,
                     child: Center(
                       child: AutoSizeText(
                         "檢測報告",
@@ -218,8 +213,8 @@ class ResultState extends State<Result> {
                     onTap: share,
                     child: Image.asset(
                       'images/share.png',
-                      height: iconSize,
-                      width: iconSize,
+                      height: mediaData.iconSize,
+                      width: mediaData.iconSize,
                       fit: BoxFit.cover,
                     ),
                   )
@@ -260,7 +255,7 @@ class ResultState extends State<Result> {
       ],
     );
 
-    if (isStraight) {
+    if (mediaData.isStraight) {
       return Container(
         color: ItemTheme.bgColor,
         child: SafeArea(
@@ -268,6 +263,8 @@ class ResultState extends State<Result> {
             color: Color.fromRGBO(255, 245, 227, 1),
             width: sizeWidth,
             height: sizeHeight,
+            width: mediaData.sizeWidth,
+            height: mediaData.sizeHeight,
             padding: EdgeInsets.all(5),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,7 +274,7 @@ class ResultState extends State<Result> {
                   ),
                   SizedBox(
                     width: reportBoxW * 0.8,
-                    height: iconSize,
+                    height: mediaData.iconSize,
                     child: AutoSizeText(
                       "蔬果汁抑制率",
                       maxLines: 1,
@@ -330,8 +327,9 @@ class ResultState extends State<Result> {
         color: ItemTheme.bgColor,
         child: SafeArea(
           child: Container(
-            padding: EdgeInsets.fromLTRB(iconSize, 5, iconSize, 5),
-            color: Color.fromRGBO(255, 245, 227, 1),
+            padding: EdgeInsets.fromLTRB(
+                mediaData.iconSize, 5, mediaData.iconSize, 5),
+            color:ItemTheme.bgColor,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -343,7 +341,7 @@ class ResultState extends State<Result> {
                   children: [
                     SizedBox(
                       width: reportBoxW * 0.95,
-                      height: iconSize,
+                      height: mediaData.iconSize,
                       child: AutoSizeText(
                         "蔬果汁抑制率",
                         maxLines: 1,

@@ -23,10 +23,7 @@ class TestMenuPage extends StatefulWidget {
 }
 
 class _TestMenuPageState extends State<TestMenuPage> {
-  bool isStraight = false;
-  double sizeHeight;
-  double sizeWidth;
-  double iconSize;
+  MediaData mediaData = new MediaData();
   double imgW = 0;
 
   @override
@@ -35,11 +32,9 @@ class _TestMenuPageState extends State<TestMenuPage> {
       getCameras();
     }
     this.setState(() {
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-      imgW = isStraight ? sizeHeight * 0.3 : sizeWidth * 0.3;
+      mediaData.update(context);
+      imgW = 0.3 *
+          (mediaData.isStraight ? mediaData.sizeHeight : mediaData.sizeWidth);
     });
 
     Widget buttonTrainBox = Container(
@@ -62,20 +57,15 @@ class _TestMenuPageState extends State<TestMenuPage> {
             )
           ],
         ),
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => TrainPage()));
-        },
+        onTap: () => Navigator.push(
+            context, MaterialPageRoute(builder: (context) => TrainPage())),
       ),
     );
     Widget buttonTestBox = Container(
       padding: EdgeInsets.all(10),
       child: GestureDetector(
-        onTap: () {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => TestInputPage()));
-         
-        },
+        onTap: () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => TestInputPage())),
         child: Stack(
           alignment: const Alignment(0, 0),
           children: [
@@ -100,8 +90,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
       color: ItemTheme.bgColor,
       child: SafeArea(
         child: Container(
-          padding: EdgeInsets.fromLTRB(
-              isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
+          padding: mediaData.getPaddingIconSizeOrFive(),
           color: ItemTheme.bgColor,
           child: SizedBox(
             child: Column(
@@ -111,9 +100,12 @@ class _TestMenuPageState extends State<TestMenuPage> {
                       children: [
                         IconBtn(
                           edgeInsets: EdgeInsets.fromLTRB(
-                              isStraight ? 5 : 0, 5, isStraight ? 5 : 5, 5),
+                              mediaData.isStraight ? 5 : 0,
+                              5,
+                              mediaData.isStraight ? 5 : 5,
+                              5),
                           onTap: () => Navigator.pop(context),
-                          iconSize: iconSize,
+                          iconSize: mediaData.iconSize,
                           imgStr: 'images/home.png',
                         ),
                         CustomButton("檢測鏡頭", () {
@@ -129,7 +121,7 @@ class _TestMenuPageState extends State<TestMenuPage> {
                       ],
                     )
                   ] +
-                  (isStraight
+                  (mediaData.isStraight
                       ? [
                           Container(
                             height: MediaQuery.of(context).size.height * 0.8,

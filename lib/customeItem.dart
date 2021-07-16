@@ -175,7 +175,9 @@ class LinkBtn extends StatefulWidget {
   final AutoSizeGroup autoSizeGroup;
   final String text;
   final Function onTap;
-  const LinkBtn({Key key, this.linkSize, this.autoSizeGroup, this.text, this.onTap}) : super(key: key);
+  const LinkBtn(
+      {Key key, this.linkSize, this.autoSizeGroup, this.text, this.onTap})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -201,16 +203,37 @@ class LinkBtnState extends State<LinkBtn> {
                 fit: BoxFit.cover,
               ),
               AutoTextChangeGroup(
-                w:this.widget.linkSize,
-                s: this.widget.text,
-                paddingW: this.widget.linkSize * 0.14,
-                paddingH: 0,
-                autoSizeGroup: this.widget.autoSizeGroup
-              ),
+                  w: this.widget.linkSize,
+                  s: this.widget.text,
+                  paddingW: this.widget.linkSize * 0.14,
+                  paddingH: 0,
+                  autoSizeGroup: this.widget.autoSizeGroup),
             ],
           ),
         ),
       ),
     ));
+  }
+}
+
+class MediaData {
+  double sizeHeight;
+  double sizeWidth;
+  double iconSize = 30;
+  bool isStraight = false;
+  void update(BuildContext context) {
+    isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
+    sizeHeight = MediaQuery.of(context).size.height;
+    sizeWidth = MediaQuery.of(context).size.width;
+    iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
+  }
+
+  EdgeInsets getPaddingIconSizeOrFive() {
+    return EdgeInsets.fromLTRB(
+        isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5);
+  }
+  EdgeInsets getPaddingFiveOrZero() {
+    return EdgeInsets.fromLTRB(
+        isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5);
   }
 }

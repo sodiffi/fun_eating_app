@@ -47,29 +47,22 @@ class RecordState extends State<RecordWidget> {
     if (data.isEmpty) {
       getData();
     }
-    this.setState(() {
-      isStraight = MediaQuery.of(context).orientation == Orientation.portrait;
-      sizeHeight = MediaQuery.of(context).size.height;
-      sizeWidth = MediaQuery.of(context).size.width;
-      iconSize = isStraight ? sizeWidth / 7 : sizeHeight * 0.15;
-    });
+    this.setState(() => mediaData.update(context));
 
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.fromLTRB(
-            isStraight ? 5 : iconSize, 5, isStraight ? 5 : iconSize, 5),
-        color: Color.fromRGBO(255, 245, 227, 1),
-        height: sizeHeight,
-        width: sizeWidth,
+        padding: mediaData.getPaddingIconSizeOrFive(),
+        color: ItemTheme.bgColor,
+        height: mediaData.sizeHeight,
+        width: mediaData.sizeWidth,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
               children: [
                 IconBtn(
-                  edgeInsets: EdgeInsets.fromLTRB(
-                      isStraight ? 5 : 0, 5, isStraight ? 5 : 0, 5),
-                  iconSize: iconSize,
+                  edgeInsets: mediaData.getPaddingFiveOrZero(),
+                  iconSize: mediaData.iconSize,
                   imgStr: 'images/home.png',
                   onTap: () => Navigator.of(context).pop(),
                 ),
@@ -138,7 +131,8 @@ class RecordState extends State<RecordWidget> {
                                           ],
                                         )),
                                     Flexible(
-                                        flex: 3, child: createText(data[index].area))
+                                        flex: 3,
+                                        child: createText(data[index].area))
                                   ],
                                 ),
                                 (data[index].name.isEmpty
